@@ -1,0 +1,47 @@
+[workspace]
+name = "prexsyn-backend"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+preview = ["pixi-build"]
+
+[tasks]
+build = "python -m build --wheel --no-isolation"
+
+[workspace.build-variants]
+python = ["3.11.*", "3.12.*", "3.13.*"]
+
+[feature.py311.dependencies]
+python = "3.11.*"
+
+[feature.py312.dependencies]
+python = "3.12.*"
+
+[feature.py313.dependencies]
+python = "3.13.*"
+
+[environments]
+py311 = ["py311"]
+py312 = ["py312"]
+py313 = ["py313"]
+
+[dependencies]
+python = ">=3.11,<4"
+pip = "*"
+setuptools = "*"
+python-build = "*"
+numpy = ">=2.3.0,<3"
+rdkit = ">=2025.3.6,<2026"
+librdkit = ">=2025.3.6,<2026"
+librdkit-dev = ">=2025.3.6,<2026"
+libboost-python-devel = ">=1.86.0,<2"
+cmake = ">=4.1.1,<5"
+clang = ">=21.1.1,<22"
+clangxx = ">=21.1.1,<22"
+clang-tools = ">=21.1.1,<22"
+llvm-tools = ">=21.1.1,<22"
+eigen = ">=3.4.0,<4"
+libboost-devel = ">=1.86.0,<2"
+spdlog = ">=1.15.3,<2"
+
+[pypi-dependencies]
+prexsyn-backend = { path = ".", editable = true }

@@ -1,0 +1,99 @@
+cmake_minimum_required(VERSION 3.15)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(prexsyn_backend LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -fsanitize=address")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mavx2 -mfma -ffast-math")
+
+find_package(RDKit REQUIRED)
+message(STATUS "RDKit_INCLUDE_DIRS: ${RDKit_INCLUDE_DIRS}")
+set(RDKit_LIBRARIES
+    RDKit::RDGeneral
+    RDKit::GraphMol
+    RDKit::SmilesParse
+    RDKit::ChemReactions
+    RDKit::GeneralizedSubstruct
+    RDKit::DataStructs
+    RDKit::Fingerprints
+    RDKit::MolStandardize
+    RDKit::Descriptors
+    RDKit::DistGeometry
+    RDKit::DistGeomHelpers
+    RDKit::ForceField
+    RDKit::ForceFieldHelpers
+    RDKit::ShapeHelpers
+    RDKit::RDGeometryLib
+    RDKit::MolAlign
+    RDKit::O3AAlign
+    RDKit::MolTransforms
+    RDKit::ChemTransforms
+    RDKit::MolChemicalFeatures)
+
+find_package(Python3 COMPONENTS Interpreter Development NumPy)
+message(STATUS "Python3_EXECUTABLE: ${Python3_EXECUTABLE}")
+message(STATUS "Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS}")
+message(STATUS "Python3_LIBRARIES: ${Python3_LIBRARIES}")
+message(STATUS "Python3_SOABI: ${Python3_SOABI}")
+
+find_package(Boost COMPONENTS system serialization iostreams python numpy
+                              REQUIRED)
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+message(STATUS "Available Boost_LIBRARIES: ${Boost_LIBRARIES}")
+
+find_package(OpenMP COMPONENTS CXX REQUIRED)
+if(OPENMP_FOUND)
+  message(STATUS "OpenMP found.")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
+
+find_package(spdlog REQUIRED)
+
+set(LIB_SOURCES
+    csrc/container/building_block_list.cpp
+    csrc/container/reaction_list.cpp
+    csrc/chemspace.cpp
+    csrc/detokenizer.cpp
+    csrc/featurizer/product_pharmacophore.cpp
+    csrc/featurizer/product_property.cpp
+    csrc/featurizer/product_structure.cpp
+    csrc/featurizer/synthesis.cpp
+    csrc/fingerprints.cpp
+    csrc/indexer.cpp
+    csrc/molops.cpp
+    csrc/pharmacophore.cpp
+    csrc/synthesis.cpp)
+set(LIB_LINK_LIBRARIES Boost::system Boost::serialization Boost::iostreams
+                       ${RDKit_LIBRARIES} spdlog::spdlog)
+add_library(libprexsyn OBJECT ${LIB_SOURCES})
+set_target_properties(libprexsyn PROPERTIES POSITION_INDEPENDENT_CODE
+                                                       TRUE)
+target_link_libraries(libprexsyn PRIVATE ${LIB_LINK_LIBRARIES})
+
+
+function(add_pymod name)
+  if(${ARGC} EQUAL 1)
+    set(sources csrc/${name}_bind.cpp)
+  else()
+    set(sources ${ARGN})
+  endif()
+  python3_add_library(${name} MODULE WITH_SOABI ${sources}
+                      $<TARGET_OBJECTS:libprexsyn>)
+  target_link_libraries(${name} PRIVATE ${Python3_LIBRARIES} Boost::python
+                                        Boost::numpy ${LIB_LINK_LIBRARIES})
+endfunction()
+
+add_pymod(building_block_list csrc/container/building_block_list_bind.cpp)
+add_pymod(chemspace)
+add_pymod(detokenizer)
+add_pymod(fingerprints)
+add_pymod(indexer)
+add_pymod(molops)
+add_pymod(pharmacophore)
+add_pymod(pipeline csrc/pipeline/bind.cpp)
+add_pymod(reaction_list csrc/container/reaction_list_bind.cpp)
+add_pymod(synthesis)
+add_pymod(types)
+add_pymod(featurizer csrc/featurizer/bind.cpp)

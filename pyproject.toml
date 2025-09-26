@@ -1,0 +1,37 @@
+[project]
+name = "prexsyn-backend"
+dynamic = ["version"]
+requires-python = ">=3.11"
+authors = [
+  {name = "Shitong Luo", email = "luost26@gmail.com"},
+]
+readme = "README.md"
+license-files = ["LICEN[CS]E.*"]
+
+[tool.black]
+line-length = 119
+
+[tool.isort]
+extra_standard_library = "typing_extensions,mypy,mypy_extensions"
+profile = "black"
+
+[tool.autoflake]
+remove-all-unused-imports = true
+expand-star-imports = true
+ignore-init-module-imports = true
+
+[tool.mypy]
+ignore_missing_imports = true
+exclude = [
+    "tests",
+    "docs",
+    "build",
+    "dist",
+    ".eggs",
+    ".tox",
+    ".venv",
+    ".env",
+    "__pycache__",
+]
+strict = true
+disallow_subclassing_any = false
