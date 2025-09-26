@@ -9,7 +9,6 @@ python = ">=3.11,<4"
 pip = "*"
 numpy = ">=2.3.0,<3"
 rdkit = ">=2025.3.6,<2026"
-librdkit = ">=2025.3.6,<2026"
 
 [feature.dev.dependencies]
 setuptools = "*"
