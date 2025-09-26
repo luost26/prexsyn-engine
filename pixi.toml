@@ -10,7 +10,7 @@ pip = "*"
 numpy = ">=2.3.0,<3"
 rdkit = ">=2025.3.6,<2026"
 
-[feature.dev.dependencies]
+[feature.build.dependencies]
 setuptools = "*"
 python-build = "*"
 librdkit-dev = ">=2025.3.6,<2026"
@@ -18,17 +18,33 @@ libboost-python-devel = ">=1.86.0,<2"
 cmake = ">=4.1.1,<5"
 clang = ">=21.1.1,<22"
 clangxx = ">=21.1.1,<22"
-clang-tools = ">=21.1.1,<22"
-llvm-tools = ">=21.1.1,<22"
 eigen = ">=3.4.0,<4"
 libboost-devel = ">=1.86.0,<2"
 spdlog = ">=1.15.3,<2"
+llvm-openmp = ">=21.1.0,<22"
+
+[feature.dev.dependencies]
+clang-tools = ">=21.1.1,<22"
+llvm-tools = ">=21.1.1,<22"
+compiler-rt = ">=21.1.1,<22"
+
+[feature.test.dependencies]
+gtest = ">=1.14.0,<2"
+
+[feature.build.tasks]
+build = "python -m build --wheel --no-isolation --outdir dist/"
 
 [feature.dev.pypi-dependencies]
 prexsyn-backend = { path = ".", editable = true }
 
-[feature.dev.tasks]
-build = "python -m build --wheel --no-isolation --outdir dist/"
+[feature.test.tasks]
+test = """
+    mkdir -p build &&
+    cd build &&
+    cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON ..
+    && cmake --build . --target unittest &&
+    ctest --output-on-failure
+"""
 
 [feature.test-py.pypi-options]
 find-links = [{ path = './dist' }]
@@ -46,8 +62,9 @@ python = "3.12.*"
 python = "3.13.*"
 
 [environments]
-default = ["dev"]
+default = ["build", "dev"]
+test = ["build", "dev", "test"]
 test-py = ["test-py"]
-py311 = ["py311", "dev"]
-py312 = ["py312", "dev"]
-py313 = ["py313", "dev"]
+py311 = ["py311", "build"]
+py312 = ["py312", "build"]
+py313 = ["py313", "build"]

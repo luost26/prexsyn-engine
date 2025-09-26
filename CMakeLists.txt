@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.15)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(prexsyn_backend LANGUAGES CXX)
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -fsanitize=address")
@@ -97,3 +99,20 @@ add_pymod(reaction_list csrc/container/reaction_list_bind.cpp)
 add_pymod(synthesis)
 add_pymod(types)
 add_pymod(featurizer csrc/featurizer/bind.cpp)
+
+if (BUILD_TESTING)
+  enable_testing()
+  set(TEST_SOURCES
+      csrc/container/building_block_list_test.cpp
+      csrc/container/reaction_list_test.cpp
+      csrc/synthesis_test.cpp
+      csrc/featurizer/product_test.cpp
+      csrc/pipeline/data_buffer_test.cpp
+      csrc/pipeline/pipeline_v2_test.cpp)
+  find_package(GTest REQUIRED)
+
+  add_executable(unittest ${TEST_SOURCES} $<TARGET_OBJECTS:libprexsyn>)
+  target_link_libraries(unittest PRIVATE GTest::gtest_main ${LIB_LINK_LIBRARIES})
+  include(GoogleTest)
+  gtest_discover_tests(unittest)
+endif()
