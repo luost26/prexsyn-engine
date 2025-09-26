@@ -47,6 +47,7 @@ python = "3.12.*"
 python = "3.13.*"
 
 [environments]
+default = ["dev"]
 test-py = ["test-py"]
 py311 = ["py311", "dev"]
 py312 = ["py312", "dev"]
