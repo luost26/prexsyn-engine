@@ -81,7 +81,8 @@ std::string PostfixNotation::pickle() const {
     return buffer.str();
 }
 
-std::unique_ptr<PostfixNotation> PostfixNotation::unpickle(const std::string &data) {
+std::unique_ptr<PostfixNotation>
+PostfixNotation::unpickle(const std::string &data) {
     std::istringstream buffer(data);
     boost::archive::binary_iarchive ia(buffer);
     size_t num_items;
@@ -249,8 +250,8 @@ std::unique_ptr<Synthesis> Synthesis::unpickle(const std::string &data) {
         }
         stack.push_back(mol_set);
     }
-    return std::make_unique<Synthesis>(std::move(*PostfixNotation::unpickle(pfn_pickle)),
-                                        std::move(stack));
+    return std::make_unique<Synthesis>(
+        std::move(*PostfixNotation::unpickle(pfn_pickle)), std::move(stack));
 }
 
 void save_synthesis_vector(const SynthesisVector &syntheses,

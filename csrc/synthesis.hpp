@@ -40,8 +40,8 @@ class push_reaction_exception : public std::runtime_error {
 class Synthesis {
     PostfixNotation postfix_notation;
     std::vector<MolSet> stack;
-    
-    public:
+
+  public:
     Synthesis() = default;
     Synthesis(const PostfixNotation &&postfix_notation,
               const std::vector<MolSet> &&stack)

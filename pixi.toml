@@ -39,6 +39,9 @@ build = "python -m build --wheel --no-isolation --outdir dist/"
 [feature.dev.pypi-dependencies]
 prexsyn-backend = { path = ".", editable = true }
 
+[feature.dev.tasks]
+lint = "pixi run pre-commit run --files csrc/* prexsyn_backend/* setup.py"
+
 [feature.test.tasks]
 configure-test = "cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G Ninja -S . -B build"
 build-test = { cmd = "ninja unittest -C build", depends-on = ["configure-test"] }
