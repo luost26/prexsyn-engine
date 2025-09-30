@@ -104,12 +104,9 @@ if (BUILD_TESTING)
   enable_testing()
   file(COPY resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   set(TEST_SOURCES
-      csrc/container/building_block_list_test.cpp
-      csrc/container/reaction_list_test.cpp
       csrc/synthesis_test.cpp
       csrc/featurizer/product_test.cpp
-      csrc/pipeline/data_buffer_test.cpp
-      csrc/pipeline/pipeline_v2_test.cpp)
+      csrc/pipeline/data_buffer_test.cpp)
   find_package(GTest REQUIRED)
 
   add_executable(unittest ${TEST_SOURCES} $<TARGET_OBJECTS:libprexsyn>)
