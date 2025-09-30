@@ -21,6 +21,7 @@ class CMakeBuild(build_ext):
         cwd = pathlib.Path().absolute()
 
         build_temp = pathlib.Path(self.build_temp)
+        print(f"build_temp: {build_temp}")
         build_temp.mkdir(parents=True, exist_ok=True)
         extdir = pathlib.Path(self.get_ext_fullpath(ext.name)).parent.resolve()
 
@@ -28,6 +29,8 @@ class CMakeBuild(build_ext):
             "-DCMAKE_PREFIX_PATH=" + sys.prefix,
             "-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=" + str(extdir),
             "-DCMAKE_BUILD_TYPE=Release",
+            "-G",
+            "Ninja",
         ]
 
         build_args = ["--config", "Release", "--", "-j4"]

@@ -102,6 +102,7 @@ add_pymod(featurizer csrc/featurizer/bind.cpp)
 
 if (BUILD_TESTING)
   enable_testing()
+  file(COPY resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   set(TEST_SOURCES
       csrc/container/building_block_list_test.cpp
       csrc/container/reaction_list_test.cpp
