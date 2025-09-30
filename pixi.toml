@@ -28,6 +28,7 @@ llvm-openmp = ">=21.1.0,<22"
 clang-tools = ">=21.1.1,<22"
 llvm-tools = ">=21.1.1,<22"
 compiler-rt = ">=21.1.1,<22"
+pre-commit = "*"
 
 [feature.test.dependencies]
 gtest = ">=1.14.0,<2"
