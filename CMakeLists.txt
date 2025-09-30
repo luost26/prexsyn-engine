@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.15)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 project(prexsyn_backend LANGUAGES CXX)
-set(CMAKE_C_COMPILER clang)
-set(CMAKE_CXX_COMPILER clang++)
+find_program(CLANG_PATH clang)
+find_program(CLANGXX_PATH clang++)
+set(CMAKE_C_COMPILER "${CLANG_PATH}")
+set(CMAKE_CXX_COMPILER "${CLANGXX_PATH}")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -fsanitize=address")
@@ -70,10 +72,8 @@ set(LIB_SOURCES
 set(LIB_LINK_LIBRARIES Boost::system Boost::serialization Boost::iostreams
                        ${RDKit_LIBRARIES} spdlog::spdlog)
 add_library(libprexsyn OBJECT ${LIB_SOURCES})
-set_target_properties(libprexsyn PROPERTIES POSITION_INDEPENDENT_CODE
-                                                       TRUE)
+set_target_properties(libprexsyn PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 target_link_libraries(libprexsyn PRIVATE ${LIB_LINK_LIBRARIES})
-
 
 function(add_pymod name)
   if(${ARGC} EQUAL 1)
@@ -100,17 +100,16 @@ add_pymod(synthesis)
 add_pymod(types)
 add_pymod(featurizer csrc/featurizer/bind.cpp)
 
-if (BUILD_TESTING)
+if(BUILD_TESTING)
   enable_testing()
   file(COPY resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-  set(TEST_SOURCES
-      csrc/synthesis_test.cpp
-      csrc/featurizer/product_test.cpp
-      csrc/pipeline/data_buffer_test.cpp)
+  set(TEST_SOURCES csrc/synthesis_test.cpp csrc/featurizer/product_test.cpp
+                   csrc/pipeline/data_buffer_test.cpp)
   find_package(GTest REQUIRED)
 
   add_executable(unittest ${TEST_SOURCES} $<TARGET_OBJECTS:libprexsyn>)
-  target_link_libraries(unittest PRIVATE GTest::gtest_main ${LIB_LINK_LIBRARIES})
+  target_link_libraries(unittest PRIVATE GTest::gtest_main
+                                         ${LIB_LINK_LIBRARIES})
   include(GoogleTest)
   gtest_discover_tests(unittest)
 endif()
