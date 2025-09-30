@@ -28,7 +28,7 @@ class PostfixNotation {
     size_t count_reactions() const;
     size_t count_building_blocks() const;
     std::string pickle() const;
-    static PostfixNotation *unpickle(const std::string &);
+    static std::unique_ptr<PostfixNotation> unpickle(const std::string &);
 };
 
 class push_reaction_exception : public std::runtime_error {
@@ -40,12 +40,12 @@ class push_reaction_exception : public std::runtime_error {
 class Synthesis {
     PostfixNotation postfix_notation;
     std::vector<MolSet> stack;
+    
+    public:
+    Synthesis() = default;
     Synthesis(const PostfixNotation &&postfix_notation,
               const std::vector<MolSet> &&stack)
         : postfix_notation(postfix_notation), stack(stack) {}
-
-  public:
-    Synthesis() = default;
     Synthesis(const Synthesis &) = default;
     Synthesis(Synthesis &&) = default;
     Synthesis &operator=(const Synthesis &) = default;
@@ -63,7 +63,7 @@ class Synthesis {
     size_t count_reactions() const;
     size_t count_building_blocks() const;
     std::string pickle() const;
-    static Synthesis *unpickle(const std::string &);
+    static std::unique_ptr<Synthesis> unpickle(const std::string &);
 };
 
 typedef std::shared_ptr<Synthesis> Synthesis_sptr;

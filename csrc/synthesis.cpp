@@ -81,12 +81,12 @@ std::string PostfixNotation::pickle() const {
     return buffer.str();
 }
 
-PostfixNotation *PostfixNotation::unpickle(const std::string &data) {
+std::unique_ptr<PostfixNotation> PostfixNotation::unpickle(const std::string &data) {
     std::istringstream buffer(data);
     boost::archive::binary_iarchive ia(buffer);
     size_t num_items;
     ia >> num_items;
-    auto *object = new PostfixNotation();
+    auto object = std::make_unique<PostfixNotation>();
     for (size_t i = 0; i < num_items; ++i) {
         PostfixNotation::ItemType type;
         std::string item_pickle;
@@ -227,7 +227,7 @@ std::string Synthesis::pickle() const {
     return buffer.str();
 }
 
-Synthesis *Synthesis::unpickle(const std::string &data) {
+std::unique_ptr<Synthesis> Synthesis::unpickle(const std::string &data) {
     std::istringstream buffer(data);
     boost::archive::binary_iarchive ia(buffer);
     std::string pfn_pickle;
@@ -249,8 +249,8 @@ Synthesis *Synthesis::unpickle(const std::string &data) {
         }
         stack.push_back(mol_set);
     }
-    return new Synthesis(std::move(*PostfixNotation::unpickle(pfn_pickle)),
-                         std::move(stack));
+    return std::make_unique<Synthesis>(std::move(*PostfixNotation::unpickle(pfn_pickle)),
+                                        std::move(stack));
 }
 
 void save_synthesis_vector(const SynthesisVector &syntheses,
@@ -282,8 +282,8 @@ SynthesisVector *load_synthesis_vector(const std::filesystem::path &path) {
     for (size_t i = 0; i < num_syntheses; ++i) {
         std::string pickle;
         ia >> pickle;
-        Synthesis *synthesis = Synthesis::unpickle(pickle);
-        syntheses->emplace_back(synthesis);
+        std::unique_ptr<Synthesis> synthesis = Synthesis::unpickle(pickle);
+        syntheses->emplace_back(std::move(synthesis));
     }
     ifs.close();
     return syntheses;
