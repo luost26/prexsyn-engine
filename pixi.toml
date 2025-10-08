@@ -1,5 +1,5 @@
 [workspace]
-name = "prexsyn-backend"
+name = "prexsyn-engine"
 channels = ["conda-forge"]
 platforms = ["linux-64"]
 preview = ["pixi-build"]
@@ -37,21 +37,15 @@ gtest = ">=1.14.0,<2"
 build = "python -m build --wheel --no-isolation --outdir dist/"
 
 [feature.dev.pypi-dependencies]
-prexsyn-backend = { path = ".", editable = true }
+prexsyn-engine = { path = ".", editable = true }
 
 [feature.dev.tasks]
-lint = "pixi run pre-commit run --files csrc/* prexsyn_backend/* setup.py"
+lint = "pixi run pre-commit run --files csrc/* prexsyn_engine/* setup.py"
 
 [feature.test.tasks]
 configure-test = "cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G Ninja -S . -B build"
 build-test = { cmd = "ninja unittest -C build", depends-on = ["configure-test"] }
 test = { cmd = "ctest --test-dir build --output-on-failure", depends-on = ["build-test"] }
-
-[feature.test-py.pypi-options]
-find-links = [{ path = './dist' }]
-
-[feature.test-py.pypi-dependencies]
-prexsyn-backend = { version = "*" }
 
 [feature.py311.dependencies]
 python = "3.11.*"
@@ -65,7 +59,6 @@ python = "3.13.*"
 [environments]
 default = ["build", "dev"]
 test = ["build", "dev", "test"]
-test-py = ["test-py"]
 py311 = ["py311", "build"]
 py312 = ["py312", "build"]
 py313 = ["py313", "build"]
