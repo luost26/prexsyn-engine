@@ -5,7 +5,7 @@
 
 #include "dtype.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 class FeatureBuilder {
   public:
     virtual ~FeatureBuilder() = default;
@@ -21,4 +21,4 @@ class FeatureBuilder {
     FeatureBuilder &erase_type() { return *this; }
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -9,7 +9,7 @@
 #include "utils/pickling.hpp"
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 py::object postfix_notation_getitem(const PostfixNotation &pfn, size_t index) {
     if (index >= pfn.size()) {

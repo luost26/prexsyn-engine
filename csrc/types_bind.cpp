@@ -6,7 +6,7 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 boost::python::list mol_set_to_list(const MolSet &set) {
     boost::python::list result;

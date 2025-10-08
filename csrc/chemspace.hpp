@@ -10,7 +10,7 @@
 #include "synthesis.hpp"
 #include "types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 class no_available_building_blocks : public std::runtime_error {
   public:
     explicit no_available_building_blocks(const std::string &message)
@@ -114,4 +114,4 @@ class SynthesisGenerator {
     SynthesisGenerator(const SynthesisGenerator &other);
     Synthesis_sptr next();
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

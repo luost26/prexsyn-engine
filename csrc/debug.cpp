@@ -10,7 +10,7 @@
 #include "pipeline/pipeline_v2.hpp"
 #include "utils/logging.hpp"
 
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 int main() {
     logger()->set_level(spdlog::level::info);

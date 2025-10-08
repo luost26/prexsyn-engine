@@ -4,7 +4,7 @@
 #include "dtype.hpp"
 #include "featurizer.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 struct PostfixNotationTokenDef {
     int PAD = 0;
     int END = 1;
@@ -30,4 +30,4 @@ class PostfixNotationFeaturizer : public Featurizer {
     void operator()(const Synthesis &synthesis,
                     FeatureBuilder &builder) override;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

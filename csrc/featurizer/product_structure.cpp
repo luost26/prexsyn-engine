@@ -7,7 +7,7 @@
 #include "../molops.hpp"
 #include "../utils/algorithm.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 ProductStructureFeaturizer::ProductStructureFeaturizer(
     const ProductStructureFeaturizerOption &option)
@@ -59,4 +59,4 @@ void ProductStructureFeaturizer::operator()(const Synthesis &syn,
     }
 }
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -14,7 +14,7 @@
 #include "utils/assert.hpp"
 #include "utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 PostfixNotation::ItemType PostfixNotation::type(
     std::vector<std::variant<Mol_sptr, Reaction_sptr>>::size_type index) const {
@@ -289,4 +289,4 @@ SynthesisVector *load_synthesis_vector(const std::filesystem::path &path) {
     ifs.close();
     return syntheses;
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

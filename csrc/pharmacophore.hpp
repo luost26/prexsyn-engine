@@ -7,7 +7,7 @@
 
 #include "types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 const std::string fdef_BASE = R"(
 # $Id$
@@ -332,4 +332,4 @@ subgraph_similarity(const PharmacophoreGraph &g1, const PharmacophoreGraph &g2,
 std::pair<float, float> pharmacophore_similarity(const PharmacophoreGraph &g1,
                                                  const PharmacophoreGraph &g2,
                                                  float lambda = 1.0f);
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

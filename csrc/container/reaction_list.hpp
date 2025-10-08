@@ -5,7 +5,7 @@
 
 #include "../types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 using ReactionIndex = size_t;
 
@@ -23,4 +23,4 @@ class ReactionList {
     Reaction_sptr get(size_t index) const;
     ReactionIndex size() const;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

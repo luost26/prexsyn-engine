@@ -10,7 +10,7 @@
 #include "../types.hpp"
 #include "../utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 std::optional<ReactionIndex> ReactionList::add(const Reaction_sptr &reaction) {
     if (!reaction) {
@@ -117,4 +117,4 @@ Reaction_sptr ReactionList::get(size_t index) const {
 }
 
 ReactionIndex ReactionList::size() const { return reactions.size(); }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

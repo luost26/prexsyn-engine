@@ -7,7 +7,7 @@
 #include "featurizer/synthesis.hpp"
 #include "synthesis.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 class Detokenizer {
   private:
     std::shared_ptr<BuildingBlockList> building_blocks = nullptr;
@@ -33,4 +33,4 @@ class Detokenizer {
                     const std::span<ReactionToken> &rxn_indices,
                     size_t stride) const;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

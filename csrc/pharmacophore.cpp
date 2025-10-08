@@ -11,7 +11,7 @@
 #include "types.hpp"
 #include "utils/assert.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 PharmacophoreNode::PharmacophoreNode(const std::string &family,
                                      const std::string &type)
@@ -525,4 +525,4 @@ std::pair<float, float> pharmacophore_similarity(const PharmacophoreGraph &g1,
     }
     return {score_1 / n_subgraphs_1, score_2 / n_subgraphs_2};
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

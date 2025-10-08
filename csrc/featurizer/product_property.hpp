@@ -7,7 +7,7 @@
 #include "builder.hpp"
 #include "featurizer.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 static const std::vector<std::string> supported_rdkit_properties{
     "amw",
@@ -75,4 +75,4 @@ class ProductRDKitPropertyFeaturizer : public Featurizer {
     size_t max_property_index() const;
     void operator()(const Synthesis &syn, FeatureBuilder &dict) override;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

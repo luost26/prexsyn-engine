@@ -9,7 +9,7 @@
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 py::tuple data_pipeline_get(DataPipeline<PyDictBuilder> &pipeline) {
     auto result = pipeline.get();

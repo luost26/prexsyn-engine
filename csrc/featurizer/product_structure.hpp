@@ -5,7 +5,7 @@
 #include "builder.hpp"
 #include "featurizer.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 struct ProductStructureFeaturizerOption {
     std::vector<std::string> fp_types = {"ecfp4", "fcfp4"};
@@ -29,4 +29,4 @@ class ProductStructureFeaturizer : public Featurizer {
     void operator()(const Synthesis &syn, FeatureBuilder &dict) override;
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -13,7 +13,7 @@
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 template <std::vector<float> F(const std::optional<Mol_sptr> &)>
 np::ndarray fp_func_numpy_wrapper(const Mol_sptr &mol) {

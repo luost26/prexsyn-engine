@@ -5,7 +5,7 @@
 #include <boost/python.hpp>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 inline void synthesis_bind() {
     py::class_<PostfixNotationTokenDef>("PostfixNotationTokenDef")

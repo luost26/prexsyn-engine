@@ -6,7 +6,7 @@
 #include "../utils/algorithm.hpp"
 #include "../utils/assert.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 ProductRDKitPropertyFeaturizer::ProductRDKitPropertyFeaturizer(
     const ProductRDKitPropertyFeaturizerOption &option)
@@ -67,4 +67,4 @@ void ProductRDKitPropertyFeaturizer::operator()(const Synthesis &syn,
     dict.add(option.name + ".values", prop_values);
 }
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

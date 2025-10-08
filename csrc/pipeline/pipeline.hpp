@@ -13,7 +13,7 @@
 #include "../utils/assert.hpp"
 #include "../utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 const int MAX_BUFFER_SIZE = 4096;
 
@@ -100,4 +100,4 @@ template <typename Builder> class DataPipeline {
     ~DataPipeline() { stop(); }
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

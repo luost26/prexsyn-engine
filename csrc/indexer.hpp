@@ -5,7 +5,7 @@
 #include "synthesis.hpp"
 #include "types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 typedef size_t ReactionIndex;
 typedef size_t ReactantIndex;
 typedef size_t MolecularIndex;
@@ -40,4 +40,4 @@ template <typename Molecular_sptr> class ReactionToMolecular {
     const std::vector<MolecularIndex> &
         get_molecular_indices(ReactionIndex, ReactantIndex) const;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -10,7 +10,7 @@
 
 #include "types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 class PostfixNotation {
     std::vector<std::variant<Mol_sptr, Reaction_sptr>> items;
 
@@ -71,4 +71,4 @@ typedef std::vector<Synthesis_sptr> SynthesisVector;
 void save_synthesis_vector(const SynthesisVector &,
                            const std::filesystem::path &);
 SynthesisVector *load_synthesis_vector(const std::filesystem::path &path);
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

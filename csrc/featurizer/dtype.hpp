@@ -6,7 +6,7 @@
 
 #include "../utils/assert.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 template <typename T>
     requires std::integral<T> || std::floating_point<T>
 static std::vector<long> shape_of(const std::vector<std::vector<T>> &vec) {
@@ -73,4 +73,4 @@ struct DType {
     }
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

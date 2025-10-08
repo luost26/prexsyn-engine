@@ -3,7 +3,7 @@
 #include <boost/python.hpp>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 BOOST_PYTHON_MODULE(indexer) {
     py::def("get_suitable_reactant_indices_for_mol",

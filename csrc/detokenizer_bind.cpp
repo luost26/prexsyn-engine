@@ -7,7 +7,7 @@
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 SynthesisVector detokenize_batch(const Detokenizer &detokenizer,
                                  const np::ndarray &token_types,

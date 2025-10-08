@@ -13,7 +13,7 @@
 #include "utils/assert.hpp"
 #include "utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 std::vector<size_t> get_suitable_reactant_indices(const Reaction_sptr &reaction,
                                                   const Mol_sptr &mol) {
@@ -131,4 +131,4 @@ ReactionToMolecular<Molecular_sptr>::get_molecular_indices(
 
 template class ReactionToMolecular<Mol_sptr>;
 template class ReactionToMolecular<Synthesis_sptr>;
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

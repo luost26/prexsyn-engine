@@ -3,7 +3,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
@@ -28,4 +28,4 @@ template <class T> struct pickle_suite : py::pickle_suite {
     }
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

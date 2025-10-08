@@ -12,7 +12,7 @@
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 py::list get_nodes(const PharmacophoreGraph &graph) {
     py::list nodes;

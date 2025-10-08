@@ -13,7 +13,7 @@
 #include "builder.hpp"
 #include "featurizer.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 struct ProductPharmacophoreFeaturizerOption {
     std::string name = "product_pharmacophore";
     std::string feature_def = fdef_BASE;
@@ -58,4 +58,4 @@ class ProductPharmacophoreFeaturizer : public Featurizer {
               const std::optional<std::vector<RDKit::FeatSPtr>> & =
                   std::nullopt) const;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

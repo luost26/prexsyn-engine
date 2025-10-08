@@ -6,7 +6,7 @@
 #include <random>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 BOOST_PYTHON_MODULE(chemspace) {
     py::class_<ChemicalSpaceDefinition>("ChemicalSpaceDefinition", py::no_init)

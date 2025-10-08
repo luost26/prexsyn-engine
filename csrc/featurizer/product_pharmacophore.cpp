@@ -9,7 +9,7 @@
 #include "../utils/algorithm.hpp"
 #include "../utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 ProductPharmacophoreFeaturizer::ProductPharmacophoreFeaturizer(
     const ProductPharmacophoreFeaturizerOption &option)
@@ -170,4 +170,4 @@ PharmacophoreGraph ProductPharmacophoreFeaturizer::get_graph(
                                       default_bond_weight);
 }
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

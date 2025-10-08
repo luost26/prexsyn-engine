@@ -3,7 +3,7 @@
 #include <boost/python.hpp>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 py::object murcko_scaffold_bind(const Mol_sptr &mol) {
     auto o = murcko_scaffold(mol);

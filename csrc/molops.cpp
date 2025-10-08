@@ -5,7 +5,7 @@
 #include "types.hpp"
 #include "utils/assert.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 std::optional<Mol_sptr> sanitize(const Mol_sptr &mol) {
     Ensures(mol != nullptr);
@@ -43,4 +43,4 @@ MolVector brics_fragments(const Mol_sptr &mol) {
     }
     return out;
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

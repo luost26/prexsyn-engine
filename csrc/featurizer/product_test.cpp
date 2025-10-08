@@ -12,7 +12,7 @@
 #include "../types.hpp"
 #include "builder.hpp"
 
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 static Synthesis get_sample_1() {
     Mol_sptr mol1(RDKit::SmilesToMol("COC(=O)c1nscc1N"));

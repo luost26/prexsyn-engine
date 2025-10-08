@@ -3,7 +3,7 @@
 #include "../synthesis.hpp"
 #include "builder.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 class Featurizer {
   public:
     virtual ~Featurizer() = default;
@@ -26,4 +26,4 @@ class FeaturizerSet : public Featurizer {
         }
     }
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

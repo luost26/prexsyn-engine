@@ -2,7 +2,7 @@
 
 #include <omp.h>
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 Detokenizer::Detokenizer(
     const std::shared_ptr<BuildingBlockList> &building_blocks,
     const std::shared_ptr<ReactionList> &reactions,
@@ -77,4 +77,4 @@ Detokenizer::detokenize_many(const std::span<TypeToken> &token_types,
     }
     return results;
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -6,7 +6,7 @@
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 inline void product_property_bind() {
     py::class_<std::vector<std::string>>("RDKitPropertyList")

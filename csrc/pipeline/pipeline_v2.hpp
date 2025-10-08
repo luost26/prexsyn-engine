@@ -12,7 +12,7 @@
 #include "../utils/logging.hpp"
 #include "data_buffer.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 template <size_t capacity> class DataPipelineV2 {
     size_t num_requested_threads;
@@ -85,4 +85,4 @@ template <size_t capacity> class DataPipelineV2 {
     ~DataPipelineV2() { stop(); }
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

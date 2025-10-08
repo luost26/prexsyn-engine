@@ -10,7 +10,7 @@
 #include "utils/assert.hpp"
 #include "utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 const std::shared_ptr<BuildingBlockList>
 ChemicalSpaceDefinition::get_primary_building_blocks() const {
@@ -318,4 +318,4 @@ Synthesis_sptr SynthesisGenerator::next() {
     Ensures(out->stack_size() == 1);
     return out;
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

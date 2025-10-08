@@ -13,7 +13,7 @@
 #include "../utils/assert.hpp"
 #include "../utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 template <size_t capacity>
     requires(capacity > 0)
@@ -277,4 +277,4 @@ class DataBuffer {
         data.clear();
     }
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

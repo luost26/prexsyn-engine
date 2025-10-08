@@ -6,7 +6,7 @@
 
 #include "../types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 struct BuildingBlockPreprocessingOption {
     bool remove_Hs = true;
     bool largest_fragment_only = true;
@@ -39,4 +39,4 @@ class BuildingBlockList {
     Mol_sptr get(size_t index) const;
     BuildingBlockIndex size() const;
 };
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

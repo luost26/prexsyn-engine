@@ -7,7 +7,7 @@
 
 #include "container/building_block_list.hpp"
 
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 TEST(chemspace, DISABLED_debug1) {
     auto sdf_path =

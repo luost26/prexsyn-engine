@@ -7,7 +7,7 @@
 
 #include "../utils/assert.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 PostfixNotationFeaturizer::PostfixNotationFeaturizer(
     const PostfixNotationFeaturizerOption &option)
@@ -79,4 +79,4 @@ void PostfixNotationFeaturizer::operator()(const Synthesis &synthesis,
     builder.add("synthesis.bb_indices", bb_indices);
     builder.add("synthesis.rxn_indices", rxn_indices);
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

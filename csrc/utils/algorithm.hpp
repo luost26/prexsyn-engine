@@ -8,7 +8,7 @@
 #include <variant>
 #include <vector>
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 class stop_iteration : public std::exception {};
 
@@ -108,4 +108,4 @@ T random_choice(const std::vector<T> &vec1, const std::vector<T> &vec2,
         return vec2[index];
     }
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

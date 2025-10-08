@@ -11,7 +11,7 @@
 namespace py = boost::python;
 namespace np = boost::python::numpy;
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 class PyDictBuilder : public FeatureBuilder {
     std::vector<std::function<void(py::dict &)>> callbacks;
 
@@ -72,4 +72,4 @@ class PyDictBuilder : public FeatureBuilder {
 #undef DEFINE_ADD_METHOD
 };
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -9,20 +9,19 @@
 
 #include "../types.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 inline std::shared_ptr<spdlog::logger> logger() {
-    static auto logger = spdlog::get("synthesis_backend");
+    static auto logger = spdlog::get("prexsyn_engine");
     if (!logger) {
-        logger = spdlog::stderr_color_mt("synthesis_backend");
+        logger = spdlog::stderr_color_mt("prexsyn_engine");
     }
     return logger;
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine
 
 template <>
-struct fmt::formatter<synthesis_backend::Mol_sptr>
-    : fmt::formatter<std::string> {
-    auto format(synthesis_backend::Mol_sptr mol, format_context &ctx) const
+struct fmt::formatter<prexsyn_engine::Mol_sptr> : fmt::formatter<std::string> {
+    auto format(prexsyn_engine::Mol_sptr mol, format_context &ctx) const
         -> decltype(ctx.out()) {
         if (!mol) {
             return fmt::format_to(ctx.out(), "Mol(null)");
@@ -34,9 +33,9 @@ struct fmt::formatter<synthesis_backend::Mol_sptr>
 };
 
 template <>
-struct fmt::formatter<synthesis_backend::Reaction_sptr>
+struct fmt::formatter<prexsyn_engine::Reaction_sptr>
     : fmt::formatter<std::string> {
-    auto format(synthesis_backend::Reaction_sptr reaction,
+    auto format(prexsyn_engine::Reaction_sptr reaction,
                 format_context &ctx) const -> decltype(ctx.out()) {
         if (!reaction) {
             return fmt::format_to(ctx.out(), "Reaction(null)");

@@ -13,7 +13,7 @@
 
 #include "../utils/logging.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 template <class Archive>
 void BuildingBlockPreprocessingOption::serialize(Archive &ar,
@@ -189,4 +189,4 @@ Mol_sptr BuildingBlockList::get(size_t index) const {
 BuildingBlockIndex BuildingBlockList::size() const {
     return building_blocks.size();
 }
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

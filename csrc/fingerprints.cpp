@@ -8,7 +8,7 @@
 
 #include "utils/assert.hpp"
 
-namespace synthesis_backend {
+namespace prexsyn_engine {
 
 template <typename T>
 std::vector<T> ecfp4_fingerprint(const std::optional<Mol_sptr> &mol) {
@@ -123,4 +123,4 @@ float tanimoto_similarity(const Mol_sptr &mol1, const Mol_sptr &mol2,
     return intersection / union_size;
 }
 
-} // namespace synthesis_backend
+} // namespace prexsyn_engine

@@ -4,7 +4,7 @@
 
 #include "../utils/logging.hpp"
 
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 TEST(data_buffer, case1) {
     DataBuffer<16> buffer{};

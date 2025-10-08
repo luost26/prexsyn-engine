@@ -13,7 +13,7 @@
 #include <omp.h>
 
 namespace py = boost::python;
-using namespace synthesis_backend;
+using namespace prexsyn_engine;
 
 static void product_pharmacophore_featurizer_call_bind(
     ProductPharmacophoreFeaturizer &featurizer, py::object obj,
