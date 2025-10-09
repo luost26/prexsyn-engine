@@ -1,19 +1,9 @@
 import abc
 from collections.abc import Sequence
-from typing import Any, Self, TypeAlias
+from typing import Self, TypeAlias
 
-import numpy as np
-
+from .feature import FeatureBuilder
 from .synthesis import Synthesis
-
-FeatureDict: TypeAlias = dict[str, int | float | str | bool | np.ndarray[Any, Any]]
-
-class FeatureBuilder(abc.ABC): ...
-
-class PyDictBuilder:
-    def __init__(self) -> None: ...
-    def get(self) -> FeatureDict: ...
-    def erase_type(self) -> FeatureBuilder: ...
 
 class Featurizer(abc.ABC):
     @abc.abstractmethod

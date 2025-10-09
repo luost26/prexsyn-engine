@@ -20,12 +20,6 @@ using namespace prexsyn_engine;
 BOOST_PYTHON_MODULE(featurizer) {
     np::initialize();
 
-    py::class_<PyDictBuilder, std::shared_ptr<PyDictBuilder>>("PyDictBuilder",
-                                                              py::init<>())
-        .def("get", &PyDictBuilder::get)
-        .def("erase_type", &PyDictBuilder::erase_type,
-             py::return_internal_reference<>());
-
     std::ignore =
         py::class_<Featurizer, std::shared_ptr<Featurizer>, boost::noncopyable>(
             "Featurizer", py::no_init);
