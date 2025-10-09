@@ -6,7 +6,7 @@
 #include <boost/python.hpp>
 #include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
-#include "utils/pickling.hpp"
+#include "utils/python_pickling.hpp"
 
 namespace py = boost::python;
 using namespace prexsyn_engine;
