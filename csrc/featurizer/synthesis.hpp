@@ -13,20 +13,17 @@ struct PostfixNotationTokenDef {
     int RXN = 4;
 };
 
-struct PostfixNotationFeaturizerOption {
-    unsigned int length = 16;
-    PostfixNotationTokenDef token_def{};
-};
-
 using TypeToken = Long;
 using BuildingBlockToken = Long;
 using ReactionToken = Long;
 
 class PostfixNotationFeaturizer : public Featurizer {
   public:
-    PostfixNotationFeaturizerOption option;
-    PostfixNotationFeaturizer(
-        const PostfixNotationFeaturizerOption &option = {});
+    unsigned int max_length;
+    PostfixNotationTokenDef token_def;
+
+    PostfixNotationFeaturizer(unsigned int max_length = 16,
+                              const PostfixNotationTokenDef &token_def = {});
     void operator()(const Synthesis &synthesis,
                     FeatureBuilder &builder) override;
 };

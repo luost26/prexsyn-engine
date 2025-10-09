@@ -7,7 +7,7 @@
 namespace py = boost::python;
 using namespace prexsyn_engine;
 
-inline void synthesis_bind() {
+BOOST_PYTHON_MODULE(featurizer__synthesis) {
     py::class_<PostfixNotationTokenDef>("PostfixNotationTokenDef")
         .def_readwrite("PAD", &PostfixNotationTokenDef::PAD)
         .def_readwrite("END", &PostfixNotationTokenDef::END)
@@ -15,19 +15,15 @@ inline void synthesis_bind() {
         .def_readwrite("BB", &PostfixNotationTokenDef::BB)
         .def_readwrite("RXN", &PostfixNotationTokenDef::RXN);
 
-    py::class_<PostfixNotationFeaturizerOption>(
-        "PostfixNotationFeaturizerOption")
-        .def_readwrite("length", &PostfixNotationFeaturizerOption::length)
-        .def_readwrite("token_def",
-                       &PostfixNotationFeaturizerOption::token_def);
-
-    py::class_<PostfixNotationFeaturizer>(
+    py::class_<PostfixNotationFeaturizer,
+               std::shared_ptr<PostfixNotationFeaturizer>,
+               py::bases<Featurizer>>(
         "PostfixNotationFeaturizer",
-        py::init<PostfixNotationFeaturizerOption>(
-            (py::arg("option") = PostfixNotationFeaturizerOption())))
-        .def_readonly("option", &PostfixNotationFeaturizer::option)
+        py::init<unsigned int, PostfixNotationTokenDef>(
+            (py::arg("max_length") = 16,
+             py::arg("token_def") = PostfixNotationTokenDef())))
+        .def_readonly("max_length", &PostfixNotationFeaturizer::max_length)
+        .def_readonly("token_def", &PostfixNotationFeaturizer::token_def)
         .def("__call__", &PostfixNotationFeaturizer::operator(),
              (py::arg("synthesis"), py::arg("builder")));
-
-    py::register_ptr_to_python<std::shared_ptr<PostfixNotationFeaturizer>>();
 }

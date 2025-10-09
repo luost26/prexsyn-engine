@@ -7,11 +7,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
-#include "../feature/pydict_builder.hpp"
-
-#include "product_property_bind.hpp"
-#include "product_structure_bind.hpp"
-#include "synthesis_bind.hpp"
+#include "featurizer.hpp"
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
@@ -37,16 +33,4 @@ BOOST_PYTHON_MODULE(featurizer) {
                 FeaturizerSet::add,
             py::return_internal_reference<>(), (py::arg("featurizer")));
     };
-
-    product_structure_bind();
-    def_featurizer_set_add_method
-        .template operator()<ProductStructureFeaturizer>();
-
-    product_property_bind();
-    def_featurizer_set_add_method
-        .template operator()<ProductRDKitPropertyFeaturizer>();
-
-    synthesis_bind();
-    def_featurizer_set_add_method
-        .template operator()<PostfixNotationFeaturizer>();
 }

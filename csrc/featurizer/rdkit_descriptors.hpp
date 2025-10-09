@@ -8,8 +8,7 @@
 #include "featurizer.hpp"
 
 namespace prexsyn_engine {
-
-static const std::vector<std::string> supported_rdkit_properties{
+static const std::vector<std::string> SUPPORTED_RDKIT_DESCRIPTORS = {
     "amw",
     "lipinskiHBA",
     "lipinskiHBD",
@@ -56,22 +55,19 @@ static const std::vector<std::string> supported_rdkit_properties{
     "Phi",
 };
 
-struct ProductRDKitPropertyFeaturizerOption {
-    std::string name = "product_rdkit_properties";
-    unsigned int num_evaluated_properties = 4;
-
-    unsigned int rdkit_property_index_offset = 1;
-    std::vector<std::string> rdkit_properties = supported_rdkit_properties;
-};
-
-class ProductRDKitPropertyFeaturizer : public Featurizer {
-    ProductRDKitPropertyFeaturizerOption option;
-    RDKit::Descriptors::Properties rdkit_properties;
-    std::map<std::string, size_t> supported_property_name_to_index;
+class RDKitDescriptorsFeaturizer : public Featurizer {
+    RDKit::Descriptors::Properties rdkit_properties_object;
+    std::map<std::string, size_t> descriptor_name_to_index;
 
   public:
-    ProductRDKitPropertyFeaturizer(
-        const ProductRDKitPropertyFeaturizerOption &option = {});
+    std::string name;
+    unsigned int num_evaluated_descriptors;
+    std::vector<std::string> descriptor_names;
+
+    RDKitDescriptorsFeaturizer(
+        const std::string &name, unsigned int num_evaluated_descriptors = 4,
+        const std::vector<std::string> &descriptor_names =
+            SUPPORTED_RDKIT_DESCRIPTORS);
     size_t max_property_index() const;
     void operator()(const Synthesis &syn, FeatureBuilder &dict) override;
 };

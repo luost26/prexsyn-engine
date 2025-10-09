@@ -1,5 +1,4 @@
-#include "product_property.hpp"
-#include "product_structure.hpp"
+#include "rdkit_descriptors.hpp"
 
 #include <gtest/gtest.h>
 
@@ -49,7 +48,7 @@ class DummyBuilder : public FeatureBuilder {
 
 TEST(featurizer__product, rdkit_properties) {
     Synthesis synthesis(get_sample_1());
-    ProductRDKitPropertyFeaturizer featurizer{};
+    RDKitDescriptorsFeaturizer featurizer("rdkit_descriptors");
     DummyBuilder builder;
     featurizer(synthesis, builder);
 }
