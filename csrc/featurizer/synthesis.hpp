@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../feature/dtype.hpp"
 #include "../synthesis.hpp"
-#include "dtype.hpp"
 #include "featurizer.hpp"
 
 namespace prexsyn_engine {

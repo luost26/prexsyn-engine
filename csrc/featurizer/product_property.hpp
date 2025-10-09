@@ -4,7 +4,7 @@
 
 #include <GraphMol/Descriptors/Property.h>
 
-#include "builder.hpp"
+#include "../feature/builder.hpp"
 #include "featurizer.hpp"
 
 namespace prexsyn_engine {

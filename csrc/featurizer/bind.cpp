@@ -7,7 +7,7 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
-#include "pydict_builder.hpp"
+#include "../feature/pydict_builder.hpp"
 
 #include "product_property_bind.hpp"
 #include "product_structure_bind.hpp"

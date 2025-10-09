@@ -9,7 +9,7 @@
 #include <span>
 #include <vector>
 
-#include "../featurizer/builder.hpp"
+#include "../feature/builder.hpp"
 #include "../utils/assert.hpp"
 #include "../utils/logging.hpp"
 

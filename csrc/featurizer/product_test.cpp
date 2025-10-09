@@ -8,9 +8,9 @@
 #include <GraphMol/SmilesParse/SmilesParse.h>
 #include <GraphMol/SmilesParse/SmilesWrite.h>
 
+#include "../feature/builder.hpp"
 #include "../synthesis.hpp"
 #include "../types.hpp"
-#include "builder.hpp"
 
 using namespace prexsyn_engine;
 

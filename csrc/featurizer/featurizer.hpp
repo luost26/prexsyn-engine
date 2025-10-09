@@ -1,7 +1,7 @@
 #pragma once
 
+#include "../feature/builder.hpp"
 #include "../synthesis.hpp"
-#include "builder.hpp"
 
 namespace prexsyn_engine {
 class Featurizer {
