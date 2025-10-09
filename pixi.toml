@@ -40,7 +40,7 @@ build = "python -m build --wheel --no-isolation --outdir dist/"
 prexsyn-engine = { path = ".", editable = true }
 
 [feature.dev.tasks]
-lint = "pixi run pre-commit run --files csrc/* prexsyn_engine/* setup.py"
+lint = "pixi run pre-commit run --all-files"
 
 [feature.test.tasks]
 configure-test = "cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G Ninja -S . -B build"
