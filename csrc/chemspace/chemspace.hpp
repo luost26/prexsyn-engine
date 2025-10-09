@@ -4,11 +4,11 @@
 #include <random>
 #include <variant>
 
-#include "container/building_block_list.hpp"
-#include "container/reaction_list.hpp"
+#include "../container/building_block_list.hpp"
+#include "../container/reaction_list.hpp"
+#include "../synthesis.hpp"
+#include "../types.hpp"
 #include "indexer.hpp"
-#include "synthesis.hpp"
-#include "types.hpp"
 
 namespace prexsyn_engine {
 class no_available_building_blocks : public std::runtime_error {

@@ -3,7 +3,7 @@
 #include <boost/python/numpy/ndarray.hpp>
 #include <random>
 
-#include "../featurizer/pydict_builder.hpp"
+#include "../feature/pydict_builder.hpp"
 #include "pipeline.hpp"
 #include "pipeline_v2.hpp"
 

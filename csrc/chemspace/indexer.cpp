@@ -8,10 +8,10 @@
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include "synthesis.hpp"
-#include "types.hpp"
-#include "utils/assert.hpp"
-#include "utils/logging.hpp"
+#include "../synthesis.hpp"
+#include "../types.hpp"
+#include "../utils/assert.hpp"
+#include "../utils/logging.hpp"
 
 namespace prexsyn_engine {
 

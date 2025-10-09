@@ -7,7 +7,7 @@
 #include <thread>
 #include <tuple>
 
-#include "../chemspace.hpp"
+#include "../chemspace/chemspace.hpp"
 #include "../featurizer/featurizer.hpp"
 #include "../synthesis.hpp"
 #include "../utils/assert.hpp"

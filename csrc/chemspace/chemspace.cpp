@@ -5,10 +5,10 @@
 #include <memory>
 #include <omp.h>
 
-#include "synthesis.hpp"
-#include "utils/algorithm.hpp"
-#include "utils/assert.hpp"
-#include "utils/logging.hpp"
+#include "../synthesis.hpp"
+#include "../utils/algorithm.hpp"
+#include "../utils/assert.hpp"
+#include "../utils/logging.hpp"
 
 namespace prexsyn_engine {
 

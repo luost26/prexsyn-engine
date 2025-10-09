@@ -2,8 +2,8 @@
 
 #include <filesystem>
 
-#include "synthesis.hpp"
-#include "types.hpp"
+#include "../synthesis.hpp"
+#include "../types.hpp"
 
 namespace prexsyn_engine {
 typedef size_t ReactionIndex;

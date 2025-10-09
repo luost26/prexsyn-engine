@@ -56,15 +56,15 @@ endif()
 find_package(spdlog REQUIRED)
 
 set(LIB_SOURCES
+    csrc/chemspace/chemspace.cpp
+    csrc/chemspace/indexer.cpp
     csrc/container/building_block_list.cpp
     csrc/container/reaction_list.cpp
-    csrc/chemspace.cpp
     csrc/detokenizer.cpp
     csrc/featurizer/product_property.cpp
     csrc/featurizer/product_structure.cpp
     csrc/featurizer/synthesis.cpp
     csrc/fingerprints.cpp
-    csrc/indexer.cpp
     csrc/molops.cpp
     csrc/synthesis.cpp)
 set(LIB_LINK_LIBRARIES Boost::system Boost::serialization Boost::iostreams
@@ -86,10 +86,10 @@ function(add_pymod name)
 endfunction()
 
 add_pymod(building_block_list csrc/container/building_block_list_bind.cpp)
-add_pymod(chemspace)
+add_pymod(chemspace csrc/chemspace/chemspace_bind.cpp)
 add_pymod(detokenizer)
 add_pymod(fingerprints)
-add_pymod(indexer)
+add_pymod(indexer csrc/chemspace/indexer_bind.cpp)
 add_pymod(molops)
 add_pymod(pipeline csrc/pipeline/bind.cpp)
 add_pymod(reaction_list csrc/container/reaction_list_bind.cpp)

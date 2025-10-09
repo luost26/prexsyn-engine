@@ -6,7 +6,7 @@
 #include <thread>
 #include <vector>
 
-#include "../chemspace.hpp"
+#include "../chemspace/chemspace.hpp"
 #include "../featurizer/featurizer.hpp"
 #include "../utils/assert.hpp"
 #include "../utils/logging.hpp"
