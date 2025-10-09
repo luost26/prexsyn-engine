@@ -2921,7 +2921,7 @@ packages:
 - pypi: ./
   name: prexsyn-engine
   version: 0.1.0
-  sha256: fbfbbc68d1bcf40fabd85b4fd1519f8a8f522f09e168b4dc9416b770380e845b
+  sha256: a74add1bdaad46257b7806b64ac2228ebe8e7937bc245de86c4b720aa0aa3112
   requires_dist:
   - numpy>=2.3.0,<3
   - rdkit>=2025.3.6,<2026

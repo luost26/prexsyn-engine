@@ -60,14 +60,12 @@ set(LIB_SOURCES
     csrc/container/reaction_list.cpp
     csrc/chemspace.cpp
     csrc/detokenizer.cpp
-    csrc/featurizer/product_pharmacophore.cpp
     csrc/featurizer/product_property.cpp
     csrc/featurizer/product_structure.cpp
     csrc/featurizer/synthesis.cpp
     csrc/fingerprints.cpp
     csrc/indexer.cpp
     csrc/molops.cpp
-    csrc/pharmacophore.cpp
     csrc/synthesis.cpp)
 set(LIB_LINK_LIBRARIES Boost::system Boost::serialization Boost::iostreams
                        ${RDKit_LIBRARIES} spdlog::spdlog)
@@ -93,7 +91,6 @@ add_pymod(detokenizer)
 add_pymod(fingerprints)
 add_pymod(indexer)
 add_pymod(molops)
-add_pymod(pharmacophore)
 add_pymod(pipeline csrc/pipeline/bind.cpp)
 add_pymod(reaction_list csrc/container/reaction_list_bind.cpp)
 add_pymod(synthesis)

@@ -3,11 +3,8 @@ from collections.abc import Sequence
 from typing import Any, Self, TypeAlias
 
 import numpy as np
-from rdkit.Chem.rdMolChemicalFeatures import MolChemicalFeature
 
-from .pharmacophore import BondWeights, PharmacophoreGraph
 from .synthesis import Synthesis
-from .types import Mol
 
 FeatureDict: TypeAlias = dict[str, int | float | str | bool | np.ndarray[Any, Any]]
 
@@ -78,22 +75,3 @@ class PostfixNotationFeaturizer(Featurizer):
         option: PostfixNotationFeaturizerOption = PostfixNotationFeaturizerOption(),
     ) -> None: ...
     def __call__(self, synthesis: Synthesis, builder: FeatureBuilder) -> None: ...
-
-class ProductPharmacophoreFeaturizerOption:
-    name: str
-    feature_def: str
-    type_index_offset: int
-    random_num_nodes_max: int
-    random_num_nodes_min: int
-    random_num_edges_max: int
-    bond_weights: BondWeights
-    default_bond_weight: float
-
-    def __init__(self) -> None: ...
-
-class ProductPharmacophoreFeaturizer(Featurizer):
-    def __init__(self, option: ProductPharmacophoreFeaturizerOption = ...) -> None: ...
-    def __call__(self, obj: Synthesis | PharmacophoreGraph, builder: FeatureBuilder) -> None: ...
-    def get_features(self, mol: Mol) -> Sequence[MolChemicalFeature]: ...
-    def get_graph(self, mol: Mol, features: Sequence[MolChemicalFeature] | None = None) -> PharmacophoreGraph: ...
-    def get_graphs(self, mols: list[Mol]) -> list[PharmacophoreGraph]: ...

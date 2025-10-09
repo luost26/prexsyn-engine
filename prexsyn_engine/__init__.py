@@ -16,7 +16,6 @@ from . import reaction_list
 from . import synthesis
 from . import indexer
 from . import chemspace
-from . import pharmacophore
 from . import featurizer
 from . import detokenizer
 

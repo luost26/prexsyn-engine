@@ -9,7 +9,6 @@
 
 #include "pydict_builder.hpp"
 
-#include "product_pharmacophore_bind.hpp"
 #include "product_property_bind.hpp"
 #include "product_structure_bind.hpp"
 #include "synthesis_bind.hpp"
@@ -56,8 +55,4 @@ BOOST_PYTHON_MODULE(featurizer) {
     synthesis_bind();
     def_featurizer_set_add_method
         .template operator()<PostfixNotationFeaturizer>();
-
-    product_pharmacophore_bind();
-    def_featurizer_set_add_method
-        .template operator()<ProductPharmacophoreFeaturizer>();
 }
