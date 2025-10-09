@@ -40,7 +40,8 @@ build = "python -m build --wheel --no-isolation --outdir dist/"
 prexsyn-engine = { path = ".", editable = true }
 
 [feature.dev.tasks]
-dev-install = "rm prexsyn_engine/*.so && pip install -e ."
+dev-install = "pip install -e ."
+dev-clean = "rm -r prexsyn_engine/*.so"
 lint = "pixi run pre-commit run --all-files"
 
 [feature.test.tasks]
