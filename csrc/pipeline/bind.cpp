@@ -4,17 +4,11 @@
 #include <random>
 
 #include "../feature/pydict_builder.hpp"
-#include "pipeline.hpp"
 #include "pipeline_v2.hpp"
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
 using namespace prexsyn_engine;
-
-py::tuple data_pipeline_get(DataPipeline<PyDictBuilder> &pipeline) {
-    auto result = pipeline.get();
-    return py::make_tuple(std::get<0>(result), std::get<1>(result));
-}
 
 np::dtype get_numpy_dtype(DType::Type dtype) {
     switch (dtype) {
@@ -60,16 +54,6 @@ py::dict data_pipeline_v2_get(DataPipelineV2<capacity> &pipeline,
 
 BOOST_PYTHON_MODULE(pipeline) {
     np::initialize();
-
-    py::class_<DataPipeline<PyDictBuilder>, boost::noncopyable>(
-        "DataPipeline",
-        py::init<size_t, std::shared_ptr<ChemicalSpaceDefinition>,
-                 SynthesisGeneratorOption, std::shared_ptr<FeaturizerSet>>(
-            (py::arg("num_threads"), py::arg("csd"), py::arg("gen_option"),
-             py::arg("featurizer"))))
-        .def("start", &DataPipeline<PyDictBuilder>::start)
-        .def("get", &data_pipeline_get)
-        .def("stop", &DataPipeline<PyDictBuilder>::stop);
 
     py::class_<DataPipelineV2<8192>, boost::noncopyable>(
         "DataPipelineV2",
