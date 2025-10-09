@@ -23,7 +23,7 @@ void ProductStructureFeaturizer::operator()(const Synthesis &syn,
     std::mt19937 rng{std::random_device{}()};
     auto product = random_choice(syn.top(), rng);
     for (const auto &fp_type : option.fp_types) {
-        auto fp = fp_func<float>(fp_type)(product);
+        auto fp = get_fp_func<float>(fp_type)(product);
         std::string name = option.embedder_name_template;
         name.replace(name.find("{}"), 2, fp_type);
         dict.add(name + ".fingerprint", fp);
@@ -31,7 +31,7 @@ void ProductStructureFeaturizer::operator()(const Synthesis &syn,
 
     if (option.scaffold) {
         auto scaffold = murcko_scaffold(product);
-        auto fp = fp_func<float>(option.scaffold_fp_type)(
+        auto fp = get_fp_func<float>(option.scaffold_fp_type)(
             scaffold.has_value() ? scaffold
                                  : product); // Use product if no scaffold
         dict.add(option.scaffold_embedder_name + ".fingerprint", fp);
@@ -43,7 +43,7 @@ void ProductStructureFeaturizer::operator()(const Synthesis &syn,
                      std::mt19937{std::random_device{}()});
         std::vector<std::vector<float>> frag_fps;
         std::vector<bool> frag_exists;
-        auto fp_f = fp_func<float>(option.fragment_fp_type);
+        auto fp_f = get_fp_func<float>(option.fragment_fp_type);
         for (size_t i = 0; i < option.num_fragments; ++i) {
             if (i < fragments.size()) {
                 frag_fps.push_back(fp_f(fragments[i]));

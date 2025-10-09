@@ -29,7 +29,7 @@ np::ndarray fp_func_numpy_wrapper(const Mol_sptr &mol) {
 }
 
 np::ndarray fp_func_bind(const Mol_sptr &mol, const std::string &name) {
-    auto fp = fp_func<float>(name)(mol);
+    auto fp = get_fp_func<float>(name)(mol);
     np::ndarray result = np::empty(py::make_tuple((int)fp.size()),
                                    np::dtype::get_builtin<float>());
     std::copy(fp.begin(), fp.end(),
@@ -43,7 +43,7 @@ np::ndarray get_fingerprints(const py::list &mlist,
     if (n == 0) {
         throw std::invalid_argument("Input molecule list is empty.");
     }
-    auto fp0 = fp_func<float>(fp_type)(py::extract<Mol_sptr>(mlist[0]));
+    auto fp0 = get_fp_func<float>(fp_type)(py::extract<Mol_sptr>(mlist[0]));
     auto fp_dim = fp0.size();
     np::ndarray result = np::zeros(py::make_tuple(n, (int)fp_dim),
                                    np::dtype::get_builtin<float>());
@@ -61,7 +61,7 @@ np::ndarray get_fingerprints(const py::list &mlist,
         if (!mols[i]) {
             continue;
         }
-        auto fp = fp_func<float>(fp_type)(mols[i]);
+        auto fp = get_fp_func<float>(fp_type)(mols[i]);
         std::copy(fp.begin(), fp.end(), ptr);
     }
 

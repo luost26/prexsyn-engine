@@ -88,9 +88,7 @@ std::vector<T> fcfp4_fingerprint(const std::optional<Mol_sptr> &mol) {
 template std::vector<float>
 fcfp4_fingerprint<float>(const std::optional<Mol_sptr> &mol);
 
-template <typename T>
-std::function<std::vector<T>(const std::optional<Mol_sptr> &)>
-fp_func(const std::string &name) {
+template <typename T> FpFunc<T> get_fp_func(const std::string &name) {
     if (name == "ecfp4") {
         return ecfp4_fingerprint<T>;
     } else if (name == "rdkit") {
@@ -101,14 +99,13 @@ fp_func(const std::string &name) {
     throw std::runtime_error("Unknown fingerprint type: " + name);
 }
 
-template std::function<std::vector<float>(const std::optional<Mol_sptr> &)>
-fp_func<float>(const std::string &name);
+template FpFunc<float> get_fp_func<float>(const std::string &name);
 
 float tanimoto_similarity(const Mol_sptr &mol1, const Mol_sptr &mol2,
                           const std::string &fp_type) {
     Ensures(mol1 != nullptr && mol2 != nullptr);
-    auto fp1 = fp_func<float>(fp_type)(mol1);
-    auto fp2 = fp_func<float>(fp_type)(mol2);
+    auto fp1 = get_fp_func<float>(fp_type)(mol1);
+    auto fp2 = get_fp_func<float>(fp_type)(mol2);
     Ensures(fp1.size() == fp2.size());
 
     float intersection = 0;
