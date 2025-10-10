@@ -7,13 +7,13 @@
 #include <boost/python.hpp>
 #include <boost/python/numpy.hpp>
 
-#include "featurizer.hpp"
+#include "base.hpp"
 
 namespace py = boost::python;
 namespace np = boost::python::numpy;
 
 using namespace prexsyn_engine;
-BOOST_PYTHON_MODULE(featurizer) {
+BOOST_PYTHON_MODULE(base) {
     np::initialize();
 
     std::ignore =
@@ -25,12 +25,4 @@ BOOST_PYTHON_MODULE(featurizer) {
             "FeaturizerSet", py::init<>())
             .def("__call__", &FeaturizerSet::operator(),
                  (py::arg("synthesis"), py::arg("builder")));
-    py::register_ptr_to_python<std::shared_ptr<FeaturizerSet>>();
-    auto def_featurizer_set_add_method = [&]<typename F>() {
-        featurizer_set_class.def(
-            "add",
-            (FeaturizerSet & (FeaturizerSet::*)(std::shared_ptr<F>)) &
-                FeaturizerSet::add,
-            py::return_internal_reference<>(), (py::arg("featurizer")));
-    };
 }

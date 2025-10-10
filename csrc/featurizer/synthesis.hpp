@@ -2,7 +2,7 @@
 
 #include "../feature/dtype.hpp"
 #include "../synthesis.hpp"
-#include "featurizer.hpp"
+#include "base.hpp"
 
 namespace prexsyn_engine {
 struct PostfixNotationTokenDef {

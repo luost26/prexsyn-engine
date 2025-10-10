@@ -1,5 +1,3 @@
-#pragma once
-
 #include "synthesis.hpp"
 
 #include <boost/python.hpp>
@@ -7,7 +5,7 @@
 namespace py = boost::python;
 using namespace prexsyn_engine;
 
-BOOST_PYTHON_MODULE(featurizer__synthesis) {
+BOOST_PYTHON_MODULE(synthesis) {
     py::class_<PostfixNotationTokenDef>("PostfixNotationTokenDef")
         .def_readwrite("PAD", &PostfixNotationTokenDef::PAD)
         .def_readwrite("END", &PostfixNotationTokenDef::END)
@@ -26,4 +24,7 @@ BOOST_PYTHON_MODULE(featurizer__synthesis) {
         .def_readonly("token_def", &PostfixNotationFeaturizer::token_def)
         .def("__call__", &PostfixNotationFeaturizer::operator(),
              (py::arg("synthesis"), py::arg("builder")));
+
+    py::implicitly_convertible<std::shared_ptr<PostfixNotationFeaturizer>,
+                               std::shared_ptr<Featurizer>>();
 }

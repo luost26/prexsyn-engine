@@ -41,6 +41,15 @@ class CMakeBuild(build_ext):
             self.spawn(["cmake", "--build", "."] + build_args)
         os.chdir(str(cwd))
 
+        # Find all submodules. Move submodules into subpackage directory
+        # For example: a__b.cpython-313-x86_64-linux-gnu.so -> a/b.cpython-313-x86_64-linux-gnu.so
+        for file in extdir.glob("**/*.so"):
+            parts = file.name.split("__")
+            if len(parts) > 1:
+                subpackage_dir = extdir.joinpath(*parts[:-1])
+                subpackage_dir.mkdir(parents=True, exist_ok=True)
+                file.rename(subpackage_dir.joinpath(parts[-1]))
+
 
 setup(
     packages=find_packages(include=["prexsyn_engine.*"]),

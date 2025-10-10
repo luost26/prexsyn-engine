@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "../chemspace/chemspace.hpp"
-#include "../featurizer/featurizer.hpp"
+#include "../featurizer/base.hpp"
 #include "../utils/assert.hpp"
 #include "../utils/logging.hpp"
 #include "data_buffer.hpp"

@@ -6,7 +6,7 @@
 namespace py = boost::python;
 
 using namespace prexsyn_engine;
-BOOST_PYTHON_MODULE(featurizer__fingerprint) {
+BOOST_PYTHON_MODULE(fingerprint) {
     py::class_<FingerprintFeaturizer, std::shared_ptr<FingerprintFeaturizer>,
                py::bases<Featurizer>>(
         "FingerprintFeaturizer", py::init<std::string, std::string>(
@@ -14,4 +14,7 @@ BOOST_PYTHON_MODULE(featurizer__fingerprint) {
         .def("__call__", &FingerprintFeaturizer::operator(),
              (py::arg("synthesis"), py::arg("builder")))
         .def_readonly("name", &FingerprintFeaturizer::name);
+
+    py::implicitly_convertible<std::shared_ptr<FingerprintFeaturizer>,
+                               std::shared_ptr<Featurizer>>();
 }

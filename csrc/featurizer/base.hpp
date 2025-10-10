@@ -19,6 +19,7 @@ class FeaturizerSet : public Featurizer {
             std::dynamic_pointer_cast<Featurizer>(featurizer));
         return *this;
     }
+    template <> FeaturizerSet &add(std::shared_ptr<Featurizer> featurizer);
     void operator()(const Synthesis &synthesis,
                     FeatureBuilder &builder) override {
         for (auto &featurizer : featurizers_) {

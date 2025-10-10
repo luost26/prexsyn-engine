@@ -10,7 +10,7 @@ class Detokenizer:
         self,
         building_blocks: building_block_list.BuildingBlockList,
         reactions: reaction_list.ReactionList,
-        token_def: featurizer.PostfixNotationTokenDef = ...,
+        token_def: featurizer.synthesis.PostfixNotationTokenDef = ...,
     ) -> None: ...
     def __call__(
         self,

@@ -5,7 +5,7 @@
 #include <GraphMol/Descriptors/Property.h>
 
 #include "../feature/builder.hpp"
-#include "featurizer.hpp"
+#include "base.hpp"
 
 namespace prexsyn_engine {
 static const std::vector<std::string> SUPPORTED_RDKIT_DESCRIPTORS = {

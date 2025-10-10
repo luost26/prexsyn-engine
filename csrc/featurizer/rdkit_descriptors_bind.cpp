@@ -1,5 +1,3 @@
-#pragma once
-
 #include "rdkit_descriptors.hpp"
 
 #include <boost/python.hpp>
@@ -7,7 +5,7 @@
 namespace py = boost::python;
 using namespace prexsyn_engine;
 
-BOOST_PYTHON_MODULE(featurizer__rdkit_descriptors) {
+BOOST_PYTHON_MODULE(rdkit_descriptors) {
     py::class_<RDKitDescriptorsFeaturizer,
                std::shared_ptr<RDKitDescriptorsFeaturizer>,
                py::bases<Featurizer>>(
@@ -25,4 +23,7 @@ BOOST_PYTHON_MODULE(featurizer__rdkit_descriptors) {
              &RDKitDescriptorsFeaturizer::max_property_index)
         .def("__call__", &RDKitDescriptorsFeaturizer::operator(),
              (py::arg("synthesis"), py::arg("builder")));
+
+    py::implicitly_convertible<std::shared_ptr<RDKitDescriptorsFeaturizer>,
+                               std::shared_ptr<Featurizer>>();
 }

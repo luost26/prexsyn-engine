@@ -96,7 +96,7 @@ add_pymod(reaction_list csrc/container/reaction_list_bind.cpp)
 add_pymod(synthesis)
 add_pymod(types)
 add_pymod(feature csrc/feature/bind.cpp)
-add_pymod(featurizer csrc/featurizer/bind.cpp)
+add_pymod(featurizer__base csrc/featurizer/base_bind.cpp)
 add_pymod(featurizer__fingerprint csrc/featurizer/fingerprint_bind.cpp)
 add_pymod(featurizer__rdkit_descriptors
           csrc/featurizer/rdkit_descriptors_bind.cpp)

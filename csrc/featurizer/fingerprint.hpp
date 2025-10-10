@@ -2,7 +2,7 @@
 
 #include "../feature/builder.hpp"
 #include "../fingerprints.hpp"
-#include "featurizer.hpp"
+#include "base.hpp"
 
 namespace prexsyn_engine {
 
