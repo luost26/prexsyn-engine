@@ -258,3 +258,4 @@ __marimo__/
 *.dwo
 
 /.vscode
+/data
