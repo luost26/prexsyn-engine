@@ -12,7 +12,8 @@ BOOST_PYTHON_MODULE(feature) {
 
     py::class_<PyDictBuilder, std::shared_ptr<PyDictBuilder>,
                py::bases<FeatureBuilder>>("PyDictBuilder", py::init<>())
-        .def("get", &PyDictBuilder::get)
-        .def("erase_type", &PyDictBuilder::erase_type,
-             py::return_internal_reference<>());
+        .def("get", &PyDictBuilder::get);
+
+    py::implicitly_convertible<std::shared_ptr<PyDictBuilder>,
+                               std::shared_ptr<FeatureBuilder>>();
 }

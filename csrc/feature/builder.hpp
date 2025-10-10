@@ -18,7 +18,6 @@ class FeatureBuilder {
     DEFINE_ADD_METHODS(Float)
     DEFINE_ADD_METHODS(Bool)
 #undef DEFINE_ADD_METHODS
-    FeatureBuilder &erase_type() { return *this; }
 };
 
 } // namespace prexsyn_engine
