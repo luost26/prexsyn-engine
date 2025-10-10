@@ -61,6 +61,7 @@ set(LIB_SOURCES
     csrc/container/building_block_list.cpp
     csrc/container/reaction_list.cpp
     csrc/detokenizer.cpp
+    csrc/featurizer/base.cpp
     csrc/featurizer/fingerprint.cpp
     csrc/featurizer/rdkit_descriptors.cpp
     csrc/featurizer/synthesis.cpp

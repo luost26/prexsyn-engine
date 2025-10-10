@@ -14,17 +14,8 @@ class FeaturizerSet : public Featurizer {
     std::vector<std::shared_ptr<Featurizer>> featurizers_;
 
   public:
-    template <typename F> FeaturizerSet &add(std::shared_ptr<F> featurizer) {
-        featurizers_.push_back(
-            std::dynamic_pointer_cast<Featurizer>(featurizer));
-        return *this;
-    }
-    template <> FeaturizerSet &add(std::shared_ptr<Featurizer> featurizer);
+    FeaturizerSet &add(std::shared_ptr<Featurizer> featurizer);
     void operator()(const Synthesis &synthesis,
-                    FeatureBuilder &builder) override {
-        for (auto &featurizer : featurizers_) {
-            (*featurizer)(synthesis, builder);
-        }
-    }
+                    FeatureBuilder &builder) override;
 };
 } // namespace prexsyn_engine

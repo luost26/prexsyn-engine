@@ -24,5 +24,7 @@ BOOST_PYTHON_MODULE(base) {
         py::class_<FeaturizerSet, std::shared_ptr<FeaturizerSet>>(
             "FeaturizerSet", py::init<>())
             .def("__call__", &FeaturizerSet::operator(),
-                 (py::arg("synthesis"), py::arg("builder")));
+                 (py::arg("synthesis"), py::arg("builder")))
+            .def("add", &FeaturizerSet::add, py::return_internal_reference<>(),
+                 (py::arg("featurizer")));
 }
