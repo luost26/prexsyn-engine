@@ -36,12 +36,9 @@ gtest = ">=1.14.0,<2"
 [feature.build.tasks]
 build = "python -m build --wheel --no-isolation --outdir dist/"
 
-[feature.dev.pypi-dependencies]
-prexsyn-engine = { path = ".", editable = true }
-
 [feature.dev.tasks]
-dev-install = "pip install -e ."
-dev-clean = "rm -r prexsyn_engine/*.so"
+dev-clean = "find prexsyn_engine -name \\*.so -type f -delete || true"
+dev-install = { cmd = "pip install -e .", depends-on = ["dev-clean"] }
 lint = "pixi run pre-commit run --all-files"
 
 [feature.test.tasks]
