@@ -1,0 +1,13 @@
+import abc
+from typing import Self
+
+from ..feature import FeatureBuilder
+from ..synthesis import Synthesis
+
+class Featurizer(abc.ABC):
+    def __call__(self, synthesis: Synthesis, builder: FeatureBuilder) -> None: ...
+
+class FeaturizerSet(Featurizer):
+    def __init__(self) -> None: ...
+    def __call__(self, synthesis: Synthesis, builder: FeatureBuilder) -> None: ...
+    def add(self, featurizer: Featurizer) -> Self: ...
