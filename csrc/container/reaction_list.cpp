@@ -29,9 +29,7 @@ std::optional<ReactionIndex> ReactionList::add(const Reaction_sptr &reaction) {
 }
 
 ReactionList::ReactionList(const ReactionVector &reactions) {
-    int original_index = 0;
     for (const auto &reaction : reactions) {
-        reaction->setProp<int>("original_index", original_index);
         add(reaction);
     }
 }
@@ -45,11 +43,16 @@ ReactionList *ReactionList::from_txt(const std::filesystem::path &path) {
     }
     std::string line;
     std::vector<Reaction_sptr> reactions;
+    int line_no = -1;
     while (std::getline(ifs, line)) {
+        line_no++;
         if (line.empty()) {
             continue;
         }
         reactions.emplace_back(RDKit::RxnSmartsToChemicalReaction(line));
+        if (reactions.back() != nullptr) {
+            reactions.back()->setProp<int>("original_index", line_no);
+        }
     }
     ifs.close();
     logger()->info("ReactionList: Loaded {} reactions", reactions.size());
