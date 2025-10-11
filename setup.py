@@ -52,7 +52,7 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    packages=find_packages(include=["prexsyn_engine.*"]),
+    packages=find_packages(include=["prexsyn_engine", "prexsyn_engine.*"]),
     ext_modules=[CMakeExtension("prexsyn_engine.*")],
     cmdclass={"build_ext": CMakeBuild},
 )
