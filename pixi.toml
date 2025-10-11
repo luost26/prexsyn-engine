@@ -8,12 +8,14 @@ preview = ["pixi-build"]
 python = ">=3.11,<4"
 pip = "*"
 numpy = ">=2.3.0,<3"
-rdkit = ">=2025.3.6,<2026"
+rdkit = ">=2025.3.6"
 
 [feature.build.dependencies]
 setuptools = "*"
 python-build = "*"
-librdkit-dev = ">=2025.3.6,<2026"
+auditwheel = "*"
+patchelf = "*"
+librdkit-dev = ">=2025.3.6"
 libboost-python-devel = ">=1.86.0,<2"
 cmake = ">=4.1.1,<5"
 ninja = ">=1.13.1,<2"
@@ -35,7 +37,8 @@ pytest = "*"
 gtest = ">=1.14.0,<2"
 
 [feature.build.tasks]
-build = "python -m build --wheel --no-isolation --outdir dist/"
+build-clean = "rm -r build/lib.* || true"
+build = "python -m build --wheel --no-isolation --outdir dist/ && auditwheel repair dist/*.whl"
 
 [feature.dev.tasks]
 dev-clean = "find prexsyn_engine -name '*.so' -type f -delete || true"
