@@ -5,7 +5,7 @@ from collections.abc import Iterable
 import pytest
 import rdkit.Chem
 
-from . import chemspace
+from prexsyn_engine import chemspace
 
 
 @pytest.fixture  # type: ignore[misc]
@@ -18,8 +18,8 @@ def test_create_chemspace(temp_dir: pathlib.Path) -> None:
     # Test the creation of a chemspace
     csd = (
         chemspace.ChemicalSpaceDefinitionBuilder()
-        .building_blocks_from_sdf("data/building_blocks/mcule_subset.sdf")
-        .reactions_from_txt("data/reactions/hartenfeller_button.txt")
+        .building_blocks_from_sdf("resources/test/chemspace_small_1/bb.sdf")
+        .reactions_from_txt("resources/test/chemspace_small_1/rxn.txt")
         .secondary_building_blocks_from_single_reaction()
         .build_primary_index()
         .build_secondary_index()
@@ -33,8 +33,8 @@ def test_create_chemspace(temp_dir: pathlib.Path) -> None:
 def test_generate_synthesis() -> None:
     csd = (
         chemspace.ChemicalSpaceDefinitionBuilder()
-        .building_blocks_from_sdf("data/building_blocks/mcule_subset.sdf")
-        .reactions_from_txt("data/reactions/hartenfeller_button.txt")
+        .building_blocks_from_sdf("resources/test/chemspace_small_1/bb.sdf")
+        .reactions_from_txt("resources/test/chemspace_small_1/rxn.txt")
         .no_secondary_building_blocks()
         .build_primary_index()
         .build_secondary_index()

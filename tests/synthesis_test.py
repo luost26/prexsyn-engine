@@ -4,7 +4,7 @@ import pytest
 import rdkit.Chem
 import rdkit.Chem.rdChemReactions
 
-from . import synthesis
+from prexsyn_engine import synthesis
 
 
 @pytest.fixture(scope="function")  # type: ignore[misc]

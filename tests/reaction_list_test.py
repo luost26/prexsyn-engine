@@ -5,7 +5,7 @@ from collections.abc import Iterable
 import pytest
 import rdkit.Chem.rdChemReactions
 
-from . import reaction_list
+from prexsyn_engine import reaction_list
 
 
 @pytest.fixture(scope="module")  # type: ignore[misc]
@@ -15,7 +15,7 @@ def temp_dir() -> Iterable[pathlib.Path]:
 
 
 def test_load_and_save(temp_dir: pathlib.Path) -> None:
-    rxn_list = reaction_list.ReactionList.from_txt("data/reactions/hartenfeller_button.txt")
+    rxn_list = reaction_list.ReactionList.from_txt("resources/test/chemspace_small_1/rxn.txt")
     rxn_list.save(str(temp_dir / "test_reactions.bin"))
 
     rxn_list2 = reaction_list.ReactionList.load(str(temp_dir / "test_reactions.bin"))
