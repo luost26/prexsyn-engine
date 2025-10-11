@@ -64,6 +64,8 @@ set(LIB_SOURCES
     csrc/featurizer/base.cpp
     csrc/featurizer/fingerprint.cpp
     csrc/featurizer/rdkit_descriptors.cpp
+    csrc/featurizer/substructures.cpp
+    csrc/featurizer/scaffold.cpp
     csrc/featurizer/synthesis.cpp
     csrc/fingerprints.cpp
     csrc/molops.cpp
@@ -101,6 +103,8 @@ add_pymod(featurizer__base csrc/featurizer/base_bind.cpp)
 add_pymod(featurizer__fingerprint csrc/featurizer/fingerprint_bind.cpp)
 add_pymod(featurizer__rdkit_descriptors
           csrc/featurizer/rdkit_descriptors_bind.cpp)
+add_pymod(featurizer__substructures csrc/featurizer/substructures_bind.cpp)
+add_pymod(featurizer__scaffold csrc/featurizer/scaffold_bind.cpp)
 add_pymod(featurizer__synthesis csrc/featurizer/synthesis_bind.cpp)
 
 if(BUILD_TESTING)
