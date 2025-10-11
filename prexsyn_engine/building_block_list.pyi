@@ -12,6 +12,8 @@ class BuildingBlockList:
     @staticmethod
     def load(path: str) -> "BuildingBlockList": ...
     @staticmethod
+    def peek_size(path: str) -> int: ...
+    @staticmethod
     def from_sdf(
         path: str,
         option: BuildingBlockPreprocessingOption = BuildingBlockPreprocessingOption(),

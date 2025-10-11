@@ -176,6 +176,22 @@ BuildingBlockList *BuildingBlockList::load(const std::filesystem::path &path) {
     return object;
 }
 
+size_t BuildingBlockList::peek_size(const std::filesystem::path &path) {
+    std::ifstream ifs(path, std::ios::binary);
+    if (!ifs) {
+        throw std::runtime_error("Failed to open file for reading");
+    }
+    boost::archive::binary_iarchive ia(ifs);
+    BuildingBlockPreprocessingOption _option;
+    ia >> _option;
+
+    size_t num_building_blocks;
+    ia >> num_building_blocks;
+    ifs.close();
+
+    return num_building_blocks;
+}
+
 Mol_sptr BuildingBlockList::get(size_t index) const {
     if (index >= building_blocks.size()) {
         throw std::out_of_range(

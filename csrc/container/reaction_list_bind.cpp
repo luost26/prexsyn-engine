@@ -13,6 +13,8 @@ BOOST_PYTHON_MODULE(reaction_list) {
         .def("load", &ReactionList::load, (py::arg("path")),
              py::return_value_policy<py::manage_new_object>())
         .staticmethod("load")
+        .def("peek_size", &ReactionList::peek_size, (py::arg("path")))
+        .staticmethod("peek_size")
         .def("from_txt", &ReactionList::from_txt, (py::arg("path")),
              py::return_value_policy<py::manage_new_object>())
         .staticmethod("from_txt");

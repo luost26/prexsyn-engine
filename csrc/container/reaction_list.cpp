@@ -1,5 +1,6 @@
 #include "reaction_list.hpp"
 
+#include <cstddef>
 #include <memory>
 
 #include <GraphMol/ChemReactions/ReactionParser.h>
@@ -108,6 +109,18 @@ ReactionList *ReactionList::load(const std::filesystem::path &path) {
     logger()->info("ReactionList: Loaded {} reactions",
                    object->reactions.size());
     return object;
+}
+
+size_t ReactionList::peek_size(const std::filesystem::path &path) {
+    std::ifstream ifs(path, std::ios::binary);
+    if (!ifs) {
+        throw std::runtime_error("Failed to open file for reading");
+    }
+    boost::archive::binary_iarchive ia(ifs);
+    size_t num_reactions;
+    ia >> num_reactions;
+    ifs.close();
+    return num_reactions;
 }
 
 Reaction_sptr ReactionList::get(size_t index) const {

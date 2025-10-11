@@ -21,6 +21,8 @@ BOOST_PYTHON_MODULE(building_block_list) {
         .def("load", &BuildingBlockList::load, (py::arg("path")),
              py::return_value_policy<py::manage_new_object>())
         .staticmethod("load")
+        .def("peek_size", &BuildingBlockList::peek_size, (py::arg("path")))
+        .staticmethod("peek_size")
         .def("from_sdf", &BuildingBlockList::from_sdf,
              (py::arg("path"),
               py::arg("option") = BuildingBlockPreprocessingOption()),

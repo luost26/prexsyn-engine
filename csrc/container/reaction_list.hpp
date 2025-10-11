@@ -20,6 +20,7 @@ class ReactionList {
     const ReactionVector &get_reactions() const;
     void save(const std::filesystem::path &path) const;
     static ReactionList *load(const std::filesystem::path &path);
+    static size_t peek_size(const std::filesystem::path &path);
     Reaction_sptr get(size_t index) const;
     ReactionIndex size() const;
 };

@@ -36,6 +36,7 @@ class BuildingBlockList {
     const MolVector &get_building_blocks() const;
     void save(const std::filesystem::path &) const;
     static BuildingBlockList *load(const std::filesystem::path &);
+    static size_t peek_size(const std::filesystem::path &);
     Mol_sptr get(size_t index) const;
     BuildingBlockIndex size() const;
 };
