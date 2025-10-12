@@ -29,11 +29,11 @@ requirements:
   - libboost-python-devel >=${{ boost_min_version }}
   - llvm-openmp ==${{ llvm_version }}
   - eigen
-  - spdlog
+  - spdlog >=1.15.3,<2
 
   run:
   - python
-  - spdlog
+  - spdlog >=1.15.3,<2
   - numpy >=2.0.0,<3
   - rdkit >=${{ rdkit_min_version }}
   - libboost >=${{ boost_min_version }}
