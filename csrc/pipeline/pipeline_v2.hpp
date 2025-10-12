@@ -53,6 +53,7 @@ template <size_t capacity> class DataPipelineV2 {
     }
 
     void start() {
+        logger()->info("Starting {} threads", num_requested_threads);
         for (size_t i = 0; i < num_requested_threads; ++i) {
             thread_pool.emplace_back(&DataPipelineV2<capacity>::worker_fn, this,
                                      i);
