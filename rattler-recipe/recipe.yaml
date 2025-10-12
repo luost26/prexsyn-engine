@@ -33,6 +33,8 @@ requirements:
 
   run:
   - python
+  - spdlog
+  - numpy >=2.0.0,<3
   - rdkit >=${{ rdkit_min_version }}
   - libboost >=${{ boost_min_version }}
   - libboost-python >=${{ boost_min_version }}

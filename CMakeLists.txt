@@ -71,7 +71,7 @@ set(LIB_SOURCES
     csrc/molops.cpp
     csrc/synthesis.cpp)
 set(LIB_LINK_LIBRARIES Boost::system Boost::serialization Boost::iostreams
-                       ${RDKit_LIBRARIES} spdlog::spdlog_header_only)
+                       ${RDKit_LIBRARIES} spdlog::spdlog)
 add_library(libprexsyn OBJECT ${LIB_SOURCES})
 set_target_properties(libprexsyn PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 target_link_libraries(libprexsyn PRIVATE ${LIB_LINK_LIBRARIES})
