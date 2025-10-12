@@ -7,8 +7,16 @@ package:
   name: prexsyn-engine
   version: 0.1.0
 
+build:
+  number: 0
+  script: |
+    mkdir builddir
+    $PYTHON -m build -w -n -x -Cbuilddir=builddir
+    $PYTHON -m pip install dist/*.whl
+
 source:
   path: ../
+  use_gitignore: true
 
 requirements:
   build:

@@ -2,19 +2,25 @@
 name = "prexsyn-engine"
 channels = ["conda-forge"]
 platforms = ["linux-64"]
+preview = ["pixi-build"]
+
+[package]
+name = "prexsyn-engine"
+version = "0.1.0"
+
+[package.build]
+backend = { name = "pixi-build-rattler-build", version = "0.3.*" }
 
 [dependencies]
 python = ">=3.11,<3.14"
+
+[feature.dev.dependencies]
 pip = "*"
+setuptools = "*"
+pre-commit = "*"
+pytest = "*"
 numpy = ">=2.0.0,<3"
 rdkit = ">=2025.3.6"
-libboost = ">=1.86.0,<2"
-libboost-python = ">=1.86.0,<2"
-llvm-openmp = "==21.1.0"
-
-[feature.build.dependencies]
-setuptools = "*"
-python-build = "*"
 librdkit-dev = ">=2025.3.6"
 libboost-python-devel = ">=1.86.0,<2"
 cmake = ">=4.1.1,<5"
@@ -25,14 +31,10 @@ llvm-openmp = "==21.1.0"
 eigen = ">=3.4.0,<4"
 libboost-devel = ">=1.86.0,<2"
 spdlog = ">=1.15.3,<2"
-
-[feature.dev.dependencies]
 clang-tools = "==21.1.0"
 llvm-tools = "==21.1.0"
 compiler-rt = "==21.1.0"
 gtest = ">=1.14.0,<2"
-pre-commit = "*"
-pytest = "*"
 
 [feature.dev.tasks]
 dev-clean = "find prexsyn_engine -name '*.so' -type f -delete || true"
@@ -43,5 +45,9 @@ configure-test = "cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G Ninja -S 
 build-test = { cmd = "ninja unittest -C build", depends-on = ["configure-test"] }
 test = { cmd = "ctest --test-dir build --output-on-failure", depends-on = ["build-test"] }
 
+[feature.prod.dependencies]
+prexsyn-engine = { path = "./rattler-recipe" }
+
 [environments]
-default = ["build", "dev"]
+default = ["dev"]
+prod = ["prod"]
