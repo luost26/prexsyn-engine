@@ -9,7 +9,7 @@ name = "prexsyn-engine"
 version = "0.1.0"
 
 [tasks]
-pre-build = "python rattler-recipe/increment_build.py && git add rattler-recipe/recipe.yaml && git commit -m 'Increment build number'"
+pre-build = "python rattler-recipe/increment_build.py && git add rattler-recipe/recipe.yaml pixi.lock && git commit -m 'Increment build number'"
 
 [package.build]
 backend = { name = "pixi-build-rattler-build", version = "0.3.*" }
