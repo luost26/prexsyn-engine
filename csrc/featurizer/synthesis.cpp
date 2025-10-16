@@ -9,6 +9,10 @@
 
 namespace prexsyn_engine {
 
+PostfixNotationTokenDef::PostfixNotationTokenDef(int pad, int end, int start,
+                                                 int bb, int rxn)
+    : PAD(pad), END(end), START(start), BB(bb), RXN(rxn) {}
+
 PostfixNotationFeaturizer::PostfixNotationFeaturizer(
     unsigned int max_length, const PostfixNotationTokenDef &token_def)
     : max_length(max_length), token_def(token_def) {}

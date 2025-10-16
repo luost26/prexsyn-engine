@@ -6,12 +6,17 @@ namespace py = boost::python;
 using namespace prexsyn_engine;
 
 BOOST_PYTHON_MODULE(synthesis) {
-    py::class_<PostfixNotationTokenDef>("PostfixNotationTokenDef")
-        .def_readwrite("PAD", &PostfixNotationTokenDef::PAD)
-        .def_readwrite("END", &PostfixNotationTokenDef::END)
-        .def_readwrite("START", &PostfixNotationTokenDef::START)
-        .def_readwrite("BB", &PostfixNotationTokenDef::BB)
-        .def_readwrite("RXN", &PostfixNotationTokenDef::RXN);
+    py::class_<PostfixNotationTokenDef>(
+        "PostfixNotationTokenDef",
+        py::init<int, int, int, int, int>(
+            (py::arg("pad") = DEFAULT_PAD, py::arg("end") = DEFAULT_END,
+             py::arg("start") = DEFAULT_START, py::arg("bb") = DEFAULT_BB,
+             py::arg("rxn") = DEFAULT_RXN)))
+        .def_readonly("PAD", &PostfixNotationTokenDef::PAD)
+        .def_readonly("END", &PostfixNotationTokenDef::END)
+        .def_readonly("START", &PostfixNotationTokenDef::START)
+        .def_readonly("BB", &PostfixNotationTokenDef::BB)
+        .def_readonly("RXN", &PostfixNotationTokenDef::RXN);
 
     py::class_<PostfixNotationFeaturizer,
                std::shared_ptr<PostfixNotationFeaturizer>,

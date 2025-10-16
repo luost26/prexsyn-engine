@@ -7,5 +7,7 @@ class PostfixNotationTokenDef:
     BB: int
     RXN: int
 
+    def __init__(self, pad: int = ..., end: int = ..., start: int = ..., bb: int = ..., rxn: int = ...) -> None: ...
+
 class PostfixNotationFeaturizer(Featurizer):
     def __init__(self, max_length: int = 16, token_def: PostfixNotationTokenDef = ...) -> None: ...

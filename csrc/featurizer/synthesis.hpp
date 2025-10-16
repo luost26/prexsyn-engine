@@ -5,12 +5,22 @@
 #include "base.hpp"
 
 namespace prexsyn_engine {
+
+const int DEFAULT_PAD = 0;
+const int DEFAULT_END = 1;
+const int DEFAULT_START = 2;
+const int DEFAULT_BB = 3;
+const int DEFAULT_RXN = 4;
+
 struct PostfixNotationTokenDef {
-    int PAD = 0;
-    int END = 1;
-    int START = 2;
-    int BB = 3;
-    int RXN = 4;
+    int PAD;
+    int END;
+    int START;
+    int BB;
+    int RXN;
+    PostfixNotationTokenDef(int pad = DEFAULT_PAD, int end = DEFAULT_END,
+                            int start = DEFAULT_START, int bb = DEFAULT_BB,
+                            int rxn = DEFAULT_RXN);
 };
 
 using TypeToken = Long;
