@@ -16,7 +16,9 @@ BOOST_PYTHON_MODULE(synthesis) {
         .def_readonly("END", &PostfixNotationTokenDef::END)
         .def_readonly("START", &PostfixNotationTokenDef::START)
         .def_readonly("BB", &PostfixNotationTokenDef::BB)
-        .def_readonly("RXN", &PostfixNotationTokenDef::RXN);
+        .def_readonly("RXN", &PostfixNotationTokenDef::RXN)
+        .def_readonly("num_token_types",
+                      &PostfixNotationTokenDef::num_token_types);
 
     py::class_<PostfixNotationFeaturizer,
                std::shared_ptr<PostfixNotationFeaturizer>,

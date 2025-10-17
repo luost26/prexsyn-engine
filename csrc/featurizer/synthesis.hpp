@@ -18,6 +18,7 @@ struct PostfixNotationTokenDef {
     int START;
     int BB;
     int RXN;
+    const unsigned int num_token_types = 5;
     PostfixNotationTokenDef(int pad = DEFAULT_PAD, int end = DEFAULT_END,
                             int start = DEFAULT_START, int bb = DEFAULT_BB,
                             int rxn = DEFAULT_RXN);

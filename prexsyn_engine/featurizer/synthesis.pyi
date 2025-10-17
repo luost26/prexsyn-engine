@@ -6,6 +6,7 @@ class PostfixNotationTokenDef:
     START: int
     BB: int
     RXN: int
+    num_token_types: int
 
     def __init__(self, pad: int = ..., end: int = ..., start: int = ..., bb: int = ..., rxn: int = ...) -> None: ...
 
