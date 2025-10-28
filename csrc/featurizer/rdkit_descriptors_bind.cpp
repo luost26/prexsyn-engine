@@ -19,8 +19,8 @@ BOOST_PYTHON_MODULE(rdkit_descriptors) {
                       &RDKitDescriptorsFeaturizer::num_evaluated_descriptors)
         .def_readonly("descriptor_names",
                       &RDKitDescriptorsFeaturizer::descriptor_names)
-        .def("max_property_index",
-             &RDKitDescriptorsFeaturizer::max_property_index)
+        .def("max_descriptor_index",
+             &RDKitDescriptorsFeaturizer::max_descriptor_index)
         .def("__call__", &RDKitDescriptorsFeaturizer::operator(),
              (py::arg("synthesis"), py::arg("builder")));
 

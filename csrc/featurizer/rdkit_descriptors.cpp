@@ -19,7 +19,7 @@ RDKitDescriptorsFeaturizer::RDKitDescriptorsFeaturizer(
     }
 }
 
-size_t RDKitDescriptorsFeaturizer::max_property_index() const {
+size_t RDKitDescriptorsFeaturizer::max_descriptor_index() const {
     return 1 + SUPPORTED_RDKIT_DESCRIPTORS.size();
 }
 

@@ -68,7 +68,7 @@ class RDKitDescriptorsFeaturizer : public Featurizer {
         const std::string &name, unsigned int num_evaluated_descriptors = 4,
         const std::vector<std::string> &descriptor_names =
             SUPPORTED_RDKIT_DESCRIPTORS);
-    size_t max_property_index() const;
+    size_t max_descriptor_index() const;
     void operator()(const Synthesis &syn, FeatureBuilder &dict) override;
 };
 } // namespace prexsyn_engine
