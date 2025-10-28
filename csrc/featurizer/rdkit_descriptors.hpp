@@ -58,17 +58,19 @@ static const std::vector<std::string> SUPPORTED_RDKIT_DESCRIPTORS = {
 class RDKitDescriptorsFeaturizer : public Featurizer {
     RDKit::Descriptors::Properties rdkit_properties_object;
     std::map<std::string, size_t> descriptor_name_to_index;
+    std::vector<std::string> descriptor_names;
 
   public:
     std::string name;
     unsigned int num_evaluated_descriptors;
-    std::vector<std::string> descriptor_names;
 
     RDKitDescriptorsFeaturizer(
         const std::string &name, unsigned int num_evaluated_descriptors = 4,
         const std::vector<std::string> &descriptor_names =
             SUPPORTED_RDKIT_DESCRIPTORS);
     size_t max_descriptor_index() const;
+    size_t get_descriptor_index(const std::string &name) const;
+    std::vector<std::string> get_descriptor_names() const;
     void operator()(const Synthesis &syn, FeatureBuilder &dict) override;
 };
 } // namespace prexsyn_engine

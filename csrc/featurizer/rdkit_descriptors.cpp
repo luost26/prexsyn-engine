@@ -6,8 +6,8 @@ namespace prexsyn_engine {
 RDKitDescriptorsFeaturizer::RDKitDescriptorsFeaturizer(
     const std::string &name, unsigned int num_evaluated_descriptors,
     const std::vector<std::string> &descriptor_names)
-    : name(name), num_evaluated_descriptors(num_evaluated_descriptors),
-      descriptor_names(descriptor_names) {
+    : descriptor_names(descriptor_names), name(name),
+      num_evaluated_descriptors(num_evaluated_descriptors) {
     for (size_t i = 1; i <= SUPPORTED_RDKIT_DESCRIPTORS.size(); i++) {
         auto name = SUPPORTED_RDKIT_DESCRIPTORS[i - 1];
         descriptor_name_to_index[name] = i;
@@ -21,6 +21,24 @@ RDKitDescriptorsFeaturizer::RDKitDescriptorsFeaturizer(
 
 size_t RDKitDescriptorsFeaturizer::max_descriptor_index() const {
     return 1 + SUPPORTED_RDKIT_DESCRIPTORS.size();
+}
+
+size_t RDKitDescriptorsFeaturizer::get_descriptor_index(
+    const std::string &name) const {
+    auto it = descriptor_name_to_index.find(name);
+    if (it == descriptor_name_to_index.end()) {
+        throw std::runtime_error("Descriptor name not found: " + name);
+    }
+    return it->second;
+}
+
+std::vector<std::string>
+RDKitDescriptorsFeaturizer::get_descriptor_names() const {
+    std::vector<std::string> names;
+    for (const auto &pair : descriptor_name_to_index) {
+        names.push_back(pair.first);
+    }
+    return names;
 }
 
 static float calc_property(const std::string &name, const RDKit::ROMol &mol) {
