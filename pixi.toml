@@ -38,6 +38,7 @@ clang-tools = "==21.1.0"
 llvm-tools = "==21.1.0"
 compiler-rt = "==21.1.0"
 gtest = ">=1.14.0,<2"
+anaconda-client = "*"
 
 [feature.dev.tasks]
 dev-clean = "find prexsyn_engine -name '*.so' -type f -delete || true"
