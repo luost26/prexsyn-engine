@@ -22,6 +22,8 @@ using FpFunc = std::function<std::vector<T>(const std::optional<Mol_sptr> &)>;
 
 template <typename T> FpFunc<T> get_fp_func(const std::string &name);
 
+size_t get_fp_dim(const std::string &fp_type);
+
 float tanimoto_similarity(const Mol_sptr &mol1, const Mol_sptr &mol2,
                           const std::string &fp_type);
 

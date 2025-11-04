@@ -101,6 +101,17 @@ template <typename T> FpFunc<T> get_fp_func(const std::string &name) {
 
 template FpFunc<float> get_fp_func<float>(const std::string &name);
 
+size_t get_fp_dim(const std::string &fp_type) {
+    if (fp_type == "ecfp4") {
+        return 2048;
+    } else if (fp_type == "rdkit") {
+        return 2048;
+    } else if (fp_type == "fcfp4") {
+        return 2048;
+    }
+    throw std::runtime_error("Unknown fingerprint type: " + fp_type);
+}
+
 float tanimoto_similarity(const Mol_sptr &mol1, const Mol_sptr &mol2,
                           const std::string &fp_type) {
     Ensures(mol1 != nullptr && mol2 != nullptr);

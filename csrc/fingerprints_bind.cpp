@@ -166,6 +166,7 @@ BOOST_PYTHON_MODULE(fingerprints) {
     py::def("ecfp4", &fp_func_numpy_wrapper<ecfp4_fingerprint<float>>,
             (py::arg("mol")));
     py::def("fp_func", &fp_func_bind, (py::arg("mol"), py::arg("fp_type")));
+    py::def("get_fp_dim", &get_fp_dim, (py::arg("fp_type")));
     py::def("get_fingerprints", &get_fingerprints,
             (py::arg("mlist"), py::arg("fp_type")));
     py::def("diversity", &diversity, (py::arg("mlist"), py::arg("fp_type")));
