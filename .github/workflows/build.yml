@@ -13,6 +13,8 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build conda package
       uses: prefix-dev/rattler-build-action@v0.2.34
+      with:
+        recipe-path: rattler-recipe/recipe.yaml
     - run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
