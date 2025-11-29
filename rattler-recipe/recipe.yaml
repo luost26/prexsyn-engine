@@ -1,7 +1,5 @@
 context:
-  llvm_version: "21.1.0"
   rdkit_min_version: "2025.3.6"
-  boost_min_version: "1.86.0"
 
 package:
   name: prexsyn-engine
@@ -19,9 +17,8 @@ source:
 
 requirements:
   build:
-  - clang ==${{ llvm_version }}
-  - clangxx ==${{ llvm_version }}
-  - llvm-openmp ==${{ llvm_version }}
+  - ${{ compiler('cxx') }}
+  - llvm-openmp
   - cmake
   - ninja
 
@@ -32,20 +29,19 @@ requirements:
   - python-build
   - rdkit >=${{ rdkit_min_version }}
   - librdkit-dev >=${{ rdkit_min_version }}
-  - libboost-devel >=${{ boost_min_version }}
-  - libboost-python-devel >=${{ boost_min_version }}
-  - llvm-openmp ==${{ llvm_version }}
+  - libboost-devel
+  - libboost-python-devel
+  - llvm-openmp
   - eigen
   - spdlog >=1.15.3,<2
 
   run:
   - python
-  - spdlog >=1.15.3,<2
   - numpy >=2.0.0,<3
   - rdkit >=${{ rdkit_min_version }}
-  - libboost >=${{ boost_min_version }}
-  - libboost-python >=${{ boost_min_version }}
-  - llvm-openmp >=${{ llvm_version }}
+  - libboost
+  - libboost-python
+  - llvm-openmp
 
 tests:
 - python:

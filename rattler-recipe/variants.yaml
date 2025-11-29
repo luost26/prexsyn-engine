@@ -2,3 +2,9 @@ python:
 - 3.11
 - 3.12
 - 3.13
+
+cxx_compiler:
+- clangxx
+
+cxx_compiler_version:
+- 21.1.0
