@@ -1,6 +1,6 @@
 # isort: skip_file
 from . import base
-from .base import FeaturizerSet
+from .base import FeaturizerSet as FeaturizerSet
 
 from . import synthesis
 from . import fingerprint

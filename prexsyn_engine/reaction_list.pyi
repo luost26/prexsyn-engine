@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 from .types import Reaction
 
 class ReactionList:
@@ -10,3 +12,4 @@ class ReactionList:
     def peek_size(path: str) -> int: ...
     @staticmethod
     def from_txt(path: str) -> "ReactionList": ...
+    def __iter__(self) -> "Iterator[Reaction]": ...  # implicit
