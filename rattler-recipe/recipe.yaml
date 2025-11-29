@@ -8,7 +8,6 @@ package:
   version: 0.1.0
 
 build:
-  number: 0
   script: |
     mkdir builddir
     $PYTHON -m build -w -n -x -Cbuilddir=builddir
