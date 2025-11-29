@@ -1,0 +1,22 @@
+name: Build and publish conda package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build conda package
+      uses: prefix-dev/rattler-build-action@v0.2.34
+    - run: |
+        for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
+          echo "Uploading ${pkg}"
+          rattler-build upload anaconda -o luost26 "${pkg}"
+        done
+      env:
+        ANACONDA_API_KEY: ${{ secrets.ANACONDA_API_KEY }}
