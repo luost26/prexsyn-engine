@@ -29,19 +29,15 @@ requirements:
   - python-build
   - rdkit >=${{ rdkit_min_version }}
   - librdkit-dev >=${{ rdkit_min_version }}
-  - libboost-devel
-  - libboost-python-devel
-  - llvm-openmp
+  - libboost-devel  # run-export: libboost
+  - libboost-python-devel  # run-export: libboost-python
+  - numpy >=2.0.0,<3  # run-export: numpy
   - eigen
   - spdlog >=1.15.3,<2
 
   run:
   - python
-  - numpy >=2.0.0,<3
   - rdkit >=${{ rdkit_min_version }}
-  - libboost
-  - libboost-python
-  - llvm-openmp
 
   ignore_run_exports:
     from_package:
