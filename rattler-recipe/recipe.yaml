@@ -43,6 +43,10 @@ requirements:
   - libboost-python
   - llvm-openmp
 
+  ignore_run_exports:
+    from_package:
+    - spdlog
+
 tests:
 - python:
     imports:
