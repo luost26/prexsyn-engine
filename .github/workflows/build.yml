@@ -9,12 +9,16 @@ jobs:
   build:
     name: Build package
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
     steps:
     - uses: actions/checkout@v4
-    - name: Build conda package
+    - name: Build conda package (Python ${{ matrix.python-version }})
       uses: prefix-dev/rattler-build-action@v0.2.34
       with:
         recipe-path: rattler-recipe/recipe.yaml
+        build-args: --variant python=${{ matrix.python-version }}
     - run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
