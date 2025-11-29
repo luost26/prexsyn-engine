@@ -2371,8 +2371,6 @@ packages:
   subdir: linux-64
   depends:
   - python
-  - spdlog >=1.15.3,<2
-  - spdlog >=1.16.0,<1.17.0a0
   - numpy >=2.0.0,<3
   - rdkit >=2025.3.6
   - libboost >=1.86.0
@@ -2388,8 +2386,9 @@ packages:
   - _openmp_mutex * *_llvm
   - _openmp_mutex >=4.5
   - python_abi 3.13.* *_cp313
+  - spdlog >=1.16.0,<1.17.0a0
   input:
-    hash: 5196c968fa819f4e69b530abfc9f210470b950fc3e60afe414de15c5f3c630ff
+    hash: 756060ae0ceab376ff92f103844462b79a1acea4a4865a0cdee31cd88f956c1d
     globs:
     - recipe.yaml
     - variants.yaml
