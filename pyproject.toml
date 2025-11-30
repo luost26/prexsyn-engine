@@ -9,17 +9,12 @@ license-files = ["LICENSE"]
 [tool.setuptools.dynamic]
 version = { attr = "prexsyn_engine.__version__" }
 
-[tool.black]
+[tool.ruff]
 line-length = 119
+target-version = "py311"
 
-[tool.isort]
-extra_standard_library = "typing_extensions,mypy,mypy_extensions"
-profile = "black"
-
-[tool.autoflake]
-remove-all-unused-imports = true
-expand-star-imports = true
-ignore-init-module-imports = true
+[tool.ruff.lint.pyflakes]
+allowed-unused-imports = ["rdkit.Chem"]
 
 [tool.mypy]
 ignore_missing_imports = true

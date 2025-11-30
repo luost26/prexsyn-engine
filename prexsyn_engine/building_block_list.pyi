@@ -1,4 +1,4 @@
-from .types import Mol, Reaction
+from .types import Mol
 
 class BuildingBlockPreprocessingOption:
     remove_Hs: bool
