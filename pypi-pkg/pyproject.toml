@@ -1,0 +1,10 @@
+[project]
+name = "prexsyn-engine"
+dynamic = ["version"]
+requires-python = ">=3.11"
+authors = [{ name = "Shitong Luo", email = "luost26@gmail.com" }]
+readme = "README.md"
+license-files = ["LICENSE"]
+
+[tool.setuptools.dynamic]
+version = { attr = "prexsyn_engine.__version__" }
