@@ -19,3 +19,21 @@ allowed-unused-imports = ["rdkit.Chem"]
 [tool.pyright]
 typeCheckingMode = "strict"
 include = ["prexsyn_engine"]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+
+[[tool.bumpversion.files]]
+filename = "prexsyn_engine/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "rattler-recipe/recipe.yaml"
+search = 'version: {current_version}'
+replace = 'version: {new_version}'
+
+[[tool.bumpversion.files]]
+filename = "stub-pkg/pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
