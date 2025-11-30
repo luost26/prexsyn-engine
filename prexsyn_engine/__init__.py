@@ -1,12 +1,12 @@
 # isort: skip_file
 import warnings
 
-# Importing RDKit modules to trigger some initialization
-# otherwise, random segfaults can occur
-import rdkit.Chem.rdchem
-import rdkit.Chem.rdChemReactions
-import rdkit.Chem.rdMolChemicalFeatures
-import rdkit.Chem.Descriptors
+# Importing RDKit modules to trigger initialization
+# otherwise, segfaults can occur
+import rdkit.Chem.rdchem  # pyright: ignore [reportUnusedImport]
+import rdkit.Chem.rdChemReactions  # pyright: ignore [reportUnusedImport]
+import rdkit.Chem.rdMolChemicalFeatures  # pyright: ignore [reportUnusedImport]
+import rdkit.Chem.Descriptors  # pyright: ignore [reportUnusedImport]
 
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", message="^.*already registered.*$", category=RuntimeWarning)

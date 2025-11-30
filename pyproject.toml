@@ -16,18 +16,6 @@ target-version = "py311"
 [tool.ruff.lint.pyflakes]
 allowed-unused-imports = ["rdkit.Chem"]
 
-[tool.mypy]
-ignore_missing_imports = true
-exclude = [
-  "tests",
-  "docs",
-  "build",
-  "dist",
-  ".eggs",
-  ".tox",
-  ".venv",
-  ".env",
-  "__pycache__",
-]
-strict = true
-disallow_subclassing_any = false
+[tool.pyright]
+typeCheckingMode = "strict"
+include = ["prexsyn_engine"]
