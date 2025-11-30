@@ -1,0 +1,31 @@
+name: Publish typing stubs to PyPI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish-stubs:
+    name: Publish typing stubs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install build tools
+      run: |
+        python -m pip install --upgrade build twine
+    - name: Build
+      run: |
+        cd stub-pkg
+        python -m build
+    - name: Publish to PyPI
+      run: |
+        cd stub-pkg
+        python -m twine upload --repository pypi dist/*
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
