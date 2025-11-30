@@ -6,8 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  publish-stubs:
-    name: Publish typing stubs
+  publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
