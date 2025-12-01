@@ -1,5 +1,3 @@
-name: Build and publish conda package
-
 on:
   push:
     tags:
@@ -14,14 +12,15 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
-    - name: Build conda package (Python ${{ matrix.python-version }})
+    - name: Build (Python ${{ matrix.python-version }})
       uses: prefix-dev/rattler-build-action@v0.2.34
       with:
         upload-artifact: false
         rattler-build-version: 'latest'
         recipe-path: rattler-recipe/recipe.yaml
         build-args: --variant python=${{ matrix.python-version }}
-    - run: |
+    - name: Upload package to Anaconda
+      run: |
         for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
           echo "Uploading ${pkg}"
           rattler-build upload anaconda -o luost26 "${pkg}"
