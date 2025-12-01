@@ -12,7 +12,7 @@ def sample_1() -> synthesis.Synthesis:
     mol1 = rdkit.Chem.MolFromSmiles("COC(=O)c1nscc1N")
     mol2 = rdkit.Chem.MolFromSmiles("CN(C)CCCN")
     rxn = rdkit.Chem.rdChemReactions.ReactionFromSmarts(
-        "[NH2:1][c:2][c:3][C:4](=[O:5])[O][C].[C:6][NH2:7]>>" "[NH:1]1[c:2][c:3][C:4](=[O:5])[N:7]([C:6])C1=O"
+        "[NH2:1][c:2][c:3][C:4](=[O:5])[O][C].[C:6][NH2:7]>>[NH:1]1[c:2][c:3][C:4](=[O:5])[N:7]([C:6])C1=O"
     )
     rxn.Initialize()
 
