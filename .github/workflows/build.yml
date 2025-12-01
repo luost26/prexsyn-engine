@@ -1,3 +1,5 @@
+name: Build and publish conda package
+
 on:
   push:
     tags:
@@ -12,7 +14,7 @@ jobs:
       fail-fast: false
     steps:
     - uses: actions/checkout@v4
-    - name: Build (Python ${{ matrix.python-version }})
+    - name: Build conda package (Python ${{ matrix.python-version }})
       uses: prefix-dev/rattler-build-action@v0.2.34
       with:
         upload-artifact: false
