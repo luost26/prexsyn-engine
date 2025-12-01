@@ -1,4 +1,4 @@
-__version__ = "0.1.1.dev1"
+__version__ = "0.1.1.dev2"
 
 raise NotImplementedError(
     "Installing prexsyn-engine from PyPI is not supported due to linking restrictions. "

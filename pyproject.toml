@@ -21,7 +21,7 @@ typeCheckingMode = "strict"
 include = ["prexsyn_engine"]
 
 [tool.bumpversion]
-current_version = "0.1.1.dev1"
+current_version = "0.1.1.dev2"
 parse = """(?x)
     (?P<major>0|[1-9]\\d*)\\.
     (?P<minor>0|[1-9]\\d*)\\.
