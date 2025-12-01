@@ -1,9 +1,12 @@
 # PrexSyn Engine
 
+[![Build and publish conda package](https://github.com/luost26/prexsyn-engine/actions/workflows/build.yml/badge.svg)](https://github.com/luost26/prexsyn-engine/actions/workflows/build.yml)
+![version](https://anaconda.org/luost26/prexsyn-engine/badges/version.svg)
+![platforms](https://anaconda.org/luost26/prexsyn-engine/badges/platforms.svg)
+
 PrexSyn Engine is the C++ backend library for PrexSyn. It provides a high-throughput data pipeline that generates synthetic pathways annotated with molecular properties to train PrexSyn models. It also includes a fast detokenizer for reconstructing synthetic pathways and product molecules from model outputs.
 
 [[PrexSyn]](https://github.com/luost26/prexsyn)
-[[Conda]](https://anaconda.org/luost26/prexsyn-engine)
 
 ## Installation & Usage
 
