@@ -6,7 +6,7 @@
 [![platforms](https://anaconda.org/luost26/prexsyn-engine/badges/platforms.svg)](https://anaconda.org/luost26/prexsyn-engine)
 ![python](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fluost26%2Fprexsyn-engine%2Frefs%2Fheads%2Fmain%2Frattler-recipe%2Fvariants.yaml&query=%24.python&style=flat-square&label=python)
 
-PrexSyn Engine is the C++ backend library for [PrexSyn](https://github.com/luost26/prexsyn). It provides a high-throughput data pipeline that generates synthetic pathways annotated with molecular properties to train PrexSyn models. It also includes a fast detokenizer for reconstructing synthetic pathways and product molecules from model outputs.
+PrexSyn Engine is the C++ backend library for [PrexSyn](https://github.com/luost26/PrexSyn). It provides a high-throughput data pipeline that generates synthetic pathways annotated with molecular properties to train PrexSyn models. It also includes a fast detokenizer for reconstructing synthetic pathways and product molecules from model outputs.
 
 
 ## Installation & Usage
@@ -17,4 +17,4 @@ PrexSyn Engine can only be installed via Conda. To install, run the following co
 conda install luost26::prexsyn-engine
 ```
 
-Please refer to the [PrexSyn repository](https://github.com/luost26/prexsyn) for usage instructions.
+Please refer to the [PrexSyn repository](https://github.com/luost26/PrexSyn) for usage instructions.
