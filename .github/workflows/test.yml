@@ -15,8 +15,9 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    matrix:
-      rdkit-version: ["*", "==2025.3.6"]
+    strategy:
+      matrix:
+        rdkit-version: ["*", "==2025.3.6"]
     steps:
       - uses: actions/checkout@v4
       - name: Set RDKit version ${{ matrix.rdkit-version }}
