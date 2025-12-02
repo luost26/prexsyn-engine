@@ -15,16 +15,8 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rdkit-version: ["*", "==2025.3.6"]
     steps:
       - uses: actions/checkout@v4
-      - name: Set RDKit version ${{ matrix.rdkit-version }}
-        run: |
-          sed -i '/rdkit =/c\rdkit = "${{ matrix.rdkit-version }}"' pixi.toml
-          sed -i '/librdkit-dev =/c\librdkit-dev = "${{ matrix.rdkit-version }}"' pixi.toml
-          cat pixi.toml
       - uses: prefix-dev/setup-pixi@v0.9.3
         with:
           cache: true
