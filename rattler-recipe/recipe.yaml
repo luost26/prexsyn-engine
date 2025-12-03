@@ -3,7 +3,7 @@ context:
 
 package:
   name: prexsyn-engine
-  version: 0.1.1.dev2
+  version: 0.1.1.dev3
 
 build:
   script: |

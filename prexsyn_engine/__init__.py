@@ -19,4 +19,4 @@ from . import chemspace as chemspace
 from . import featurizer as featurizer
 from . import detokenizer as detokenizer
 
-__version__ = "0.1.1.dev2"
+__version__ = "0.1.1.dev3"
