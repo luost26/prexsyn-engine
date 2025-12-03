@@ -2,7 +2,6 @@
 
 [![test status](https://img.shields.io/github/actions/workflow/status/luost26/prexsyn-engine/test.yml?style=flat-square&label=test)](https://github.com/luost26/prexsyn-engine/actions/workflows/test.yml)
 [![build status](https://img.shields.io/github/actions/workflow/status/luost26/prexsyn-engine/build-conda.yml?style=flat-square)](https://github.com/luost26/prexsyn-engine/actions/workflows/build-conda.yml)
-[![publish status](https://img.shields.io/github/actions/workflow/status/luost26/prexsyn-engine/publish-conda.yml?style=flat-square&label=publish)](https://github.com/luost26/prexsyn-engine/actions/workflows/publish-conda.yml)
 [![version](https://anaconda.org/luost26/prexsyn-engine/badges/version.svg)](https://anaconda.org/luost26/prexsyn-engine)
 [![platforms](https://anaconda.org/luost26/prexsyn-engine/badges/platforms.svg)](https://anaconda.org/luost26/prexsyn-engine)
 ![python](https://img.shields.io/badge/dynamic/yaml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fluost26%2Fprexsyn-engine%2Frefs%2Fheads%2Fmain%2Frattler-recipe%2Fvariants.yaml&query=%24.python&style=flat-square&label=python)
