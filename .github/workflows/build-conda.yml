@@ -1,9 +1,9 @@
-name: Build and publish conda package
+name: Build conda packages
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 jobs:
   build:
@@ -21,11 +21,12 @@ jobs:
         rattler-build-version: 'latest'
         recipe-path: rattler-recipe/recipe.yaml
         build-args: --variant python=${{ matrix.python-version }}
-    - name: Upload package to Anaconda
-      run: |
-        for pkg in $(find output -type f \( -name "*.conda" -o -name "*.tar.bz2" \) ); do
-          echo "Uploading ${pkg}"
-          rattler-build upload anaconda -o luost26 "${pkg}"
-        done
-      env:
-        ANACONDA_API_KEY: ${{ secrets.ANACONDA_API_KEY }}
+    - name: Upload package artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: conda-package-py${{ matrix.python-version }}
+        path: |
+          output/*.conda
+          output/*.tar.bz2
+        if-no-files-found: error
+
