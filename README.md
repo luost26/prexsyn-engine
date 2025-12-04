@@ -17,4 +17,4 @@ PrexSyn Engine can only be installed via Conda. To install, run the following co
 conda install luost26::prexsyn-engine
 ```
 
-Please refer to the [PrexSyn repository](https://github.com/luost26/PrexSyn) for usage instructions.
+Please refer to the [documentation](https://prexsyn.readthedocs.io/en/latest/prexsyn-engine/) and  [PrexSyn repository](https://github.com/luost26/PrexSyn) for usage instructions.
