@@ -44,3 +44,6 @@ test-py = { cmd = "pytest tests", depends-on = ["dev-install"] }
 
 [environments]
 default = ["dev"]
+
+[activation.env]
+LD_LIBRARY_PATH = "${LD_LIBRARY_PATH}:${CONDA_PREFIX}/lib"
