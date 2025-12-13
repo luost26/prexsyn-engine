@@ -72,9 +72,9 @@ set(LIB_LINK_LIBRARIES Boost::system Boost::serialization Boost::iostreams
                        ${RDKit_LIBRARIES})
 add_library(libprexsyn OBJECT ${LIB_SOURCES})
 set_target_properties(libprexsyn PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
-target_link_libraries(libprexsyn PUBLIC ${LIB_LINK_LIBRARIES})
+target_link_libraries(libprexsyn PRIVATE ${LIB_LINK_LIBRARIES})
 target_compile_definitions(
-  libprexsyn PUBLIC SPDLOG_HEADER_ONLY SPDLOG_FMT_EXTERNAL_HO FMT_HEADER_ONLY)
+  libprexsyn PRIVATE SPDLOG_HEADER_ONLY SPDLOG_FMT_EXTERNAL_HO FMT_HEADER_ONLY)
 
 function(add_pymod name)
   if(${ARGC} EQUAL 1)
@@ -84,8 +84,8 @@ function(add_pymod name)
   endif()
   python3_add_library(${name} MODULE WITH_SOABI ${sources}
                       $<TARGET_OBJECTS:libprexsyn>)
-  target_link_libraries(${name} PUBLIC ${Python3_LIBRARIES} Boost::python
-                                       Boost::numpy ${LIB_LINK_LIBRARIES})
+  target_link_libraries(${name} PRIVATE ${Python3_LIBRARIES} Boost::python
+                                        Boost::numpy ${LIB_LINK_LIBRARIES})
 endfunction()
 
 add_pymod(building_block_list csrc/container/building_block_list_bind.cpp)
