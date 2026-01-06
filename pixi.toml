@@ -37,7 +37,7 @@ dev-clean = "find prexsyn_engine -name '*.so' -type f -delete || true"
 dev-install = { cmd = "pip install -e .", depends-on = ["dev-clean"] }
 lint = "pre-commit run --all-files"
 
-configure-test = "cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -G Ninja -S . -B build"
+configure-test = "cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON -G Ninja -S . -B build"
 build-test = { cmd = "ninja unittest -C build", depends-on = ["configure-test"] }
 test = { cmd = "ctest --test-dir build --output-on-failure", depends-on = ["build-test"] }
 test-py = { cmd = "pytest tests", depends-on = ["dev-install"] }

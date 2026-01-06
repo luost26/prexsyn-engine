@@ -107,7 +107,7 @@ add_pymod(featurizer__substructures csrc/featurizer/substructures_bind.cpp)
 add_pymod(featurizer__scaffold csrc/featurizer/scaffold_bind.cpp)
 add_pymod(featurizer__synthesis csrc/featurizer/synthesis_bind.cpp)
 
-if(BUILD_TESTING)
+if(BUILD_TESTS)
   enable_testing()
   file(COPY resources DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
   set(TEST_SOURCES csrc/synthesis_test.cpp csrc/featurizer/product_test.cpp
