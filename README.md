@@ -14,7 +14,7 @@ PrexSyn Engine is the C++ backend library for [PrexSyn](https://github.com/luost
 PrexSyn Engine can only be installed via Conda. To install, run the following command:
 
 ```bash
-conda install luost26::prexsyn-engine
+conda install conda-forge::prexsyn-engine
 ```
 
 Please refer to the [documentation](https://prexsyn.readthedocs.io/en/latest/prexsyn-engine/) and  [PrexSyn repository](https://github.com/luost26/prexsyn) for usage instructions.
