@@ -261,3 +261,6 @@ __marimo__/
 /.vscode
 /data
 /output
+# pixi environments
+.pixi/*
+!.pixi/config.toml
