@@ -1,0 +1,6 @@
+---
+If:
+  PathMatch: src/.*
+Diagnostics:
+  UnusedIncludes: Strict
+  MissingIncludes: Strict

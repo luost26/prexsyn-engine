@@ -3,3 +3,5 @@ IndentWidth: 4
 UseTab: Never
 IncludeBlocks: Preserve
 InsertNewlineAtEOF: true
+ColumnLimit: 100
+AccessModifierOffset: -4
