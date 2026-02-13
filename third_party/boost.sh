@@ -17,6 +17,6 @@ fi
 cd boost
 
 
-./bootstrap.sh --prefix=$CONDA_PREFIX
+./bootstrap.sh --prefix=$CONDA_PREFIX --with-toolset=clang
 ./b2
 ./b2 install
