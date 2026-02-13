@@ -13,6 +13,7 @@ ninja = ">=1.13.2,<2"
 cairo = ">=1.18.4,<2"
 zlib = ">=1.3.1,<2"
 pre-commit = ">=4.5.1,<5"
+pybind11 = ">=3.0.1,<4"
 
 [tasks]
 install-boost = { cmd = "./boost.sh", cwd = "third_party" }
