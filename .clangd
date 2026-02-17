@@ -1,6 +1,6 @@
 ---
 If:
-  PathMatch: src/.*
+  PathMatch: csrc/.*
 Diagnostics:
   UnusedIncludes: Strict
   MissingIncludes: Strict
