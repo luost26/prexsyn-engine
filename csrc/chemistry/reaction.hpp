@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <utility>
@@ -20,6 +21,7 @@ public:
 
 struct ReactionOutcome {
     std::vector<std::shared_ptr<Molecule>> products;
+    std::vector<size_t> reactant_indices;
 
     bool empty() const { return products.empty(); }
     size_t num_products() const { return products.size(); }
@@ -43,8 +45,9 @@ public:
     RDKit::ChemicalReaction &rdkit_rxn() { return *rdkit_rxn_; }
     std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn_ptr() const { return rdkit_rxn_; }
 
-    std::vector<ReactionOutcome> apply(const std::vector<std::shared_ptr<Molecule>> &reactants,
-                                       bool ignore_errors) const;
+    std::vector<ReactionOutcome>
+    apply(const std::vector<std::shared_ptr<Molecule>> &reactants, bool ignore_errors = false,
+          const std::optional<std::vector<size_t>> &reactant_indices = std::nullopt) const;
 };
 
 } // namespace prexsyn
