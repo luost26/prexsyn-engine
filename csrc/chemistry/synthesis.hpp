@@ -4,8 +4,6 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
-#include <utility>
-#include <variant>
 #include <vector>
 
 #include "molecule.hpp"
@@ -21,19 +19,46 @@ public:
 class SynthesisNode {
 private:
     struct Item {
-        std::variant<std::shared_ptr<Molecule>, ReactionOutcomeWithReactantAssignment> m;
-        std::vector<size_t> precursor_indices;
+        std::shared_ptr<Molecule> molecule;
+        std::vector<std::string> reactant_names;
+        std::vector<size_t> precursor_item_indices;
     };
 
     std::vector<Item> items_;
     std::shared_ptr<Reaction> reaction_;
-    std::vector<std::pair<std::shared_ptr<SynthesisNode>, size_t>> precursors_;
+    std::vector<std::shared_ptr<SynthesisNode>> precursor_nodes_;
+
+    SynthesisNode() = default;
 
 public:
-    SynthesisNode(std::shared_ptr<Molecule> mol) { items_.push_back({mol, {}}); };
+    static std::unique_ptr<SynthesisNode> from_molecule(const std::shared_ptr<Molecule> &);
+    static std::unique_ptr<SynthesisNode>
+    from_reaction(const std::shared_ptr<Reaction> &,
+                  const std::vector<std::shared_ptr<SynthesisNode>> &);
 
-    size_t size() const;
-    const Item &at(size_t) const;
+    void add_reaction_outcome(const ReactionOutcomeWithReactantAssignment &outcome,
+                              const std::vector<size_t> &precursor_item_indices);
+
+    size_t size() const { return items_.size(); }
+    std::shared_ptr<Molecule> at(size_t i) const { return items_.at(i).molecule; }
+
+    struct PrecursorMolecule {
+        size_t precursor_index;
+        std::string reactant_name;
+        size_t item_index;
+        std::shared_ptr<Molecule> molecule;
+    };
+    std::vector<PrecursorMolecule> precursor_molecules(size_t index) const;
+};
+
+class Synthesis {
+private:
+    std::vector<std::shared_ptr<SynthesisNode>> nodes_;
+    std::vector<std::shared_ptr<SynthesisNode>> stack_;
+
+public:
+    void push(const std::shared_ptr<Molecule> &);
+    void push(const std::shared_ptr<Reaction> &);
 };
 
 } // namespace prexsyn::synthesis

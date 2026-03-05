@@ -66,6 +66,8 @@ public:
     RDKit::ChemicalReaction &rdkit_rxn() { return *rdkit_rxn_; }
     std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn_ptr() const { return rdkit_rxn_; }
 
+    size_t num_reactants() const { return reactant_names_.size(); }
+
     std::vector<ReactionOutcome>
     apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactants,
           bool ignore_errors = false) const;
