@@ -17,7 +17,7 @@ struct BuildingBlockEntry {
     std::set<std::string> classifications;
 };
 
-struct BuildingBlockItem : public BuildingBlockEntry {
+struct BuildingBlockItem : BuildingBlockEntry {
     size_t index{};
 };
 

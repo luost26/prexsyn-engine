@@ -1,8 +1,12 @@
 #include "reaction.hpp"
 
+#include <cstddef>
 #include <stdexcept>
 #include <string>
 #include <utility>
+#include <vector>
+
+#include "../chemistry/chemistry.hpp"
 
 namespace prexsyn::chemspace {
 
@@ -29,6 +33,25 @@ ReactionLibrary::Index ReactionLibrary::add(const ReactionEntry &entry) {
     reactions_.push_back(ReactionItem{entry, new_index});
     name_to_index_[entry.name] = new_index;
     return new_index;
+}
+
+std::vector<ReactionLibrary::Match>
+ReactionLibrary::match_reactants(const Molecule &molecule) const {
+    std::vector<ReactionLibrary::Match> matches;
+    for (size_t i = 0; i < reactions_.size(); ++i) {
+        const auto &rxn = reactions_[i];
+        auto rxn_matches = rxn.reaction->match_reactants(molecule);
+        for (const auto &match : rxn_matches) {
+            matches.push_back({
+                .reaction_index = i,
+                .reaction_name = rxn.name,
+                .reactant_index = match.index,
+                .reactant_name = match.name,
+                .count = match.count,
+            });
+        }
+    }
+    return matches;
 }
 
 } // namespace prexsyn::chemspace

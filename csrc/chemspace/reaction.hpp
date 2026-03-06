@@ -4,6 +4,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "../chemistry/chemistry.hpp"
@@ -13,10 +14,9 @@ namespace prexsyn::chemspace {
 struct ReactionEntry {
     std::shared_ptr<Reaction> reaction;
     std::string name;
-    std::string group;
 };
 
-struct ReactionItem : public ReactionEntry {
+struct ReactionItem : ReactionEntry {
     size_t index{};
 };
 
@@ -38,6 +38,15 @@ public:
 
     auto begin() const noexcept { return reactions_.begin(); }
     auto end() const noexcept { return reactions_.end(); }
+
+    struct Match {
+        Index reaction_index;
+        std::string_view reaction_name;
+        Reaction::ReactantIndex reactant_index;
+        std::string_view reactant_name;
+        size_t count;
+    };
+    std::vector<Match> match_reactants(const Molecule &molecule) const;
 };
 
 } // namespace prexsyn::chemspace
