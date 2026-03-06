@@ -6,6 +6,7 @@
 #include <utility>
 
 #include <GraphMol/GraphMol.h>
+#include <GraphMol/SmilesParse/SmilesWrite.h>
 
 namespace prexsyn {
 
@@ -17,12 +18,14 @@ public:
 class Molecule {
 private:
     RDKit::ROMOL_SPTR rdkit_mol_;
+    std::string smiles_;
 
 public:
     Molecule(RDKit::ROMOL_SPTR rdkit_mol) : rdkit_mol_(std::move(rdkit_mol)) {
         if (!rdkit_mol_) {
             throw MoleculeError("RDKit molecule pointer is null");
         }
+        smiles_ = RDKit::MolToSmiles(*rdkit_mol_);
     }
     static std::unique_ptr<Molecule> from_smiles(const std::string &smiles);
     static std::unique_ptr<Molecule> from_unsanitized_rdkit(const RDKit::ROMOL_SPTR &rdkit_mol);
@@ -32,6 +35,7 @@ public:
     RDKit::ROMOL_SPTR rdkit_mol_ptr() const { return rdkit_mol_; }
 
     unsigned int num_heavy_atoms() const { return rdkit_mol_->getNumHeavyAtoms(); }
+    const std::string &smiles() const { return smiles_; }
 };
 
 } // namespace prexsyn
