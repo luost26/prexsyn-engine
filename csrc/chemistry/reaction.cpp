@@ -38,6 +38,22 @@ std::unique_ptr<Reaction> Reaction::from_smarts(const std::string &smarts,
     return std::make_unique<Reaction>(std::move(rdkit_rxn), reactant_names);
 }
 
+std::vector<Reaction::ReactantMatch> Reaction::match_reactant(const Molecule &molecule) const {
+    std::vector<Reaction::ReactantMatch> matches;
+    for (size_t i = 0; i < num_reactants(); ++i) {
+        const auto &tmpl = rdkit_rxn_->getReactants()[i];
+        auto res = RDKit::SubstructMatch(molecule.rdkit_mol(), *tmpl);
+        if (!res.empty()) {
+            matches.push_back({
+                .index = i,
+                .name = reactant_names_.at(i),
+                .count = res.size(),
+            });
+        }
+    }
+    return matches;
+}
+
 std::vector<ReactionOutcome>
 Reaction::apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactants,
                 bool ignore_errors) const {

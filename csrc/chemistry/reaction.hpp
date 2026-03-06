@@ -67,6 +67,16 @@ public:
     std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn_ptr() const { return rdkit_rxn_; }
 
     size_t num_reactants() const { return reactant_names_.size(); }
+    const std::map<std::string, size_t> &reactant_name_to_index() const {
+        return reactant_name_to_index_;
+    }
+
+    struct ReactantMatch {
+        size_t index;
+        std::string name;
+        size_t count;
+    };
+    std::vector<ReactantMatch> match_reactant(const Molecule &) const;
 
     std::vector<ReactionOutcome>
     apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactants,
