@@ -38,7 +38,7 @@ std::unique_ptr<Reaction> Reaction::from_smarts(const std::string &smarts,
     return std::make_unique<Reaction>(std::move(rdkit_rxn), reactant_names);
 }
 
-std::vector<Reaction::ReactantMatch> Reaction::match_reactant(const Molecule &molecule) const {
+std::vector<Reaction::ReactantMatch> Reaction::match_reactants(const Molecule &molecule) const {
     std::vector<Reaction::ReactantMatch> matches;
     for (size_t i = 0; i < num_reactants(); ++i) {
         const auto &tmpl = rdkit_rxn_->getReactants()[i];
@@ -108,6 +108,7 @@ Reaction::apply(const std::vector<std::shared_ptr<Molecule>> &reactants, bool ig
     std::sort(name_perm.begin(), name_perm.end());
 
     std::vector<ReactionOutcomeWithReactantAssignment> results;
+    // NOLINTNEXTLINE(cppcoreguidelines-avoid-do-while)
     do {
         std::map<std::string, std::shared_ptr<Molecule>> reactant_map;
         for (size_t i = 0; i < name_perm.size(); ++i) {

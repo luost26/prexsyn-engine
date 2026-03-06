@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -32,10 +33,13 @@ struct ReactionOutcomeWithReactantAssignment : public ReactionOutcome {
 };
 
 class Reaction {
+public:
+    using ReactantIndex = size_t;
+
 private:
     std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn_;
     std::vector<std::string> reactant_names_;
-    std::map<std::string, size_t> reactant_name_to_index_;
+    std::map<std::string, ReactantIndex> reactant_name_to_index_;
 
 public:
     Reaction(std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn,
@@ -67,16 +71,16 @@ public:
     std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn_ptr() const { return rdkit_rxn_; }
 
     size_t num_reactants() const { return reactant_names_.size(); }
-    const std::map<std::string, size_t> &reactant_name_to_index() const {
+    const std::map<std::string, ReactantIndex> &reactant_name_to_index() const {
         return reactant_name_to_index_;
     }
 
     struct ReactantMatch {
-        size_t index;
-        std::string name;
+        ReactantIndex index;
+        std::string_view name;
         size_t count;
     };
-    std::vector<ReactantMatch> match_reactant(const Molecule &) const;
+    std::vector<ReactantMatch> match_reactants(const Molecule &) const;
 
     std::vector<ReactionOutcome>
     apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactants,
