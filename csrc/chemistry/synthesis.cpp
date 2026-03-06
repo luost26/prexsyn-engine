@@ -3,13 +3,14 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <string>
 #include <utility>
 #include <vector>
 
 #include "molecule.hpp"
 #include "reaction.hpp"
 
-namespace prexsyn::synthesis {
+namespace prexsyn {
 
 std::unique_ptr<SynthesisNode> SynthesisNode::from_molecule(const std::shared_ptr<Molecule> &mol) {
     std::unique_ptr<SynthesisNode> node{new SynthesisNode()};
@@ -50,6 +51,7 @@ SynthesisNode::precursor_molecules(size_t index) const {
 
 void Synthesis::push(const std::shared_ptr<Molecule> &molecule) {
     nodes_.push_back(SynthesisNode::from_molecule(molecule));
+    stack_.push_back(nodes_.back());
 }
 
 static void cartesian_product(const std::vector<size_t> &sizes,
@@ -74,7 +76,9 @@ static void cartesian_product(const std::vector<size_t> &sizes,
 
 void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
     if (stack_.size() < reaction->num_reactants()) {
-        throw SynthesisError("Not enough reactants on the stack for the reaction");
+        throw SynthesisError("Not enough reactants on the stack for the reaction, got " +
+                             std::to_string(stack_.size()) + " but need " +
+                             std::to_string(reaction->num_reactants()));
     }
 
     std::vector<std::shared_ptr<SynthesisNode>> precursor_nodes;
@@ -99,6 +103,9 @@ void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
             new_node->add_reaction_outcome(outcome, item_indices);
         }
     });
+
+    nodes_.push_back(std::move(new_node));
+    stack_.push_back(nodes_.back());
 }
 
-} // namespace prexsyn::synthesis
+} // namespace prexsyn

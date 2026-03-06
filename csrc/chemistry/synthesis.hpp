@@ -9,7 +9,7 @@
 #include "molecule.hpp"
 #include "reaction.hpp"
 
-namespace prexsyn::synthesis {
+namespace prexsyn {
 
 class SynthesisError : public std::runtime_error {
 public:
@@ -57,8 +57,11 @@ private:
     std::vector<std::shared_ptr<SynthesisNode>> stack_;
 
 public:
+    const std::vector<std::shared_ptr<SynthesisNode>> &nodes() const { return nodes_; }
+    const std::vector<std::shared_ptr<SynthesisNode>> &stack() const { return stack_; }
+
     void push(const std::shared_ptr<Molecule> &);
     void push(const std::shared_ptr<Reaction> &);
 };
 
-} // namespace prexsyn::synthesis
+} // namespace prexsyn
