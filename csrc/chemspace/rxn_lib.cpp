@@ -1,4 +1,4 @@
-#include "reaction.hpp"
+#include "rxn_lib.hpp"
 
 #include <cstddef>
 #include <stdexcept>

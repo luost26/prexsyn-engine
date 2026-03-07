@@ -5,6 +5,7 @@
 #include <utility>
 
 #include <GraphMol/MolOps.h>
+#include <GraphMol/MolStandardize/Fragment.h>
 #include <GraphMol/SmilesParse/SmilesParse.h>
 
 namespace prexsyn {
@@ -28,6 +29,12 @@ std::unique_ptr<Molecule> Molecule::from_unsanitized_rdkit(const RDKit::ROMOL_SP
         throw MoleculeError("Failed to sanitize RDKit molecule: " + std::string(e.what()));
     }
     return std::make_unique<Molecule>(std::move(sanitized));
+}
+
+std::unique_ptr<Molecule> Molecule::largest_fragment() const {
+    RDKit::MolStandardize::LargestFragmentChooser chooser{};
+    auto lf = RDKit::ROMOL_SPTR(chooser.choose(rdkit_mol()));
+    return std::make_unique<Molecule>(std::move(lf));
 }
 
 } // namespace prexsyn

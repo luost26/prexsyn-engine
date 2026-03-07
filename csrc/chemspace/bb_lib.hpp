@@ -29,9 +29,8 @@ private:
     std::vector<BuildingBlockItem> building_blocks_;
     std::map<std::string, Index> identifier_to_index_;
 
-    BuildingBlockLibrary() = default;
-
 public:
+    BuildingBlockLibrary() = default;
     size_t size() const { return building_blocks_.size(); }
     const BuildingBlockItem &get(Index) const;
     const BuildingBlockItem &get(const std::string &) const;

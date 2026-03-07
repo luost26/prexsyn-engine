@@ -12,6 +12,7 @@ cairo = ">=1.18.4,<2"
 zlib = ">=1.3.1,<2"
 eigen = ">=3.4.0,<4"
 pybind11 = ">=3.0.1,<4"
+spdlog = ">=1.15.3,<2"
 gtest = "*"
 
 pre-commit = ">=4.5.1,<5"
@@ -33,7 +34,7 @@ configure = [ { task = "configure-debug" }, { task = "configure-release" } ]
 build-debug = { cmd = "ninja -C build/debug/" }
 build-release = { cmd = "ninja -C build/release/" }
 build = [ { task = "build-debug" }, { task = "build-release" } ]
-test = { cmd = "ctest --output-on-failure --test-dir build/debug", depends-on = ["build"] }
+test = { cmd = "ctest --output-on-failure --test-dir build/debug", depends-on = ["build-debug"] }
 
 [target.linux-64.activation.env]
 LD_LIBRARY_PATH = "${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"

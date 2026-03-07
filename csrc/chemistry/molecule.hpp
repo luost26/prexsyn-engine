@@ -36,6 +36,8 @@ public:
 
     unsigned int num_heavy_atoms() const { return rdkit_mol_->getNumHeavyAtoms(); }
     const std::string &smiles() const { return smiles_; }
+
+    std::unique_ptr<Molecule> largest_fragment() const;
 };
 
 } // namespace prexsyn

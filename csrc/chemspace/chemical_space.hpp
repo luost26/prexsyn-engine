@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "../chemistry/chemistry.hpp"
-#include "building_block.hpp"
-#include "reaction.hpp"
+#include "bb_lib.hpp"
+#include "rxn_lib.hpp"
 
 namespace prexsyn::chemspace {
 

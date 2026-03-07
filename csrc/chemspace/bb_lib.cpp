@@ -1,4 +1,4 @@
-#include "building_block.hpp"
+#include "bb_lib.hpp"
 
 #include <stdexcept>
 #include <string>
