@@ -52,7 +52,9 @@ public:
 
         if (rdkit_rxn_->getNumReactantTemplates() != reactant_names.size()) {
             throw ReactionError(
-                "Number of reactant names does not match number of reactant templates");
+                "Number of reactant names does not match number of reactant templates, expected " +
+                std::to_string(rdkit_rxn_->getNumReactantTemplates()) + " but got " +
+                std::to_string(reactant_names.size()));
         }
 
         for (const auto &name : reactant_names) {
@@ -65,6 +67,7 @@ public:
     }
     static std::unique_ptr<Reaction> from_smarts(const std::string &smarts,
                                                  const std::vector<std::string> &reactant_names);
+    static std::unique_ptr<Reaction> from_smarts(const std::string &smarts);
 
     const RDKit::ChemicalReaction &rdkit_rxn() const { return *rdkit_rxn_; }
     RDKit::ChemicalReaction &rdkit_rxn() { return *rdkit_rxn_; }

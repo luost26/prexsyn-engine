@@ -5,4 +5,5 @@
 #include "bb_lib_factory.hpp"
 #include "chemical_space.hpp"
 #include "rxn_lib.hpp"
+#include "rxn_lib_factory.hpp"
 // IWYU pragma: end_exports

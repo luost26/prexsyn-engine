@@ -38,6 +38,25 @@ std::unique_ptr<Reaction> Reaction::from_smarts(const std::string &smarts,
     return std::make_unique<Reaction>(std::move(rdkit_rxn), reactant_names);
 }
 
+std::unique_ptr<Reaction> Reaction::from_smarts(const std::string &smarts) {
+    std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn(RDKit::RxnSmartsToChemicalReaction(smarts));
+    if (!rdkit_rxn) {
+        throw ReactionError("Failed to parse SMARTS: " + smarts);
+    }
+    rdkit_rxn->initReactantMatchers();
+    if (!rdkit_rxn->isInitialized()) {
+        throw ReactionError("RDKit reaction is not initialized after parsing SMARTS: " + smarts);
+    }
+
+    std::vector<std::string> reactant_names;
+    reactant_names.reserve(rdkit_rxn->getNumReactantTemplates());
+    for (size_t i = 0; i < rdkit_rxn->getNumReactantTemplates(); ++i) {
+        reactant_names.emplace_back("R" + std::to_string(i));
+    }
+
+    return std::make_unique<Reaction>(std::move(rdkit_rxn), reactant_names);
+}
+
 std::vector<Reaction::ReactantMatch> Reaction::match_reactants(const Molecule &molecule) const {
     std::vector<Reaction::ReactantMatch> matches;
     for (size_t i = 0; i < num_reactants(); ++i) {

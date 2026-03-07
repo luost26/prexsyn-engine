@@ -28,9 +28,9 @@ private:
     std::vector<ReactionItem> reactions_;
     std::map<std::string, Index> name_to_index_;
 
+public:
     ReactionLibrary() = default;
 
-public:
     size_t size() const { return reactions_.size(); }
     const ReactionItem &get(Index) const;
     const ReactionItem &get(const std::string &) const;
