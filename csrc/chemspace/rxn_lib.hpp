@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstddef>
+#include <istream>
 #include <map>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -18,6 +20,18 @@ struct ReactionEntry {
 
 struct ReactionItem : ReactionEntry {
     size_t index{};
+
+    template <typename Archive> void serialize(Archive &ar, const unsigned int /* version */) {
+        if constexpr (Archive::is_saving::value) {
+            ar << reaction->serialize();
+        } else {
+            std::string rxn_data;
+            ar >> rxn_data;
+            reaction = Reaction::deserialize(rxn_data);
+        }
+        ar & name;
+        ar & index;
+    }
 };
 
 class ReactionLibrary {
@@ -30,6 +44,9 @@ private:
 
 public:
     ReactionLibrary() = default;
+
+    static std::unique_ptr<ReactionLibrary> deserialize(std::istream &);
+    void serialize(std::ostream &) const;
 
     size_t size() const { return reactions_.size(); }
     const ReactionItem &get(Index) const;

@@ -1,14 +1,42 @@
 #include "rxn_lib.hpp"
 
 #include <cstddef>
+#include <istream>
+#include <memory>
+#include <ostream>
 #include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "../chemistry/chemistry.hpp"
+#include "../utility/serialization.hpp"
 
 namespace prexsyn::chemspace {
+
+std::unique_ptr<ReactionLibrary> ReactionLibrary::deserialize(std::istream &data) {
+    boost::archive::binary_iarchive ia(data);
+    size_t num_items = 0;
+    ia >> num_items;
+    auto rxn_lib = std::make_unique<ReactionLibrary>();
+    rxn_lib->reactions_.reserve(num_items);
+    for (size_t i = 0; i < num_items; ++i) {
+        ReactionItem item;
+        ia >> item;
+        rxn_lib->reactions_.push_back(std::move(item));
+    }
+    ia >> rxn_lib->name_to_index_;
+    return rxn_lib;
+}
+
+void ReactionLibrary::serialize(std::ostream &stream) const {
+    boost::archive::binary_oarchive oa(stream);
+    oa << reactions_.size();
+    for (const auto &item : reactions_) {
+        oa << item;
+    }
+    oa << name_to_index_;
+}
 
 const ReactionItem &ReactionLibrary::get(Index index) const {
     if (index >= reactions_.size()) {
