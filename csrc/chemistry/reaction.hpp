@@ -58,6 +58,7 @@ public:
     std::string rdkit_pickle() const;
 
     size_t num_reactants() const { return reactant_names_.size(); }
+    const std::vector<std::string> &reactant_names() const { return reactant_names_; }
     const std::map<std::string, ReactantIndex> &reactant_name_to_index() const {
         return reactant_name_to_index_;
     }
