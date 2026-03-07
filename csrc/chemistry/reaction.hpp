@@ -6,7 +6,6 @@
 #include <stdexcept>
 #include <string>
 #include <string_view>
-#include <utility>
 #include <vector>
 
 #include <GraphMol/ChemReactions/Reaction.h>
@@ -43,35 +42,20 @@ private:
 
 public:
     Reaction(std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn,
-             const std::vector<std::string> &reactant_names)
-        : rdkit_rxn_(std::move(rdkit_rxn)), reactant_names_(reactant_names) {
-
-        if (!rdkit_rxn_) {
-            throw ReactionError("RDKit reaction pointer is null");
-        }
-
-        if (rdkit_rxn_->getNumReactantTemplates() != reactant_names.size()) {
-            throw ReactionError(
-                "Number of reactant names does not match number of reactant templates, expected " +
-                std::to_string(rdkit_rxn_->getNumReactantTemplates()) + " but got " +
-                std::to_string(reactant_names.size()));
-        }
-
-        for (const auto &name : reactant_names) {
-            if (reactant_name_to_index_.contains(name)) {
-                throw ReactionError("Duplicate reactant name: " + name);
-            }
-            size_t index = reactant_name_to_index_.size();
-            reactant_name_to_index_[name] = index;
-        }
-    }
+             const std::vector<std::string> &reactant_names);
     static std::unique_ptr<Reaction> from_smarts(const std::string &smarts,
                                                  const std::vector<std::string> &reactant_names);
     static std::unique_ptr<Reaction> from_smarts(const std::string &smarts);
+    static std::unique_ptr<Reaction> from_rdkit_pickle(const std::string &,
+                                                       const std::vector<std::string> &);
+
+    static std::unique_ptr<Reaction> deserialize(const std::string &);
+    std::string serialize() const;
 
     const RDKit::ChemicalReaction &rdkit_rxn() const { return *rdkit_rxn_; }
     RDKit::ChemicalReaction &rdkit_rxn() { return *rdkit_rxn_; }
     std::shared_ptr<RDKit::ChemicalReaction> rdkit_rxn_ptr() const { return rdkit_rxn_; }
+    std::string rdkit_pickle() const;
 
     size_t num_reactants() const { return reactant_names_.size(); }
     const std::map<std::string, ReactantIndex> &reactant_name_to_index() const {

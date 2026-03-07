@@ -5,6 +5,7 @@
 #include <utility>
 
 #include <GraphMol/MolOps.h>
+#include <GraphMol/MolPickler.h>
 #include <GraphMol/MolStandardize/Fragment.h>
 #include <GraphMol/SmilesParse/SmilesParse.h>
 
@@ -29,6 +30,19 @@ std::unique_ptr<Molecule> Molecule::from_unsanitized_rdkit(const RDKit::ROMOL_SP
         throw MoleculeError("Failed to sanitize RDKit molecule: " + std::string(e.what()));
     }
     return std::make_unique<Molecule>(std::move(sanitized));
+}
+
+std::unique_ptr<Molecule> Molecule::from_rdkit_pickle(const std::string &pickle) {
+    RDKit::ROMOL_SPTR rdkit_mol(new RDKit::ROMol());
+    RDKit::MolPickler::MolPickler::molFromPickle(pickle, rdkit_mol.get(),
+                                                 RDKit::PicklerOps::AllProps);
+    return std::make_unique<Molecule>(std::move(rdkit_mol));
+}
+
+std::string Molecule::rdkit_pickle() const {
+    std::string pickle;
+    RDKit::MolPickler::pickleMol(*rdkit_mol_, pickle, RDKit::PicklerOps::AllProps);
+    return pickle;
 }
 
 std::unique_ptr<Molecule> Molecule::largest_fragment() const {

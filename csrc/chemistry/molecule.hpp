@@ -29,10 +29,17 @@ public:
     }
     static std::unique_ptr<Molecule> from_smiles(const std::string &smiles);
     static std::unique_ptr<Molecule> from_unsanitized_rdkit(const RDKit::ROMOL_SPTR &rdkit_mol);
+    static std::unique_ptr<Molecule> from_rdkit_pickle(const std::string &);
+
+    static std::unique_ptr<Molecule> deserialize(const std::string &data) {
+        return from_rdkit_pickle(data);
+    }
+    std::string serialize() const { return rdkit_pickle(); }
 
     const RDKit::ROMol &rdkit_mol() const { return *rdkit_mol_; }
     RDKit::ROMol &rdkit_mol() { return *rdkit_mol_; }
     RDKit::ROMOL_SPTR rdkit_mol_ptr() const { return rdkit_mol_; }
+    std::string rdkit_pickle() const;
 
     unsigned int num_heavy_atoms() const { return rdkit_mol_->getNumHeavyAtoms(); }
     const std::string &smiles() const { return smiles_; }
