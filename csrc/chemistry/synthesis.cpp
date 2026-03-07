@@ -84,11 +84,11 @@ void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
     std::vector<std::shared_ptr<SynthesisNode>> precursor_nodes;
     precursor_nodes.reserve(reaction->num_reactants());
     std::vector<size_t> sizes;
+    auto stack_iter = stack_.end();
     for (size_t i = 0; i < reaction->num_reactants(); ++i) {
-        const auto &node = stack_.back();
+        const auto &node = *(--stack_iter);
         precursor_nodes.push_back(node);
         sizes.push_back(node->size());
-        stack_.pop_back();
     }
 
     auto new_node = SynthesisNode::from_reaction(reaction, precursor_nodes);
@@ -109,6 +109,7 @@ void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
     }
 
     nodes_.push_back(std::move(new_node));
+    stack_.erase(stack_iter, stack_.end());
     stack_.push_back(nodes_.back());
 }
 
