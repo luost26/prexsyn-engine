@@ -66,7 +66,7 @@ bb_lib_from_sdf(const std::filesystem::path &path, const BuildingBlockPreprocess
             continue;
         }
     }
-    logger()->info("Done. Total loaded: {}", count);
+    logger()->info("Done. Loaded: {}", count);
     return bb_lib;
 }
 
@@ -106,7 +106,7 @@ bb_lib_from_csv(const std::filesystem::path &path, const BuildingBlockCSVConfig 
             continue;
         }
     }
-    logger()->info("Done. Total loaded: {}", count);
+    logger()->info("Done. Loaded: {}", count);
     return bb_lib;
 }
 

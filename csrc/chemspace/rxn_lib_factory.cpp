@@ -78,7 +78,7 @@ std::unique_ptr<ReactionLibrary> rxn_lib_from_plain_text(const std::filesystem::
         }
     }
 
-    logger()->info("Done. Total loaded: {}", rxn_lib->size());
+    logger()->info("Done. Loaded: {}", rxn_lib->size());
 
     return rxn_lib;
 }

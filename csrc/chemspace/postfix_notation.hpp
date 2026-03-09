@@ -8,8 +8,9 @@ namespace prexsyn::chemspace {
 class PostfixNotation {
 public:
     struct Token {
+        enum Type { BuildingBlock = 1, Reaction = 2 }; // NOLINT(performance-enum-size)
         size_t index;
-        enum Type { BuildingBlock = 1, Reaction = 2 } type; // NOLINT(performance-enum-size)
+        Type type;
 
         template <typename Archive> void serialize(Archive &ar, const unsigned int /* version */) {
             ar & index;
