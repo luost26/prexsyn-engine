@@ -32,8 +32,7 @@ void SynthesisNode::add_reaction_outcome(const ReactionOutcomeWithReactantAssign
     items_.push_back({outcome.main_product(), outcome.reactant_names, precursor_item_indices});
 }
 
-std::vector<SynthesisNode::PrecursorMolecule>
-SynthesisNode::precursor_molecules(size_t index) const {
+std::vector<SynthesisNode::PrecursorMolecule> SynthesisNode::precursors(size_t index) const {
     const auto &item = items_.at(index);
     std::vector<PrecursorMolecule> result;
 

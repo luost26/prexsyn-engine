@@ -45,7 +45,7 @@ TEST(SynthesisTest, PushReactionBuildsExpectedTopNodeAndPrecursors) {
     ASSERT_EQ(top->size(), 1);
     EXPECT_EQ(top->at(0)->smiles(), kExpectedProductSmiles);
 
-    const auto precursors = top->precursor_molecules(0);
+    const auto precursors = top->precursors(0);
     ASSERT_EQ(precursors.size(), 2);
 
     EXPECT_EQ(precursors.at(0).precursor_index, 0);
@@ -94,7 +94,7 @@ TEST(SynthesisTest, PrecursorMoleculesThrowsOnInvalidItemIndex) {
     ASSERT_EQ(top->size(), 1);
     EXPECT_THROW(
         {
-            const auto unused = top->precursor_molecules(1);
+            const auto unused = top->precursors(1);
             (void)unused;
         },
         std::out_of_range);

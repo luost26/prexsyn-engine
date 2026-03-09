@@ -49,7 +49,7 @@ public:
         size_t item_index;
         std::shared_ptr<Molecule> molecule;
     };
-    std::vector<PrecursorMolecule> precursor_molecules(size_t index) const;
+    std::vector<PrecursorMolecule> precursors(size_t index) const;
 };
 
 class Synthesis {
