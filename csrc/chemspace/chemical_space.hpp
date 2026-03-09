@@ -9,6 +9,7 @@
 
 #include "../chemistry/chemistry.hpp"
 #include "bb_lib.hpp"
+#include "int_lib.hpp"
 #include "rxn_lib.hpp"
 #include "synthesis.hpp"
 
@@ -27,10 +28,13 @@ struct ReactantMatchingConfig {
     }
 };
 
-class ReactantBuildingBlockMapping {
+class ReactantLists {
+public:
+    using MolIndex = size_t;
+
 private:
     // reaction -> reactant -> [building block]
-    std::vector<std::vector<std::vector<BuildingBlockLibrary::Index>>> r2b_;
+    std::vector<std::vector<std::vector<MolIndex>>> r2b_;
     size_t num_matches_ = 0;
     friend class ChemicalSpace;
 
@@ -47,22 +51,24 @@ public:
     size_t num_matches() const { return num_matches_; }
 
     void init(const ReactionLibrary &);
-    void set(BuildingBlockLibrary::Index, ReactionLibrary::Index, Reaction::ReactantIndex);
+    void set(MolIndex, ReactionLibrary::Index, Reaction::ReactantIndex);
 };
 
 class ChemicalSpace {
 private:
     std::unique_ptr<BuildingBlockLibrary> bb_lib_;
     std::unique_ptr<ReactionLibrary> rxn_lib_;
+    std::unique_ptr<IntermediateLibrary> int_lib_;
 
     ReactantMatchingConfig reactant_matching_config_;
-    ReactantBuildingBlockMapping rnt_bb_mapping_;
+    ReactantLists rnt_bb_mapping_;
 
 public:
     ChemicalSpace(std::unique_ptr<BuildingBlockLibrary> bb_lib,
                   std::unique_ptr<ReactionLibrary> rxn_lib,
+                  std::unique_ptr<IntermediateLibrary> int_lib,
                   const ReactantMatchingConfig &matching_config = {})
-        : bb_lib_(std::move(bb_lib)), rxn_lib_(std::move(rxn_lib)),
+        : bb_lib_(std::move(bb_lib)), rxn_lib_(std::move(rxn_lib)), int_lib_(std::move(int_lib)),
           reactant_matching_config_(matching_config) {}
 
     static std::unique_ptr<ChemicalSpace> deserialize(std::istream &);
@@ -70,12 +76,13 @@ public:
 
     const BuildingBlockLibrary &bb_lib() const { return *bb_lib_; }
     const ReactionLibrary &rxn_lib() const { return *rxn_lib_; }
+    const IntermediateLibrary &int_lib() const { return *int_lib_; }
     const ReactantMatchingConfig &reactant_matching_config() const {
         return reactant_matching_config_;
     }
 
-    void build_reactant_building_block_mapping();
-    void print_reactant_building_block_mapping(std::ostream &) const;
+    void build_reactant_lists();
+    void print_reactant_lists(std::ostream &) const;
 
     std::unique_ptr<ChemicalSpaceSynthesis> new_synthesis() const;
 };
