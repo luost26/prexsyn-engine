@@ -152,6 +152,7 @@ Reaction::apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactant
     }
 
     auto rdk_outcomes = rdkit_rxn_->runReactants(rdk_reactants);
+    bool has_error = false;
     for (const auto &rdk_outcome : rdk_outcomes) {
         ReactionOutcome outcome;
         for (const auto &rdk_prod : rdk_outcome) {
@@ -159,6 +160,7 @@ Reaction::apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactant
                 auto prod = Molecule::from_unsanitized_rdkit(rdk_prod);
                 outcome.products.push_back(std::move(prod));
             } catch (const MoleculeError &e) {
+                has_error = true;
                 if (ignore_errors) {
                     continue;
                 } else {
@@ -168,7 +170,9 @@ Reaction::apply(const std::map<std::string, std::shared_ptr<Molecule>> &reactant
             }
         }
 
-        outcomes.push_back(std::move(outcome));
+        if (!has_error && !outcome.products.empty()) {
+            outcomes.push_back(std::move(outcome));
+        }
     }
 
     return outcomes;

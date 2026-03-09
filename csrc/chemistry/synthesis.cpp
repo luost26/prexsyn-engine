@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>
@@ -48,6 +49,13 @@ std::vector<SynthesisNode::PrecursorMolecule> SynthesisNode::precursors(size_t i
     }
 
     return result;
+}
+
+std::shared_ptr<SynthesisNode> Synthesis::stack_top(size_t i) const {
+    if (i >= stack_.size()) {
+        throw SynthesisError("Stack index out of range");
+    }
+    return stack_.at(stack_.size() - 1 - i);
 }
 
 void Synthesis::push(const std::shared_ptr<Molecule> &molecule) {
@@ -112,6 +120,18 @@ void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
     nodes_.push_back(std::move(new_node));
     stack_.erase(stack_iter, stack_.end());
     stack_.push_back(nodes_.back());
+}
+
+void Synthesis::undo() {
+    if (stack_.empty()) {
+        throw SynthesisError("Cannot undo because the stack is empty");
+    }
+    const auto &top_node = stack_.back();
+    stack_.pop_back();
+    nodes_.pop_back();
+    for (const auto &it : std::ranges::reverse_view(top_node->precursor_nodes())) {
+        stack_.push_back(it);
+    }
 }
 
 } // namespace prexsyn

@@ -79,6 +79,12 @@ public:
     }
 
     static std::unique_ptr<ChemicalSpace> deserialize(std::istream &);
+    struct PeekStats {
+        size_t num_reactions = 0;
+        size_t num_building_blocks = 0;
+        size_t num_intermediates = 0;
+    };
+    static PeekStats peek(std::istream &);
     void serialize(std::ostream &) const;
 
     const BuildingBlockLibrary &bb_lib() const { return *bb_lib_; }

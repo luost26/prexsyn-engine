@@ -8,4 +8,5 @@
 #include "postfix_notation.hpp"
 #include "rxn_lib.hpp"
 #include "rxn_lib_factory.hpp"
+#include "synthesis.hpp"
 // IWYU pragma: end_exports

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <stdexcept>
 #include <vector>
 
 namespace prexsyn::chemspace {
@@ -34,6 +35,13 @@ public:
 
     void extend(const std::vector<Token> &new_tokens) {
         tokens_.insert(tokens_.end(), new_tokens.begin(), new_tokens.end());
+    }
+
+    void pop_back() {
+        if (tokens_.empty()) {
+            throw std::out_of_range("Cannot pop_back from an empty PostfixNotation");
+        }
+        tokens_.pop_back();
     }
 };
 

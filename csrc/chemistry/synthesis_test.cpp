@@ -40,8 +40,8 @@ TEST(SynthesisTest, PushReactionBuildsExpectedTopNodeAndPrecursors) {
     synthesis.push(reactant_b);
     synthesis.push(reaction);
 
-    ASSERT_EQ(synthesis.stack().size(), 1);
-    const auto &top = synthesis.stack().back();
+    ASSERT_EQ(synthesis.stack_size(), 1);
+    const auto &top = synthesis.stack_top();
     ASSERT_EQ(top->size(), 1);
     EXPECT_EQ(top->at(0)->smiles(), kExpectedProductSmiles);
 
@@ -73,8 +73,8 @@ TEST(SynthesisTest, PushReactionCanProduceEmptyTopNodeWhenNoOutcomes) {
 
     synthesis.push(make_test_reaction());
 
-    ASSERT_EQ(synthesis.stack().size(), 1);
-    const auto &top = synthesis.stack().back();
+    ASSERT_EQ(synthesis.stack_size(), 1);
+    const auto &top = synthesis.stack_top();
     EXPECT_EQ(top->size(), 0);
     EXPECT_THROW(
         {
@@ -90,7 +90,7 @@ TEST(SynthesisTest, PrecursorMoleculesThrowsOnInvalidItemIndex) {
     synthesis.push(make_reactant_b());
     synthesis.push(make_test_reaction());
 
-    const auto &top = synthesis.stack().back();
+    const auto &top = synthesis.stack_top();
     ASSERT_EQ(top->size(), 1);
     EXPECT_THROW(
         {

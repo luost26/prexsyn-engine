@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "../chemistry/chemistry.hpp"
 #include "bb_lib.hpp"
@@ -36,10 +38,18 @@ public:
         operator bool() const { return is_ok; }
     };
 
+    size_t count_building_blocks() const;
+    size_t count_reactions() const;
+    std::vector<std::shared_ptr<Molecule>> products() const;
+
     Result add_building_block(BuildingBlockLibrary::Index) noexcept;
     Result add_building_block(const std::string &) noexcept;
     Result add_reaction(ReactionLibrary::Index) noexcept;
     Result add_reaction(const std::string &) noexcept;
+    Result add_postfix_notation(const PostfixNotation &) noexcept;
+    Result undo() noexcept;
 };
+
+using Synthesis = ChemicalSpaceSynthesis;
 
 } // namespace prexsyn::chemspace

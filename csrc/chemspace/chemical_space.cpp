@@ -66,6 +66,13 @@ std::unique_ptr<ChemicalSpace> ChemicalSpace::deserialize(std::istream &is) {
     }
 }
 
+ChemicalSpace::PeekStats ChemicalSpace::peek(std::istream &is) {
+    boost::archive::binary_iarchive ia(is);
+    PeekStats stats;
+    ia >> stats.num_building_blocks >> stats.num_reactions >> stats.num_intermediates;
+    return stats;
+}
+
 void ChemicalSpace::serialize(std::ostream &os) const {
     {
         // For peeking
