@@ -126,7 +126,7 @@ void Synthesis::undo() {
     if (stack_.empty()) {
         throw SynthesisError("Cannot undo because the stack is empty");
     }
-    const auto &top_node = stack_.back();
+    auto top_node = stack_.back();
     stack_.pop_back();
     nodes_.pop_back();
     for (const auto &it : std::ranges::reverse_view(top_node->precursor_nodes())) {

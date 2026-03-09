@@ -66,22 +66,33 @@ TEST(SynthesisTest, PushReactionThrowsWhenStackHasTooFewReactants) {
     EXPECT_THROW({ synthesis.push(make_test_reaction()); }, SynthesisError);
 }
 
-TEST(SynthesisTest, PushReactionCanProduceEmptyTopNodeWhenNoOutcomes) {
+TEST(SynthesisTest, PushReactionThrowsWhenReactionDoesNotProduceAnyProducts) {
     Synthesis synthesis;
     synthesis.push(make_non_matching_reactant());
     synthesis.push(make_non_matching_reactant());
 
-    synthesis.push(make_test_reaction());
+    EXPECT_THROW({ synthesis.push(make_test_reaction()); }, SynthesisError);
+}
 
+TEST(SynthesisTest, UndoRestoresPrecursorNodesInOriginalStackOrder) {
+    Synthesis synthesis;
+    const auto reactant_a = make_reactant_a();
+    const auto reactant_b = make_reactant_b();
+    const auto reaction = make_test_reaction();
+
+    synthesis.push(reactant_a);
+    synthesis.push(reactant_b);
+    synthesis.push(reaction);
+
+    ASSERT_EQ(synthesis.nodes().size(), 3);
     ASSERT_EQ(synthesis.stack_size(), 1);
-    const auto &top = synthesis.stack_top();
-    EXPECT_EQ(top->size(), 0);
-    EXPECT_THROW(
-        {
-            const auto unused = top->at(0);
-            (void)unused;
-        },
-        std::out_of_range);
+
+    synthesis.undo();
+
+    ASSERT_EQ(synthesis.nodes().size(), 2);
+    ASSERT_EQ(synthesis.stack_size(), 2);
+    EXPECT_EQ(synthesis.stack_top(0)->at(0)->smiles(), reactant_b->smiles());
+    EXPECT_EQ(synthesis.stack_top(1)->at(0)->smiles(), reactant_a->smiles());
 }
 
 TEST(SynthesisTest, PrecursorMoleculesThrowsOnInvalidItemIndex) {
