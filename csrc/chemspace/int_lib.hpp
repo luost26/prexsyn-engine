@@ -54,6 +54,7 @@ public:
     const IntermediateItem &get(Index) const;
     const IntermediateItem &get(const std::string &) const;
     Index add(const IntermediateEntry &);
+    void clear();
 
     auto begin() const noexcept { return intermediates_.begin(); }
     auto end() const noexcept { return intermediates_.end(); }

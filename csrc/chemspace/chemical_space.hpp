@@ -4,6 +4,7 @@
 #include <istream>
 #include <memory>
 #include <ostream>
+#include <stdexcept>
 #include <utility>
 #include <vector>
 
@@ -16,7 +17,7 @@
 namespace prexsyn::chemspace {
 
 struct ReactantMatchingConfig {
-    size_t selectivity_cutoff = 1;
+    size_t selectivity_cutoff = 2;
 
     template <typename Archive> void serialize(Archive &ar, const unsigned int /* version */) {
         ar & selectivity_cutoff;
@@ -61,7 +62,7 @@ private:
     std::unique_ptr<IntermediateLibrary> int_lib_;
 
     ReactantMatchingConfig reactant_matching_config_;
-    ReactantLists rnt_bb_mapping_;
+    ReactantLists rnt_bb_mapping_, rnt_int_mapping_;
 
 public:
     ChemicalSpace(std::unique_ptr<BuildingBlockLibrary> bb_lib,
@@ -69,7 +70,13 @@ public:
                   std::unique_ptr<IntermediateLibrary> int_lib,
                   const ReactantMatchingConfig &matching_config = {})
         : bb_lib_(std::move(bb_lib)), rxn_lib_(std::move(rxn_lib)), int_lib_(std::move(int_lib)),
-          reactant_matching_config_(matching_config) {}
+          reactant_matching_config_(matching_config) {
+        if (bb_lib_ == nullptr || rxn_lib_ == nullptr || int_lib_ == nullptr) {
+            throw std::invalid_argument("null pointer not allowed");
+        }
+        rnt_bb_mapping_.init(*rxn_lib_);
+        rnt_int_mapping_.init(*rxn_lib_);
+    }
 
     static std::unique_ptr<ChemicalSpace> deserialize(std::istream &);
     void serialize(std::ostream &) const;
@@ -81,7 +88,10 @@ public:
         return reactant_matching_config_;
     }
 
-    void build_reactant_lists();
+    void generate_intermediates();
+
+    void build_reactant_lists_for_building_blocks();
+    void build_reactant_lists_for_intermediates();
     void print_reactant_lists(std::ostream &) const;
 
     std::unique_ptr<ChemicalSpaceSynthesis> new_synthesis() const;

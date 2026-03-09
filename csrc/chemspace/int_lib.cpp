@@ -62,4 +62,9 @@ IntermediateLibrary::Index IntermediateLibrary::add(const IntermediateEntry &ent
     return new_index;
 }
 
+void IntermediateLibrary::clear() {
+    intermediates_.clear();
+    identifier_to_index_.clear();
+}
+
 } // namespace prexsyn::chemspace
