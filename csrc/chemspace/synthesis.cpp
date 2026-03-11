@@ -9,6 +9,7 @@
 #include "../chemistry/chemistry.hpp"
 #include "bb_lib.hpp"
 #include "chemical_space.hpp"
+#include "int_lib.hpp"
 #include "postfix_notation.hpp"
 #include "rxn_lib.hpp"
 
@@ -118,6 +119,15 @@ Result ChemicalSpaceSynthesis::add_postfix_notation(const PostfixNotation &pfn) 
     }
     return result;
 };
+
+Result ChemicalSpaceSynthesis::add_intermediate(IntermediateLibrary::Index index) noexcept {
+    try {
+        const auto &int_item = cs_.int_lib().get(index);
+        return add_postfix_notation(int_item.postfix_notation);
+    } catch (const std::exception &e) {
+        return Result::error(e.what());
+    }
+}
 
 Result ChemicalSpaceSynthesis::undo() noexcept {
     try {

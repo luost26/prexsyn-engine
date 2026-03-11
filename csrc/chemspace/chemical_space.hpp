@@ -45,7 +45,7 @@ public:
         ar & num_matches_;
     }
 
-    const auto &get_building_blocks(ReactionLibrary::Index i, Reaction::ReactantIndex j) const {
+    const auto &get(ReactionLibrary::Index i, Reaction::ReactantIndex j) const {
         return r2b_.at(i).at(j);
     }
 
@@ -93,6 +93,8 @@ public:
     const ReactantMatchingConfig &reactant_matching_config() const {
         return reactant_matching_config_;
     }
+    const ReactantLists &building_block_reactant_lists() const { return rnt_bb_mapping_; }
+    const ReactantLists &intermediate_reactant_lists() const { return rnt_int_mapping_; }
 
     void generate_intermediates();
 

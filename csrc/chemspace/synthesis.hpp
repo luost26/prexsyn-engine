@@ -7,6 +7,7 @@
 
 #include "../chemistry/chemistry.hpp"
 #include "bb_lib.hpp"
+#include "int_lib.hpp"
 #include "postfix_notation.hpp"
 #include "rxn_lib.hpp"
 
@@ -47,6 +48,7 @@ public:
     Result add_reaction(ReactionLibrary::Index) noexcept;
     Result add_reaction(const std::string &) noexcept;
     Result add_postfix_notation(const PostfixNotation &) noexcept;
+    Result add_intermediate(IntermediateLibrary::Index) noexcept;
     Result undo() noexcept;
 };
 
