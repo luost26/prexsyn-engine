@@ -13,9 +13,9 @@
 
 namespace {
 
+using prexsyn::DataType;
 using prexsyn::datapipe::ColumnDef;
 using prexsyn::datapipe::DataBuffer;
-using prexsyn::datapipe::DataType;
 using prexsyn::datapipe::ReadBatch;
 
 constexpr size_t kTestCapacity = 4;

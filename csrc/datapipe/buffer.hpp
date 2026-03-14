@@ -10,7 +10,9 @@
 #include <string>
 #include <vector>
 
+// IWYU pragma: begin_exports
 #include "../utility/data_type.hpp"
+// IWYU pragma: end_exports
 
 namespace prexsyn::datapipe {
 
