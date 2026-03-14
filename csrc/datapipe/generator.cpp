@@ -73,10 +73,8 @@ void Generator::grow_synthesis() {
         if (i == match.reactant_index) {
             continue;
         }
-        const auto &rlist_bb =
-            cs_->building_block_reactant_lists().get(match.reaction_index, match.reactant_index);
-        const auto &rlist_int =
-            cs_->intermediate_reactant_lists().get(match.reaction_index, match.reactant_index);
+        const auto &rlist_bb = cs_->building_block_reactant_lists().get(match.reaction_index, i);
+        const auto &rlist_int = cs_->intermediate_reactant_lists().get(match.reaction_index, i);
         const auto &[choice, index] = random_choice(rlist_bb, rlist_int, rng_);
         if (choice == which_vector::first) {
             result = synthesis_->add_building_block(index);
