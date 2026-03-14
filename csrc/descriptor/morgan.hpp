@@ -13,7 +13,7 @@
 
 namespace prexsyn::descriptor {
 
-class MorganFingerprint : public MoleculeDescriptor<float> {
+class MorganFingerprint : public MoleculeDescriptor {
 private:
     using Generator = RDKit::FingerprintGenerator<std::uint64_t>;
     std::unique_ptr<Generator> generator_;
@@ -25,8 +25,9 @@ public:
     static std::unique_ptr<MorganFingerprint> fcfp4();
 
     size_t size() const override { return generator_->getOptions()->d_fpSize; }
+    DataType::T dtype() const override { return DataType::bool8; }
 
-    void operator()(const Molecule &mol, std::span<float> &out) const override;
+    void operator()(const Molecule &, std::span<std::byte> &) const override;
 };
 
 } // namespace prexsyn::descriptor

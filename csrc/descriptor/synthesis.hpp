@@ -18,7 +18,7 @@ struct TokenDef {
     std::int64_t rxn = 4;
 };
 
-class SynthesisPostfixNotation : public SynthesisDescriptor<std::int64_t> {
+class SynthesisPostfixNotation : public SynthesisDescriptor {
 private:
     TokenDef token_def_;
     size_t max_length_;
@@ -32,8 +32,9 @@ public:
     };
 
     size_t size() const override { return max_length_ * 3; /* type + bb_idx + rxn_idx */ }
+    DataType::T dtype() const override { return DataType::int64; }
 
-    void operator()(const chemspace::Synthesis &syn, std::span<std::int64_t> &out) const override;
+    void operator()(const chemspace::Synthesis &, std::span<std::byte> &) const override;
 };
 
 } // namespace prexsyn::descriptor

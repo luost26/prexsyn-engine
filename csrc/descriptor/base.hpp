@@ -4,69 +4,54 @@
 #include <span>
 #include <stdexcept>
 #include <string>
-#include <vector>
+#include <type_traits>
 
+// IWYU pragma: begin_exports
+#include "../utility/data_type.hpp"
+// IWYU pragma: end_exports
 #include "../chemistry/chemistry.hpp"
 #include "../chemspace/chemspace.hpp"
 
 namespace prexsyn::descriptor {
 
-template <typename D>
-    requires(std::is_floating_point_v<D> || std::is_integral_v<D>)
-class MoleculeDescriptor {
+template <typename T>
+    requires std::is_same_v<T, Molecule> || std::is_same_v<T, chemspace::Synthesis>
+class Descriptor {
 public:
-    MoleculeDescriptor() = default;
-    MoleculeDescriptor(const MoleculeDescriptor &) = default;
-    MoleculeDescriptor(MoleculeDescriptor &&) = default;
-    MoleculeDescriptor &operator=(const MoleculeDescriptor &) = default;
-    MoleculeDescriptor &operator=(MoleculeDescriptor &&) = default;
+    Descriptor() = default;
+    Descriptor(const Descriptor &) = default;
+    Descriptor(Descriptor &&) = default;
+    Descriptor &operator=(const Descriptor &) = default;
+    Descriptor &operator=(Descriptor &&) = default;
 
-    virtual ~MoleculeDescriptor() = default;
+    virtual ~Descriptor() = default;
+    virtual DataType::T dtype() const = 0;
     virtual size_t size() const = 0;
-    virtual void operator()(const Molecule &, std::span<D> &out) const = 0;
+    size_t size_in_bytes() const { return size() * DataType::get_size(dtype()); }
 
-    void check_size(std::span<D> &out) const {
-        if (out.size() != size()) {
+    template <SupportedDataType U> std::span<U> cast(std::span<std::byte> &out) const {
+        if (DataType::get_dtype<U>() != dtype()) {
+            throw std::runtime_error("Data type mismatch");
+        }
+        return std::span<U>(reinterpret_cast<U *>(out.data()),
+                            out.size() / DataType::get_size(dtype()));
+    }
+
+    virtual void operator()(const T &, std::span<std::byte> &) const = 0;
+
+    void check_size(std::span<std::byte> &out) const {
+        if (out.size() != size_in_bytes()) {
             throw std::runtime_error("descriptor size mismatch, expected " +
-                                     std::to_string(size()) + " but got " +
+                                     std::to_string(size_in_bytes()) + " but got " +
                                      std::to_string(out.size()));
         }
     }
-
-    std::vector<D> operator()(const Molecule &mol) const {
-        std::vector<D> out(size());
-        (*this)(mol, out);
-        return out;
-    }
 };
 
-template <typename D>
-    requires(std::is_floating_point_v<D> || std::is_integral_v<D>)
-class SynthesisDescriptor {
-public:
-    SynthesisDescriptor() = default;
-    SynthesisDescriptor(const SynthesisDescriptor &) = default;
-    SynthesisDescriptor(SynthesisDescriptor &&) = default;
-    SynthesisDescriptor &operator=(const SynthesisDescriptor &) = default;
-    SynthesisDescriptor &operator=(SynthesisDescriptor &&) = default;
+template class Descriptor<Molecule>;
+using MoleculeDescriptor = Descriptor<Molecule>;
 
-    virtual ~SynthesisDescriptor() = default;
-    virtual size_t size() const = 0;
-    virtual void operator()(const chemspace::Synthesis &, std::span<D> &out) const = 0;
-
-    void check_size(std::span<D> &out) const {
-        if (out.size() != size()) {
-            throw std::runtime_error("descriptor size mismatch, expected " +
-                                     std::to_string(size()) + " but got " +
-                                     std::to_string(out.size()));
-        }
-    }
-
-    std::vector<D> operator()(const chemspace::Synthesis &syn) const {
-        std::vector<D> out(size());
-        (*this)(syn, out);
-        return out;
-    }
-};
+template class Descriptor<chemspace::Synthesis>;
+using SynthesisDescriptor = Descriptor<chemspace::Synthesis>;
 
 } // namespace prexsyn::descriptor

@@ -10,8 +10,10 @@
 namespace prexsyn::descriptor {
 
 void SynthesisPostfixNotation::operator()(const chemspace::Synthesis &syn,
-                                          std::span<std::int64_t> &out) const {
-    check_size(out);
+                                          std::span<std::byte> &out_raw) const {
+    check_size(out_raw);
+    auto out = cast<std::int64_t>(out_raw);
+
     const auto &tokens = syn.postfix_notation().tokens();
 
     std::fill(out.begin(), out.end(), token_def_.pad);

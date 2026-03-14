@@ -30,12 +30,14 @@ std::unique_ptr<MorganFingerprint> MorganFingerprint::fcfp4() {
     return std::make_unique<MorganFingerprint>(std::move(generator));
 }
 
-void MorganFingerprint::operator()(const Molecule &mol, std::span<float> &out) const {
-    // getFingerprint returns a raw pointer with released ownership
+void MorganFingerprint::operator()(const Molecule &mol, std::span<std::byte> &out) const {
     check_size(out);
+    auto out_t = cast<bool>(out);
+
+    // getFingerprint returns a raw pointer with released ownership
     std::unique_ptr<ExplicitBitVect> fp{generator_->getFingerprint(mol.rdkit_mol())};
     for (size_t i = 0; i < out.size(); ++i) {
-        out[i] = (*fp)[i] ? 1.0f : 0.0f;
+        out_t[i] = (*fp)[i];
     }
 }
 
