@@ -15,6 +15,8 @@ pybind11 = ">=3.0.1,<4"
 spdlog = ">=1.15.3,<2"
 gtest = "*"
 
+pip = "*"
+setuptools = "*"
 scikit-build-core = ">=0.11.6"
 auditwheel = "*"
 patchelf = "*"
@@ -40,7 +42,11 @@ build-release = { cmd = "ninja -C build/release/" }
 build = [ { task = "build-debug" }, { task = "build-release" } ]
 test = { cmd = "ctest --output-on-failure --test-dir build/debug", depends-on = ["build-debug"] }
 
+pyinstall-debug = { cmd = "pip install -e . --no-build-isolation --config-settings=cmake.build-type=Debug -v"}
+python-asan = { cmd = "python", env = { LD_PRELOAD = "$(clang -print-file-name=libclang_rt.asan-x86_64.so)" } }
+
 [target.linux-64.activation.env]
 LD_LIBRARY_PATH = "${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
+ASAN_SYMBOLIZER_PATH = "${CONDA_PREFIX}/bin/llvm-symbolizer"
 CXX = "${CONDA_PREFIX}/bin/clang++"
 CC = "${CONDA_PREFIX}/bin/clang"
