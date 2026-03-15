@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <span>
 #include <stop_token>
 #include <string>
 #include <utility>
@@ -31,6 +32,13 @@ DataPipeline::DataPipeline(const std::shared_ptr<ChemicalSpace> &cs,
     }
 
     buffer_ = std::make_unique<DataBuffer<8192>>(column_defs);
+
+    logger_->info("DataPipeline initialized");
+    logger_->info("Buffer schema:");
+    for (const auto &col_def : buffer_->schema()) {
+        logger_->info("- {}: shape {}, dtype {}", col_def.name(), col_def.shape(),
+                      DataType::to_string(col_def.dtype()));
+    }
 }
 
 void DataPipeline::start_workers(const std::vector<size_t> &seeds) {
@@ -52,6 +60,28 @@ void DataPipeline::stop_workers() {
 
 void DataPipeline::get(const NamedReadBatch &batch) { buffer_->get(batch); }
 
+DataPipeline::Batch DataPipeline::get(size_t batch_size) {
+    Batch batch{.pipeline = *this, .batch_size = batch_size, .data = {}};
+    for (const auto &col_def : buffer_->schema()) {
+        batch.data[col_def.name()] = std::vector<std::byte>(batch_size * col_def.size_in_bytes());
+    }
+
+    NamedReadBatch read_batch{.batch_size = batch_size, .destinations = {}};
+    for (const auto &col_def : buffer_->schema()) {
+        read_batch.add(col_def.name(), std::span<std::byte>(batch.data[col_def.name()]));
+    }
+
+    get(read_batch);
+    return batch;
+}
+
+Worker::Worker(const DataPipeline &owner, size_t seed)
+    : owner_(owner), seed_(seed),
+      generator_(owner_.chemical_space_, owner_.generator_config_, seed),
+      thread_(&Worker::run, this) {
+    owner_.logger_->info("Worker[seed={}] started", seed);
+}
+
 void Worker::run() {
     while (!thread_.get_stop_token().stop_requested()) {
         auto [synthesis, product] = generator_.next_with_product();
@@ -66,6 +96,15 @@ void Worker::run() {
         }
         owner_.buffer_->put(std::move(data_row));
     }
+}
+
+void Worker::request_stop() { thread_.request_stop(); }
+
+void Worker::join() {
+    if (thread_.joinable()) {
+        thread_.join();
+    }
+    owner_.logger_->info("Worker[seed={}] joined", seed_);
 }
 
 } // namespace prexsyn::datapipe

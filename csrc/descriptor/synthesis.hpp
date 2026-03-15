@@ -25,7 +25,7 @@ private:
     size_t max_length_;
 
 public:
-    SynthesisPostfixNotation(const TokenDef &token_def, size_t max_length)
+    SynthesisPostfixNotation(const TokenDef &token_def = TokenDef(), size_t max_length = 16)
         : token_def_(token_def), max_length_(max_length) {
         if (max_length_ < 4) {
             throw std::invalid_argument("max_length must be at least 4");

@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <string>
 #include <type_traits>
 
 namespace prexsyn {
@@ -39,6 +40,18 @@ struct DataType {
             return 1;
         }
         return 0;
+    }
+
+    static std::string to_string(const T &t) {
+        switch (t) {
+        case T::float32:
+            return "float32";
+        case T::int64:
+            return "int64";
+        case T::bool8:
+            return "bool8";
+        }
+        return "unknown";
     }
 };
 

@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <span>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <vector>
@@ -45,6 +47,27 @@ public:
     void stop_workers();
 
     void get(const NamedReadBatch &batch);
+
+    struct Batch {
+        const DataPipeline &pipeline;
+        size_t batch_size;
+        std::map<std::string, std::vector<std::byte>> data;
+
+        template <typename T> std::span<const T> get(const std::string &name) const {
+            if (!data.contains(name)) {
+                throw std::runtime_error("missing: " + name);
+            }
+            auto col_idx = pipeline.buffer_->column_name_to_index().at(name);
+            auto col_def = pipeline.buffer_->schema().at(col_idx);
+            if (DataType::get_dtype<T>() != col_def.dtype()) {
+                throw std::runtime_error("type mismatch: " + name);
+            }
+            const auto &bytes = data.at(name);
+            return std::span<const T>(reinterpret_cast<const T *>(bytes.data()),
+                                      bytes.size() / sizeof(T));
+        }
+    };
+    Batch get(size_t batch_size);
 };
 
 class Worker {
@@ -52,23 +75,15 @@ private:
     friend class DataPipeline;
 
     const DataPipeline &owner_;
+    const size_t seed_;
     Generator generator_;
     std::jthread thread_;
 
-    Worker(const DataPipeline &owner, size_t seed)
-        : owner_(owner), generator_(owner_.chemical_space_, owner_.generator_config_, seed),
-          thread_(&Worker::run, this) {
-        owner_.logger_->info("Worker thread started with seed {}", seed);
-    }
-
-    void request_stop() { thread_.request_stop(); }
-    void join() {
-        if (thread_.joinable()) {
-            thread_.join();
-        }
-    }
+    Worker(const DataPipeline &owner, size_t seed);
 
     void run();
+    void request_stop();
+    void join();
 };
 
 } // namespace prexsyn::datapipe

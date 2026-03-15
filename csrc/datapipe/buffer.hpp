@@ -72,9 +72,12 @@ struct NamedReadBatch;
 template <size_t capacity>
     requires(capacity > 0)
 class DataBuffer {
+public:
+    using Schema = std::vector<ColumnDef>;
+
 private:
     std::vector<Column<capacity>> columns_;
-    std::vector<ColumnDef> schema_;
+    Schema schema_;
     std::map<std::string, size_t> column_name_to_index_;
 
     std::counting_semaphore<capacity> empty_sem{capacity};
@@ -135,6 +138,8 @@ struct ReadBatch {
     size_t batch_size;
     std::vector<std::span<std::byte>> destinations;
 
+    void add(std::span<std::byte> dest) { destinations.emplace_back(dest); }
+
     template <SupportedDataType T> void add(std::span<T> destination) {
         destinations.emplace_back(std::as_writable_bytes(destination));
     }
@@ -143,6 +148,8 @@ struct ReadBatch {
 struct NamedReadBatch {
     size_t batch_size;
     std::map<std::string, std::span<std::byte>> destinations;
+
+    void add(const std::string &name, std::span<std::byte> dest) { destinations[name] = dest; }
 
     template <SupportedDataType T> void add(const std::string &name, std::span<T> destination) {
         destinations[name] = std::as_writable_bytes(destination);

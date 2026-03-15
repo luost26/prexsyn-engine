@@ -20,7 +20,7 @@ void SynthesisPostfixNotation::operator()(const chemspace::Synthesis &syn,
     out[0] = token_def_.start;
 
     size_t i = 1;
-    for (; i < std::min(tokens.size(), max_length_); ++i) {
+    for (; i <= std::min(tokens.size(), max_length_ - 1); ++i) {
         const auto &token = tokens[i - 1];
         if (token.type == chemspace::PostfixNotation::Token::Type::BuildingBlock) {
             out[i * 3] = token_def_.bb;

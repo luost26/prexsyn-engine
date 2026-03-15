@@ -11,7 +11,7 @@ namespace prexsyn::datapipe {
 
 template <size_t capacity>
     requires(capacity > 0)
-DataBuffer<capacity>::DataBuffer(const std::vector<ColumnDef> &schema) : schema_(schema) {
+DataBuffer<capacity>::DataBuffer(const Schema &schema) : schema_(schema) {
     columns_.reserve(schema.size());
     for (size_t col_index = 0; col_index < schema.size(); ++col_index) {
         columns_.emplace_back(schema[col_index]);
