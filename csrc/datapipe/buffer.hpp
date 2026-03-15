@@ -67,12 +67,14 @@ template <size_t capacity>
 class WriteRow;
 
 struct ReadBatch;
+struct NamedReadBatch;
 
 template <size_t capacity>
     requires(capacity > 0)
 class DataBuffer {
 private:
     std::vector<Column<capacity>> columns_;
+    std::vector<ColumnDef> schema_;
     std::map<std::string, size_t> column_name_to_index_;
 
     std::counting_semaphore<capacity> empty_sem{capacity};
@@ -86,11 +88,13 @@ private:
 
 public:
     DataBuffer(const std::vector<ColumnDef> &schema);
+    const std::vector<ColumnDef> &schema() const { return schema_; }
     const auto &column_name_to_index() const { return column_name_to_index_; }
 
     std::unique_ptr<WriteRow<capacity>> new_write_row();
     void put(std::unique_ptr<WriteRow<capacity>> row);
     void get(const ReadBatch &batch);
+    void get(const NamedReadBatch &batch);
 };
 
 template <size_t capacity>
@@ -110,6 +114,11 @@ private:
     friend class DataBuffer<capacity>;
 
 public:
+    std::span<std::byte> data(const std::string &name) {
+        auto index = buffer_.column_name_to_index_.at(name);
+        return row_data_[index];
+    }
+
     template <typename T> std::span<T> data(const std::string &name) {
         auto index = buffer_.column_name_to_index_.at(name);
         const ColumnDef &def = buffer_.columns_[index];
@@ -125,6 +134,19 @@ public:
 struct ReadBatch {
     size_t batch_size;
     std::vector<std::span<std::byte>> destinations;
+
+    template <SupportedDataType T> void add(std::span<T> destination) {
+        destinations.emplace_back(std::as_writable_bytes(destination));
+    }
+};
+
+struct NamedReadBatch {
+    size_t batch_size;
+    std::map<std::string, std::span<std::byte>> destinations;
+
+    template <SupportedDataType T> void add(const std::string &name, std::span<T> destination) {
+        destinations[name] = std::as_writable_bytes(destination);
+    }
 };
 
 } // namespace prexsyn::datapipe

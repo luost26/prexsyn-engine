@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 
+#include "../chemistry/chemistry.hpp"
 #include "../chemspace/chemspace.hpp"
 #include "../utility/random.hpp"
 
@@ -117,6 +118,13 @@ std::shared_ptr<chemspace::Synthesis> Generator::next() {
         }
     }
     throw std::runtime_error("too many failed attempts to find next synthesis");
+}
+
+std::pair<std::shared_ptr<chemspace::Synthesis>, std::shared_ptr<Molecule>>
+Generator::next_with_product() {
+    auto syn = next();
+    auto product = random_choice(syn->products(), rng_);
+    return {syn, product};
 }
 
 } // namespace prexsyn::datapipe

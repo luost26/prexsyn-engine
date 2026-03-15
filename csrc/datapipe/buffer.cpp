@@ -11,7 +11,7 @@ namespace prexsyn::datapipe {
 
 template <size_t capacity>
     requires(capacity > 0)
-DataBuffer<capacity>::DataBuffer(const std::vector<ColumnDef> &schema) {
+DataBuffer<capacity>::DataBuffer(const std::vector<ColumnDef> &schema) : schema_(schema) {
     columns_.reserve(schema.size());
     for (size_t col_index = 0; col_index < schema.size(); ++col_index) {
         columns_.emplace_back(schema[col_index]);
@@ -47,6 +47,9 @@ template <size_t capacity>
 void DataBuffer<capacity>::get(const ReadBatch &batch) {
     if (batch.batch_size > capacity) {
         throw std::runtime_error("Batch size cannot be greater than buffer capacity");
+    }
+    if (batch.destinations.size() != columns_.size()) {
+        throw std::runtime_error("Batch destinations size must match number of columns");
     }
 
     for (size_t i = 0; i < batch.batch_size; ++i) {
@@ -93,6 +96,22 @@ void DataBuffer<capacity>::get(const ReadBatch &batch) {
     for (size_t i = 0; i < batch.batch_size; ++i) {
         empty_sem.release();
     }
+}
+
+template <size_t capacity>
+    requires(capacity > 0)
+void DataBuffer<capacity>::get(const NamedReadBatch &batch) {
+    ReadBatch index_batch;
+    index_batch.batch_size = batch.batch_size;
+    index_batch.destinations.reserve(columns_.size());
+    for (size_t col_index = 0; col_index < columns_.size(); ++col_index) {
+        const auto &col_name = columns_[col_index].name();
+        if (batch.destinations.find(col_name) == batch.destinations.end()) {
+            throw std::runtime_error("Batch destinations missing column: " + col_name);
+        }
+        index_batch.destinations.push_back(batch.destinations.at(col_name));
+    }
+    get(index_batch);
 }
 
 template class DataBuffer<4>;
