@@ -15,6 +15,10 @@ pybind11 = ">=3.0.1,<4"
 spdlog = ">=1.15.3,<2"
 gtest = "*"
 
+scikit-build-core = ">=0.11.6"
+auditwheel = "*"
+patchelf = "*"
+
 pre-commit = ">=4.5.1,<5"
 
 [target.linux-64.dependencies]

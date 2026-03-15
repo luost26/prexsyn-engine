@@ -43,14 +43,19 @@ list(FILTER SOURCES EXCLUDE REGEX "binding.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX "main.cpp$")
 add_library(prexsyn_obj OBJECT ${SOURCES})
 set_target_properties(prexsyn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX
-                                         csv)
-target_include_directories(prexsyn_obj PUBLIC csv)
+target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX)
+target_include_directories(prexsyn_obj PUBLIC ${csv_SOURCE_DIR}/single_include)
 target_compile_definitions(
   prexsyn_obj PUBLIC SPDLOG_HEADER_ONLY SPDLOG_FMT_EXTERNAL_HO FMT_HEADER_ONLY)
 
 add_executable(main csrc/main.cpp)
 target_link_libraries(main PRIVATE prexsyn_obj)
+
+find_package(Python COMPONENTS Interpreter Development)
+find_package(pybind11 CONFIG)
+file(GLOB_RECURSE BIND_SOURCES CONFIGURE_DEPENDS csrc/*binding.cpp)
+pybind11_add_module(prexsyn_engine ${BIND_SOURCES})
+target_link_libraries(prexsyn_engine PRIVATE prexsyn_obj)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
   enable_testing()
