@@ -31,7 +31,8 @@ public:
     virtual DataType::T dtype() const = 0;
     virtual std::vector<size_t> size() const = 0;
     size_t num_elements() const {
-        return std::accumulate(size().begin(), size().end(), 1, std::multiplies<size_t>());
+        auto s = size();
+        return std::accumulate(s.begin(), s.end(), 1, std::multiplies<size_t>());
     }
     size_t size_in_bytes() const { return num_elements() * DataType::get_size(dtype()); }
 
