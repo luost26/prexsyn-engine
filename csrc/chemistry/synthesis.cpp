@@ -51,7 +51,7 @@ std::vector<SynthesisNode::PrecursorMolecule> SynthesisNode::precursors(size_t i
     return result;
 }
 
-std::shared_ptr<SynthesisNode> Synthesis::stack_top(size_t i) const {
+const std::shared_ptr<SynthesisNode> &Synthesis::stack_top(size_t i) const {
     if (i >= stack_.size()) {
         throw SynthesisError("Stack index out of range");
     }

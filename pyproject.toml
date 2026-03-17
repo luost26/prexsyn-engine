@@ -8,5 +8,4 @@ version = "1.0.0.dev0"
 
 [tool.scikit-build]
 build-dir = "build/scikit-build"
-editable.rebuild = true
 cmake.build-type = "Release"

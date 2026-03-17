@@ -41,7 +41,7 @@ public:
 
     size_t size() const { return items_.size(); }
     const auto &precursor_nodes() const { return precursor_nodes_; }
-    std::shared_ptr<Molecule> at(size_t i) const { return items_.at(i).molecule; }
+    const std::shared_ptr<Molecule> &at(size_t i) const { return items_.at(i).molecule; }
 
     struct PrecursorMolecule {
         size_t precursor_index;
@@ -61,7 +61,7 @@ private:
 public:
     const std::vector<std::shared_ptr<SynthesisNode>> &nodes() const { return nodes_; }
     size_t stack_size() const { return stack_.size(); }
-    std::shared_ptr<SynthesisNode> stack_top(size_t i = 0) const;
+    const std::shared_ptr<SynthesisNode> &stack_top(size_t i = 0) const;
 
     void push(const std::shared_ptr<Molecule> &);
     void push(const std::shared_ptr<Reaction> &);
