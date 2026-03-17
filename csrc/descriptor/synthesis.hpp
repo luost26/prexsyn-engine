@@ -33,6 +33,11 @@ public:
         }
     };
 
+    static std::unique_ptr<SynthesisPostfixNotation> create(const TokenDef &token_def,
+                                                            size_t max_length = 16) {
+        return std::make_unique<SynthesisPostfixNotation>(token_def, max_length);
+    }
+
     static std::unique_ptr<SynthesisPostfixNotation> create(size_t max_length = 16) {
         return std::make_unique<SynthesisPostfixNotation>(TokenDef(), max_length);
     }

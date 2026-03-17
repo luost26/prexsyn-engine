@@ -24,6 +24,7 @@ pytest = "*"
 pyright = "*"
 mypy = "*"
 
+numpy = ">=2.4.2,<3"
 pre-commit = ">=4.5.1,<5"
 
 [target.linux-64.dependencies]
@@ -46,7 +47,7 @@ build = [ { task = "build-debug" }, { task = "build-release" } ]
 test = { cmd = "ctest --output-on-failure --test-dir build/debug", depends-on = ["build-debug"] }
 
 pyinstall-debug = { cmd = "pip install -e . --no-build-isolation --config-settings=cmake.build-type=Debug -v"}
-python-asan = { cmd = "python", env = { LD_PRELOAD = "$(clang -print-file-name=libclang_rt.asan-x86_64.so)" } }
+python-asan = { cmd = "python", env = { LD_PRELOAD = "$(clang -print-file-name=libclang_rt.asan-x86_64.so)" }, depends-on = ["pyinstall-debug"] }
 test-py = { cmd = "pytest tests/", env = { LD_PRELOAD = "$(clang -print-file-name=libclang_rt.asan-x86_64.so)" }, depends-on = ["pyinstall-debug"] }
 
 [target.linux-64.activation.env]
