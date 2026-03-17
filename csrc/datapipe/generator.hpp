@@ -12,8 +12,8 @@
 namespace prexsyn::datapipe {
 
 struct GeneratorConfig {
-    unsigned int max_building_blocks;
-    unsigned int heavy_atom_limit;
+    unsigned int max_building_blocks = 5;
+    unsigned int heavy_atom_limit = 50;
 };
 
 class Generator {
@@ -40,7 +40,7 @@ private:
 
 public:
     Generator(std::shared_ptr<chemspace::ChemicalSpace> cs, const Config &config = default_config,
-              size_t random_seed = std::random_device{}());
+              std::optional<size_t> random_seed = std::nullopt);
 
     std::shared_ptr<chemspace::Synthesis> next();
     std::pair<std::shared_ptr<chemspace::Synthesis>, std::shared_ptr<Molecule>> next_with_product();

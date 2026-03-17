@@ -16,8 +16,9 @@
 namespace prexsyn::datapipe {
 
 Generator::Generator(std::shared_ptr<chemspace::ChemicalSpace> cs, const Config &config,
-                     size_t random_seed)
-    : cs_(std::move(cs)), config_(config), synthesis_(nullptr), rng_(random_seed) {
+                     std::optional<size_t> random_seed)
+    : cs_(std::move(cs)), config_(config), synthesis_(nullptr),
+      rng_(random_seed.value_or(std::random_device{}())) {
     if (cs_ == nullptr) {
         throw std::invalid_argument("null pointer for chemical space");
     }

@@ -43,6 +43,8 @@ public:
                  const std::map<std::string, std::shared_ptr<SynthesisDescriptor>> &,
                  const GeneratorConfig & = Generator::default_config);
 
+    const auto &buffer() const { return *buffer_; }
+
     void start_workers(const std::vector<size_t> &seeds);
     void stop_workers();
 
