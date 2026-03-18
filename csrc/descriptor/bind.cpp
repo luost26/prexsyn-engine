@@ -1,4 +1,4 @@
-#include "binding.hpp"
+#include "bind.hpp"
 
 #include <cstddef>
 #include <span>
@@ -12,11 +12,11 @@
 
 #include "../chemistry/chemistry.hpp"
 #include "../chemspace/chemspace.hpp"
-#include "../utility/data_type_binding.hpp"
+#include "../utility/data_type_bind.hpp"
 #include "descriptor.hpp"
 
-#include "morgan_binding.hpp"
-#include "synthesis_binding.hpp"
+#include "morgan_bind.hpp"
+#include "synthesis_bind.hpp"
 
 namespace py = pybind11;
 using namespace prexsyn;

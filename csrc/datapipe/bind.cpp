@@ -1,4 +1,4 @@
-#include "binding.hpp"
+#include "bind.hpp"
 
 #include <cstddef>
 #include <map>
@@ -16,7 +16,7 @@
 
 #include "../chemspace/chemspace.hpp"
 #include "../descriptor/descriptor.hpp"
-#include "../utility/data_type_binding.hpp"
+#include "../utility/data_type_bind.hpp"
 #include "datapipe.hpp"
 
 namespace py = pybind11;
@@ -25,7 +25,7 @@ using namespace prexsyn::datapipe;
 
 static auto get_from_data_pipeline(DataPipeline &pipeline, size_t batch_size) {
     const auto &schema = pipeline.buffer().schema();
-    NamedReadBatch read{.batch_size = batch_size};
+    NamedReadBatch read{.batch_size = batch_size, .destinations = {}};
     py::dict data;
     for (const auto &col_def : schema) {
         const auto &name = col_def.name();

@@ -1,8 +1,8 @@
 #include <pybind11/pybind11.h>
 
-#include "chemistry/binding.hpp"
-#include "chemspace/binding.hpp"
-#include "descriptor/binding.hpp"
+#include "chemistry/bind.hpp"
+#include "chemspace/bind.hpp"
+#include "descriptor/bind.hpp"
 
 namespace py = pybind11;
 
