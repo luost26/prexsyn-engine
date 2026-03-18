@@ -19,21 +19,21 @@ def resource_path(name: str) -> Path:
 def test_postfix_notation_basic_ops():
     pfn = chemspace.PostfixNotation()
 
-    pfn.append(1, chemspace.PostfixNotationTokenType.building_block())
+    pfn.append(1, chemspace.PostfixNotationTokenType.BuildingBlock)
 
     t1 = chemspace.PostfixNotationToken()
     t1.index = 2
-    t1.type = chemspace.PostfixNotationTokenType.building_block()
+    t1.type = chemspace.PostfixNotationTokenType.BuildingBlock
     t2 = chemspace.PostfixNotationToken()
     t2.index = 3
-    t2.type = chemspace.PostfixNotationTokenType.reaction()
+    t2.type = chemspace.PostfixNotationTokenType.Reaction
     pfn.extend([t1, t2])
 
     tokens = pfn.tokens()
     assert len(tokens) == 3
     assert tokens[0].index == 1
-    assert tokens[0].type == chemspace.PostfixNotationTokenType.building_block()
-    assert tokens[2].type == chemspace.PostfixNotationTokenType.reaction()
+    assert tokens[0].type == chemspace.PostfixNotationTokenType.BuildingBlock
+    assert tokens[2].type == chemspace.PostfixNotationTokenType.Reaction
 
     pfn.pop_back()
     assert len(pfn.tokens()) == 2
@@ -42,7 +42,7 @@ def test_postfix_notation_basic_ops():
 def test_postfix_notation_invalid_type_raises():
     pfn = chemspace.PostfixNotation()
 
-    with pytest.raises(ValueError, match="Invalid PostfixNotation token type"):
+    with pytest.raises(TypeError):
         pfn.append(1, 99)
 
 

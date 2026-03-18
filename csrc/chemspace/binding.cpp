@@ -1,11 +1,10 @@
 #include "binding.hpp"
 
-#include <cstddef>
 #include <memory>
 #include <sstream>
-#include <stdexcept>
 #include <string>
 
+#include <pybind11/native_enum.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/pytypes.h>
 #include <pybind11/stl.h>
@@ -20,43 +19,22 @@
 namespace py = pybind11;
 using namespace prexsyn::chemspace;
 
-struct PostfixNotationTokenTypeProxy {};
-
 static void def_postfix_notation(py::module &m) {
-    py::class_<PostfixNotationTokenTypeProxy>(m, "PostfixNotationTokenType")
-        .def_static(
-            "building_block",
-            []() { return static_cast<size_t>(PostfixNotation::Token::Type::BuildingBlock); })
-        .def_static("reaction",
-                    []() { return static_cast<size_t>(PostfixNotation::Token::Type::Reaction); });
+    py::native_enum<PostfixNotation::Token::Type>(m, "PostfixNotationTokenType", "enum.Enum")
+        .value("BuildingBlock", PostfixNotation::Token::Type::BuildingBlock)
+        .value("Reaction", PostfixNotation::Token::Type::Reaction)
+        .export_values()
+        .finalize();
 
     py::class_<PostfixNotation::Token>(m, "PostfixNotationToken")
         .def(py::init<>())
         .def_readwrite("index", &PostfixNotation::Token::index)
-        .def_property(
-            "type",
-            [](const PostfixNotation::Token &token) { return static_cast<size_t>(token.type); },
-            [](PostfixNotation::Token &token, size_t type) {
-                if (type != static_cast<size_t>(PostfixNotation::Token::Type::BuildingBlock) &&
-                    type != static_cast<size_t>(PostfixNotation::Token::Type::Reaction)) {
-                    throw std::invalid_argument("Invalid PostfixNotation token type");
-                }
-                token.type = static_cast<PostfixNotation::Token::Type>(type);
-            });
+        .def_readwrite("type", &PostfixNotation::Token::type);
 
     py::class_<PostfixNotation, py::smart_holder>(m, "PostfixNotation")
         .def(py::init<>())
         .def("tokens", &PostfixNotation::tokens, py::return_value_policy::reference_internal)
-        .def(
-            "append",
-            [](PostfixNotation &pn, size_t index, size_t type) {
-                if (type != static_cast<size_t>(PostfixNotation::Token::Type::BuildingBlock) &&
-                    type != static_cast<size_t>(PostfixNotation::Token::Type::Reaction)) {
-                    throw std::invalid_argument("Invalid PostfixNotation token type");
-                }
-                pn.append(index, static_cast<PostfixNotation::Token::Type>(type));
-            },
-            py::arg("index"), py::arg("type"))
+        .def("append", &PostfixNotation::append, py::arg("index"), py::arg("type"))
         .def("extend", &PostfixNotation::extend, py::arg("tokens"))
         .def("pop_back", &PostfixNotation::pop_back)
         .def("__repr__", [](const PostfixNotation &pn) {
