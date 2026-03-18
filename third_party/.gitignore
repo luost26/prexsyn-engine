@@ -1,5 +1,6 @@
 *
 !.gitignore
+!clean.sh
 !boost.sh
 !rdkit.sh
 !pkgs/

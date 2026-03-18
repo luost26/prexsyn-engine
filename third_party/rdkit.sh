@@ -14,6 +14,7 @@ else
 fi
 
 cd rdkit
+rm -rf build
 mkdir -p build
 cd build
 

@@ -17,10 +17,12 @@ fi
 cd boost
 
 if [[ -n "$CC" ]]; then
-    ./bootstrap.sh --prefix=$PREFIX --with-toolset=$(basename $CC)
+    ARGS="--with-toolset=$(basename $CC)"
 else
-    ./bootstrap.sh --prefix=$PREFIX
+    ARGS=""
 fi
+
+./bootstrap.sh --prefix=$PREFIX --with-libraries=serialization,iostreams,program_options $ARGS
 ./b2 --clean-all
-./b2 link=static cxxflags=-fPIC cflags=-fPIC --without-python --without-numpy
+./b2 link=static cxxflags=-fPIC cflags=-fPIC
 ./b2 install
