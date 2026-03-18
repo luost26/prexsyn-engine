@@ -1,10 +1,8 @@
 import numpy as np
 import pytest
 
-prexsyn_engine = pytest.importorskip("prexsyn_engine", exc_type=ImportError)
+from prexsyn_engine import chemistry, descriptor
 
-chemistry = prexsyn_engine.chemistry
-descriptor = prexsyn_engine.descriptor
 
 Molecule = chemistry.Molecule
 

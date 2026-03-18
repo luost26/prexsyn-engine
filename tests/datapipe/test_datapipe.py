@@ -1,13 +1,8 @@
 from pathlib import Path
 
 import numpy as np
-import pytest
 
-
-prexsyn_engine = pytest.importorskip("prexsyn_engine", exc_type=ImportError)
-chemspace = prexsyn_engine.chemspace
-datapipe = prexsyn_engine.datapipe
-descriptor = prexsyn_engine.descriptor
+from prexsyn_engine import chemspace, datapipe, descriptor
 
 
 def resource_path(name: str) -> Path:

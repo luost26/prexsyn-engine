@@ -52,6 +52,7 @@ test-py-debug = { cmd = "pytest tests/", env = { LD_PRELOAD = "$(clang -print-fi
 
 pyinstall = { cmd = "pip install -e . --no-build-isolation -v" }
 test-py = { cmd = "pytest tests/", depends-on = ["pyinstall"] }
+generate-stubs = { cmd = "stubgen -p prexsyn_engine -o typings", depends-on = ["pyinstall"] }
 
 [target.linux-64.activation.env]
 LD_LIBRARY_PATH = "${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"

@@ -2,10 +2,7 @@ from pathlib import Path
 
 import pytest
 
-
-prexsyn_engine = pytest.importorskip("prexsyn_engine", exc_type=ImportError)
-chemistry = prexsyn_engine.chemistry
-chemspace = prexsyn_engine.chemspace
+from prexsyn_engine import chemspace, chemistry
 
 Molecule = chemistry.Molecule
 Reaction = chemistry.Reaction
