@@ -3,19 +3,29 @@
 #include <cstddef>
 #include <map>
 #include <memory>
-#include <span>
 #include <stop_token>
 #include <string>
 #include <utility>
 #include <vector>
 
-#include "../utility/logging.hpp"
 #include "buffer.hpp"
 #include "generator.hpp"
 
 namespace prexsyn::datapipe {
 
 size_t DataPipeline::global_pipeline_id_ = 0;
+
+static std::string shape_to_string(const std::vector<size_t> &shape) {
+    std::string result = "[";
+    for (size_t i = 0; i < shape.size(); ++i) {
+        result += std::to_string(shape[i]);
+        if (i < shape.size() - 1) {
+            result += ", ";
+        }
+    }
+    result += "]";
+    return result;
+}
 
 DataPipeline::DataPipeline(const std::shared_ptr<ChemicalSpace> &cs,
                            const std::map<std::string, std::shared_ptr<MoleculeDescriptor>> &md,
@@ -39,7 +49,8 @@ DataPipeline::DataPipeline(const std::shared_ptr<ChemicalSpace> &cs,
     logger_->info("DataPipeline initialized");
     logger_->info("Buffer schema:");
     for (const auto &col_def : buffer_->schema()) {
-        logger_->info("- {}: shape {}, dtype {}", col_def.name(), col_def.shape(),
+
+        logger_->info("- {}: shape {}, dtype {}", col_def.name(), shape_to_string(col_def.shape()),
                       DataType::to_string(col_def.dtype()));
     }
 }

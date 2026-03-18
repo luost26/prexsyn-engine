@@ -49,17 +49,29 @@ set(gtest_force_shared_crt
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
+FetchContent_Declare(
+  pybind11
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
+  GIT_SHALLOW TRUE
+  GIT_TAG v3.0.2)
+FetchContent_MakeAvailable(pybind11)
+
+set(SPDLOG_BUILD_PIC ON)
+FetchContent_Declare(
+  spdlog
+  GIT_REPOSITORY https://github.com/gabime/spdlog.git
+  GIT_TAG v1.17.0)
+FetchContent_MakeAvailable(spdlog)
+
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS csrc/*.cpp)
 list(FILTER SOURCES EXCLUDE REGEX ".*_test.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX "bind.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX "main.cpp$")
 add_library(prexsyn_obj OBJECT ${SOURCES})
 set_target_properties(prexsyn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX)
+target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX
+                                         spdlog::spdlog)
 target_include_directories(prexsyn_obj PUBLIC ${csv_SOURCE_DIR}/single_include)
-target_compile_definitions(
-  prexsyn_obj PUBLIC SPDLOG_HEADER_ONLY SPDLOG_FMT_EXTERNAL_HO FMT_HEADER_ONLY)
-
 add_executable(main csrc/main.cpp)
 target_link_libraries(main PRIVATE prexsyn_obj)
 
