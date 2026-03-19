@@ -9,7 +9,7 @@ fi
 
 mkdir -p "$PREFIX"
 
-LIBRARIES=(serialization iostreams program_options json)
+LIBRARIES=(serialization iostreams program_options json stacktrace format)
 
 if [[ -d "boost" ]]; then
     echo "Boost directory already exists. Skipping clone."
