@@ -11,9 +11,9 @@
 
 #include "../chemspace/chemspace.hpp"
 #include "../descriptor/descriptor.hpp"
+#include "../enumerator/enumerator.hpp"
 #include "../utility/logging.hpp"
 #include "buffer.hpp"
-#include "generator.hpp"
 
 namespace prexsyn::datapipe {
 
@@ -28,7 +28,7 @@ private:
     static size_t global_pipeline_id_;
 
     std::shared_ptr<ChemicalSpace> chemical_space_;
-    GeneratorConfig generator_config_;
+    enumerator::EnumeratorConfig enumerator_config_;
 
     std::map<std::string, std::shared_ptr<MoleculeDescriptor>> molecule_descriptors_;
     std::map<std::string, std::shared_ptr<SynthesisDescriptor>> synthesis_descriptors_;
@@ -43,7 +43,7 @@ public:
     DataPipeline(const std::shared_ptr<ChemicalSpace> &,
                  const std::map<std::string, std::shared_ptr<MoleculeDescriptor>> &,
                  const std::map<std::string, std::shared_ptr<SynthesisDescriptor>> &,
-                 const GeneratorConfig & = Generator::default_config);
+                 const enumerator::EnumeratorConfig & = enumerator::default_config);
 
     const auto &buffer() const { return *buffer_; }
 
@@ -80,7 +80,7 @@ private:
 
     const DataPipeline &owner_;
     const size_t seed_;
-    Generator generator_;
+    enumerator::RandomEnumerator enumerator_;
     std::jthread thread_;
 
     Worker(const DataPipeline &owner, size_t seed);

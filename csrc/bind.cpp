@@ -4,6 +4,7 @@
 #include "chemspace/bind.hpp"
 #include "datapipe/bind.hpp"
 #include "descriptor/bind.hpp"
+#include "enumerator/bind.hpp"
 
 namespace py = pybind11;
 
@@ -18,6 +19,9 @@ PYBIND11_MODULE(prexsyn_engine, m) {
 
     auto m_descriptor = m.def_submodule("descriptor");
     def_module_descriptor(m_descriptor);
+
+    auto m_enumerator = m.def_submodule("enumerator");
+    def_module_enumerator(m_enumerator);
 
     auto m_datapipe = m.def_submodule("datapipe");
     def_module_datapipe(m_datapipe);

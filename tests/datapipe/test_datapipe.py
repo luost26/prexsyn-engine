@@ -22,52 +22,6 @@ def make_chemical_space():
     return cs
 
 
-def test_generator_config_defaults_and_assignment():
-    config = datapipe.GeneratorConfig()
-
-    assert config.max_building_blocks == 5
-    assert config.heavy_atom_limit == 50
-
-    config.max_building_blocks = 3
-    config.heavy_atom_limit = 24
-
-    assert config.max_building_blocks == 3
-    assert config.heavy_atom_limit == 24
-
-
-def test_generator_next_returns_synthesis():
-    cs = make_chemical_space()
-
-    gen = datapipe.Generator(cs, random_seed=7)
-    syn = gen.next()
-
-    assert isinstance(syn, chemspace.Synthesis)
-    assert syn.count_building_blocks() >= 1
-    assert len(syn.products()) >= 1
-
-
-def test_generator_next_with_product_returns_pair():
-    cs = make_chemical_space()
-
-    gen = datapipe.Generator(cs, random_seed=11)
-    syn, product = gen.next_with_product()
-
-    assert isinstance(syn, chemspace.Synthesis)
-    assert product.smiles() != ""
-
-
-def test_generator_same_seed_has_reproducible_first_product():
-    cs = make_chemical_space()
-
-    gen1 = datapipe.Generator(cs, random_seed=123)
-    gen2 = datapipe.Generator(cs, random_seed=123)
-
-    _, product1 = gen1.next_with_product()
-    _, product2 = gen2.next_with_product()
-
-    assert product1.smiles() == product2.smiles()
-
-
 def test_data_pipeline_get_returns_expected_arrays():
     cs = make_chemical_space()
 

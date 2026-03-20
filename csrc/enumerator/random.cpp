@@ -1,4 +1,4 @@
-#include "generator.hpp"
+#include "random.hpp"
 
 #include <cstddef>
 #include <cstdlib>
@@ -13,10 +13,10 @@
 #include "../chemspace/chemspace.hpp"
 #include "../utility/random.hpp"
 
-namespace prexsyn::datapipe {
+namespace prexsyn::enumerator {
 
-Generator::Generator(std::shared_ptr<chemspace::ChemicalSpace> cs, const Config &config,
-                     std::optional<size_t> random_seed)
+RandomEnumerator::RandomEnumerator(std::shared_ptr<chemspace::ChemicalSpace> cs,
+                                   const Config &config, std::optional<size_t> random_seed)
     : cs_(std::move(cs)), config_(config), synthesis_(nullptr),
       rng_(random_seed.value_or(std::random_device{}())) {
     if (cs_ == nullptr) {
@@ -30,7 +30,7 @@ Generator::Generator(std::shared_ptr<chemspace::ChemicalSpace> cs, const Config 
     }
 }
 
-bool Generator::is_limit_exceeded() const {
+bool RandomEnumerator::not_growable() const {
     if (synthesis_ == nullptr) {
         return false;
     }
@@ -39,13 +39,13 @@ bool Generator::is_limit_exceeded() const {
         return false;
     }
     const auto &product = products.front();
-    return product->num_heavy_atoms() > config_.heavy_atom_limit ||
-           synthesis_->count_building_blocks() > config_.max_building_blocks;
+    return product->num_heavy_atoms() >= config_.heavy_atom_limit ||
+           synthesis_->count_building_blocks() >= config_.max_building_blocks;
 }
 
-void Generator::clear_synthesis() { synthesis_.reset(); }
+void RandomEnumerator::clear_synthesis() { synthesis_.reset(); }
 
-void Generator::init_synthesis() {
+void RandomEnumerator::init_synthesis() {
     synthesis_ = std::make_unique<chemspace::Synthesis>(*cs_);
 
     auto num_bb = cs_->bb_lib().size();
@@ -54,7 +54,7 @@ void Generator::init_synthesis() {
     synthesis_->add_building_block(index);
 }
 
-void Generator::grow_synthesis() {
+void RandomEnumerator::grow_synthesis() {
     auto products = synthesis_->products();
     if (products.empty()) {
         clear_synthesis();
@@ -96,8 +96,8 @@ void Generator::grow_synthesis() {
     }
 }
 
-std::optional<std::shared_ptr<chemspace::Synthesis>> Generator::try_next() {
-    if (synthesis_ == nullptr || is_limit_exceeded()) {
+std::optional<std::shared_ptr<chemspace::Synthesis>> RandomEnumerator::try_next() {
+    if (synthesis_ == nullptr || not_growable()) {
         init_synthesis();
     } else {
         grow_synthesis();
@@ -110,7 +110,7 @@ std::optional<std::shared_ptr<chemspace::Synthesis>> Generator::try_next() {
     }
 }
 
-std::shared_ptr<chemspace::Synthesis> Generator::next() {
+std::shared_ptr<chemspace::Synthesis> RandomEnumerator::next() {
     constexpr const int max_attempts = 100;
     for (int attempt = 0; attempt < max_attempts; ++attempt) {
         auto result = try_next();
@@ -122,10 +122,10 @@ std::shared_ptr<chemspace::Synthesis> Generator::next() {
 }
 
 std::pair<std::shared_ptr<chemspace::Synthesis>, std::shared_ptr<Molecule>>
-Generator::next_with_product() {
+RandomEnumerator::next_with_product() {
     auto syn = next();
     auto product = random_choice(syn->products(), rng_);
     return {syn, product};
 }
 
-} // namespace prexsyn::datapipe
+} // namespace prexsyn::enumerator

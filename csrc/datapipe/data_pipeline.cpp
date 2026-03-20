@@ -8,8 +8,9 @@
 #include <utility>
 #include <vector>
 
+#include "../enumerator/enumerator.hpp"
+#include "../utility/logging.hpp"
 #include "buffer.hpp"
-#include "generator.hpp"
 
 namespace prexsyn::datapipe {
 
@@ -30,8 +31,8 @@ static std::string shape_to_string(const std::vector<size_t> &shape) {
 DataPipeline::DataPipeline(const std::shared_ptr<ChemicalSpace> &cs,
                            const std::map<std::string, std::shared_ptr<MoleculeDescriptor>> &md,
                            const std::map<std::string, std::shared_ptr<SynthesisDescriptor>> &sd,
-                           const GeneratorConfig &generator_config)
-    : chemical_space_(cs), generator_config_(generator_config), molecule_descriptors_(md),
+                           const enumerator::EnumeratorConfig &enumerator_config)
+    : chemical_space_(cs), enumerator_config_(enumerator_config), molecule_descriptors_(md),
       synthesis_descriptors_(sd),
       logger_(create_logger("DataPipeline" + std::to_string(global_pipeline_id_++))) {
     std::vector<ColumnDef> column_defs;
@@ -91,14 +92,14 @@ DataPipeline::Batch DataPipeline::get(size_t batch_size) {
 
 Worker::Worker(const DataPipeline &owner, size_t seed)
     : owner_(owner), seed_(seed),
-      generator_(owner_.chemical_space_, owner_.generator_config_, seed),
+      enumerator_(owner_.chemical_space_, owner_.enumerator_config_, seed),
       thread_(&Worker::run, this) {
     owner_.logger_->info("Worker[seed={}] started", seed);
 }
 
 void Worker::run() {
     while (!thread_.get_stop_token().stop_requested()) {
-        auto [synthesis, product] = generator_.next_with_product();
+        auto [synthesis, product] = enumerator_.next_with_product();
         auto data_row = owner_.buffer_->new_write_row();
         for (const auto &[name, fn] : owner_.synthesis_descriptors_) {
             auto dest_span = data_row->data(name);
