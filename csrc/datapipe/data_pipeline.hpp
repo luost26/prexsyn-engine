@@ -83,6 +83,12 @@ private:
     enumerator::RandomEnumerator enumerator_;
     std::jthread thread_;
 
+    // Each worker holds a copy of descriptor generators to avoid potential race condition
+    // Ideally, descriptor generators should be thread-safe and sharable, but we take the safe route
+    // here, and don't assume anything about the thread-safety of descriptor generators.
+    std::map<std::string, std::shared_ptr<MoleculeDescriptor>> molecule_descriptors_;
+    std::map<std::string, std::shared_ptr<SynthesisDescriptor>> synthesis_descriptors_;
+
     Worker(const DataPipeline &owner, size_t seed);
 
     void run();

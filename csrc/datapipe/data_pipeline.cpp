@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <span>
 #include <stop_token>
 #include <string>
 #include <utility>
@@ -93,7 +94,8 @@ DataPipeline::Batch DataPipeline::get(size_t batch_size) {
 Worker::Worker(const DataPipeline &owner, size_t seed)
     : owner_(owner), seed_(seed),
       enumerator_(owner_.chemical_space_, owner_.enumerator_config_, seed),
-      thread_(&Worker::run, this) {
+      thread_(&Worker::run, this), molecule_descriptors_(owner.molecule_descriptors_),
+      synthesis_descriptors_(owner.synthesis_descriptors_) {
     owner_.logger_->info("Worker[seed={}] started", seed);
 }
 
@@ -101,11 +103,11 @@ void Worker::run() {
     while (!thread_.get_stop_token().stop_requested()) {
         auto [synthesis, product] = enumerator_.next_with_product();
         auto data_row = owner_.buffer_->new_write_row();
-        for (const auto &[name, fn] : owner_.synthesis_descriptors_) {
+        for (const auto &[name, fn] : this->synthesis_descriptors_) {
             auto dest_span = data_row->data(name);
             (*fn)(*synthesis, dest_span);
         }
-        for (const auto &[name, fn] : owner_.molecule_descriptors_) {
+        for (const auto &[name, fn] : this->molecule_descriptors_) {
             auto dest_span = data_row->data(name);
             (*fn)(*product, dest_span);
         }
