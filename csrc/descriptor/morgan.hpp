@@ -19,6 +19,9 @@ private:
     using Generator = RDKit::FingerprintGenerator<std::uint64_t>;
     std::unique_ptr<Generator> generator_;
 
+    std::unique_ptr<RDKit::AtomInvariantsGenerator> atom_invariants_generator_ = nullptr;
+    std::unique_ptr<RDKit::BondInvariantsGenerator> bond_invariants_generator_ = nullptr;
+
 public:
     MorganFingerprint(std::unique_ptr<Generator> generator) : generator_(std::move(generator)) {};
 

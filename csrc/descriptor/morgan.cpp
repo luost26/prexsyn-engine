@@ -23,11 +23,13 @@ std::unique_ptr<MorganFingerprint> MorganFingerprint::ecfp4() {
 }
 
 std::unique_ptr<MorganFingerprint> MorganFingerprint::fcfp4() {
-    auto feature_inv_gen = RDKit::MorganFingerprint::MorganFeatureAtomInvGenerator();
+    auto atom_inv = std::make_unique<RDKit::MorganFingerprint::MorganFeatureAtomInvGenerator>();
     std::unique_ptr<Generator> generator{
-        RDKit::MorganFingerprint::getMorganGenerator<std::uint64_t>(
-            2, false, false, true, false, true, &feature_inv_gen, nullptr)};
-    return std::make_unique<MorganFingerprint>(std::move(generator));
+        RDKit::MorganFingerprint::getMorganGenerator<std::uint64_t>(2, false, false, true, false,
+                                                                    true, atom_inv.get(), nullptr)};
+    auto instance = std::make_unique<MorganFingerprint>(std::move(generator));
+    instance->atom_invariants_generator_ = std::move(atom_inv);
+    return instance;
 }
 
 void MorganFingerprint::operator()(const Molecule &mol, std::span<std::byte> &out) const {
