@@ -46,14 +46,24 @@ void ReactantLists::set(MolIndex bb, ReactionLibrary::Index rxn, Reaction::React
 }
 
 std::unique_ptr<ChemicalSpace> ChemicalSpace::deserialize(std::istream &is) {
+    logger()->info("Deserializing chemical space...");
     {
         boost::archive::binary_iarchive ia(is);
         size_t bb_lib_size = 0, rxn_lib_size = 0, int_lib_size = 0;
         ia >> bb_lib_size >> rxn_lib_size >> int_lib_size;
+        logger()->info(" - Sizes: {} building blocks, {} reactions, {} intermediates", bb_lib_size,
+                       rxn_lib_size, int_lib_size);
     }
+
     auto bb_lib = BuildingBlockLibrary::deserialize(is);
+    logger()->info(" - Building block library deserialized. Size: {}", bb_lib->size());
+
     auto rxn_lib = ReactionLibrary::deserialize(is);
+    logger()->info(" - Reaction library deserialized. Size: {}", rxn_lib->size());
+
     auto int_lib = IntermediateLibrary::deserialize(is);
+    logger()->info(" - Intermediate library deserialized. Size: {}", int_lib->size());
+
     {
         boost::archive::binary_iarchive ia(is);
         ReactantMatchingConfig matching_config;
@@ -61,7 +71,13 @@ std::unique_ptr<ChemicalSpace> ChemicalSpace::deserialize(std::istream &is) {
         auto chemspace = std::make_unique<ChemicalSpace>(std::move(bb_lib), std::move(rxn_lib),
                                                          std::move(int_lib), matching_config);
         ia >> chemspace->rnt_bb_mapping_;
+        logger()->info(" - Reactant-building block mapping deserialized. Matches: {}",
+                       chemspace->rnt_bb_mapping_.num_matches());
+
         ia >> chemspace->rnt_int_mapping_;
+        logger()->info(" - Reactant-intermediate mapping deserialized. Matches: {}",
+                       chemspace->rnt_int_mapping_.num_matches());
+
         return chemspace;
     }
 }
