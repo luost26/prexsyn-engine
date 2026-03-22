@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <ranges>
 #include <string>
 #include <utility>
@@ -64,10 +65,12 @@ void Synthesis::push(const std::shared_ptr<Molecule> &molecule) {
 }
 
 static void cartesian_product(const std::vector<size_t> &sizes,
-                              const std::function<void(const std::vector<size_t> &)> &callback) {
+                              const std::function<bool(const std::vector<size_t> &)> &callback) {
     std::vector<size_t> indices(sizes.size(), 0);
     while (true) {
-        callback(indices);
+        if (!callback(indices)) {
+            break;
+        }
         size_t i = 0;
         while (i < sizes.size()) {
             indices[i]++;
@@ -83,7 +86,8 @@ static void cartesian_product(const std::vector<size_t> &sizes,
     }
 };
 
-void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
+void Synthesis::push(const std::shared_ptr<Reaction> &reaction,
+                     std::optional<size_t> max_outcomes) {
     if (stack_.size() < reaction->num_reactants()) {
         throw SynthesisError("Not enough reactants on the stack for the reaction, got " +
                              std::to_string(stack_.size()) + " but need " +
@@ -101,7 +105,7 @@ void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
     }
 
     auto new_node = SynthesisNode::from_reaction(reaction, precursor_nodes);
-    cartesian_product(sizes, [&](const std::vector<size_t> &item_indices) -> void {
+    cartesian_product(sizes, [&](const std::vector<size_t> &item_indices) -> bool {
         std::vector<std::shared_ptr<Molecule>> reactants;
         reactants.reserve(precursor_nodes.size());
         for (size_t i = 0; i < precursor_nodes.size(); ++i) {
@@ -110,7 +114,11 @@ void Synthesis::push(const std::shared_ptr<Reaction> &reaction) {
         auto outcomes = reaction->apply(reactants, /*ignore_errors=*/true);
         for (const auto &outcome : outcomes) {
             new_node->add_reaction_outcome(outcome, item_indices);
+            if (max_outcomes.has_value() && new_node->size() >= max_outcomes.value()) {
+                return false;
+            }
         }
+        return true;
     });
 
     if (new_node->size() == 0) {

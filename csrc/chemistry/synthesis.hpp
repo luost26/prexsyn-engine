@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -64,7 +65,7 @@ public:
     const std::shared_ptr<SynthesisNode> &stack_top(size_t i = 0) const;
 
     void push(const std::shared_ptr<Molecule> &);
-    void push(const std::shared_ptr<Reaction> &);
+    void push(const std::shared_ptr<Reaction> &, std::optional<size_t> max_outcomes);
     void undo();
 };
 

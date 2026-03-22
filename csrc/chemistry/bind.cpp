@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <map>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -128,8 +129,9 @@ static void def_synthesis(py::module &m) {
             py::arg("molecule"))
         .def(
             "push_reaction",
-            [](Synthesis &s, const std::shared_ptr<Reaction> &rxn) { s.push(rxn); },
-            py::arg("reaction"))
+            [](Synthesis &s, const std::shared_ptr<Reaction> &rxn,
+               std::optional<size_t> max_outcomes) { s.push(rxn, max_outcomes); },
+            py::arg("reaction"), py::arg("max_outcomes"))
         .def("undo", &Synthesis::undo);
 
     py::register_exception<SynthesisError>(m, "SynthesisError", PyExc_RuntimeError);
