@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -45,11 +46,13 @@ public:
 
     Result add_building_block(BuildingBlockLibrary::Index) noexcept;
     Result add_building_block(const std::string &) noexcept;
-    Result add_reaction(ReactionLibrary::Index) noexcept;
-    Result add_reaction(const std::string &) noexcept;
-    Result add_postfix_notation(const PostfixNotation &) noexcept;
-    Result add_intermediate(IntermediateLibrary::Index) noexcept;
-    Result add_intermediate(const std::string &) noexcept;
+    Result add_reaction(ReactionLibrary::Index, std::optional<size_t> max_outcomes) noexcept;
+    Result add_reaction(const std::string &, std::optional<size_t> max_outcomes) noexcept;
+    Result add_postfix_notation(const PostfixNotation &,
+                                std::optional<size_t> max_outcomes) noexcept;
+    Result add_intermediate(IntermediateLibrary::Index,
+                            std::optional<size_t> max_outcomes) noexcept;
+    Result add_intermediate(const std::string &, std::optional<size_t> max_outcomes) noexcept;
     Result undo() noexcept;
 };
 

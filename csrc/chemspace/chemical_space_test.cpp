@@ -77,7 +77,7 @@ TEST(ChemicalSpaceTest, EndToEndWorkflowMatchesMainExample) {
     const auto bb_result_2 = syn->add_building_block("EN300-101318");
     ASSERT_TRUE(bb_result_2) << bb_result_2.message;
 
-    const auto rxn_result = syn->add_reaction("ReactionA");
+    const auto rxn_result = syn->add_reaction("ReactionA", std::nullopt);
     ASSERT_TRUE(rxn_result) << rxn_result.message;
     EXPECT_EQ(syn->synthesis().stack_size(), 1U);
 

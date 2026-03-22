@@ -1,9 +1,11 @@
 #include "bind.hpp"
 
+#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -272,20 +274,23 @@ static void def_chemical_space_synthesis(py::module &m) {
              py::overload_cast<const std::string &>(&ChemicalSpaceSynthesis::add_building_block),
              py::arg("identifier"))
         .def("add_reaction",
-             py::overload_cast<ReactionLibrary::Index>(&ChemicalSpaceSynthesis::add_reaction),
-             py::arg("index"))
+             py::overload_cast<ReactionLibrary::Index, std::optional<size_t>>(
+                 &ChemicalSpaceSynthesis::add_reaction),
+             py::arg("index"), py::arg("max_outcomes"))
         .def("add_reaction",
-             py::overload_cast<const std::string &>(&ChemicalSpaceSynthesis::add_reaction),
-             py::arg("name"))
+             py::overload_cast<const std::string &, std::optional<size_t>>(
+                 &ChemicalSpaceSynthesis::add_reaction),
+             py::arg("name"), py::arg("max_outcomes"))
         .def("add_postfix_notation", &ChemicalSpaceSynthesis::add_postfix_notation,
-             py::arg("postfix_notation"))
+             py::arg("postfix_notation"), py::arg("max_outcomes"))
         .def("add_intermediate",
-             py::overload_cast<IntermediateLibrary::Index>(
+             py::overload_cast<IntermediateLibrary::Index, std::optional<size_t>>(
                  &ChemicalSpaceSynthesis::add_intermediate),
-             py::arg("index"))
+             py::arg("index"), py::arg("max_outcomes"))
         .def("add_intermediate",
-             py::overload_cast<const std::string &>(&ChemicalSpaceSynthesis::add_intermediate),
-             py::arg("identifier"))
+             py::overload_cast<const std::string &, std::optional<size_t>>(
+                 &ChemicalSpaceSynthesis::add_intermediate),
+             py::arg("identifier"), py::arg("max_outcomes"))
         .def("undo", &ChemicalSpaceSynthesis::undo);
 }
 

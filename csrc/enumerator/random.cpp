@@ -63,6 +63,11 @@ void RandomEnumerator::grow_synthesis() {
     auto product = random_choice(products, rng_);
 
     auto matches = cs_->rxn_lib().match_reactants(*product);
+
+    // Remove when there are too many same functional groups for the reaction (poor selectivity)
+    std::erase_if(matches,
+                  [&](const auto &match) { return match.count > config_.selectivity_cutoff; });
+
     if (matches.empty()) {
         clear_synthesis();
         return;
@@ -81,7 +86,7 @@ void RandomEnumerator::grow_synthesis() {
         if (choice == which_vector::first) {
             result = synthesis_->add_building_block(index);
         } else {
-            result = synthesis_->add_intermediate(index);
+            result = synthesis_->add_intermediate(index, config_.max_outcomes_per_reaction);
         }
         if (!result) {
             clear_synthesis();
@@ -89,7 +94,7 @@ void RandomEnumerator::grow_synthesis() {
         }
     }
 
-    result = synthesis_->add_reaction(match.reaction_index);
+    result = synthesis_->add_reaction(match.reaction_index, config_.max_outcomes_per_reaction);
     if (!result) {
         clear_synthesis();
         return;

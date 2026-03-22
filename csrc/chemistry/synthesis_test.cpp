@@ -1,4 +1,5 @@
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <vector>
@@ -38,7 +39,7 @@ TEST(SynthesisTest, PushReactionBuildsExpectedTopNodeAndPrecursors) {
 
     synthesis.push(reactant_a);
     synthesis.push(reactant_b);
-    synthesis.push(reaction);
+    synthesis.push(reaction, std::nullopt);
 
     ASSERT_EQ(synthesis.stack_size(), 1);
     const auto &top = synthesis.stack_top();
@@ -63,7 +64,7 @@ TEST(SynthesisTest, PushReactionThrowsWhenStackHasTooFewReactants) {
     Synthesis synthesis;
     synthesis.push(make_reactant_a());
 
-    EXPECT_THROW({ synthesis.push(make_test_reaction()); }, SynthesisError);
+    EXPECT_THROW({ synthesis.push(make_test_reaction(), std::nullopt); }, SynthesisError);
 }
 
 TEST(SynthesisTest, PushReactionThrowsWhenReactionDoesNotProduceAnyProducts) {
@@ -71,7 +72,7 @@ TEST(SynthesisTest, PushReactionThrowsWhenReactionDoesNotProduceAnyProducts) {
     synthesis.push(make_non_matching_reactant());
     synthesis.push(make_non_matching_reactant());
 
-    EXPECT_THROW({ synthesis.push(make_test_reaction()); }, SynthesisError);
+    EXPECT_THROW({ synthesis.push(make_test_reaction(), std::nullopt); }, SynthesisError);
 }
 
 TEST(SynthesisTest, UndoRestoresPrecursorNodesInOriginalStackOrder) {
@@ -82,7 +83,7 @@ TEST(SynthesisTest, UndoRestoresPrecursorNodesInOriginalStackOrder) {
 
     synthesis.push(reactant_a);
     synthesis.push(reactant_b);
-    synthesis.push(reaction);
+    synthesis.push(reaction, std::nullopt);
 
     ASSERT_EQ(synthesis.nodes().size(), 3);
     ASSERT_EQ(synthesis.stack_size(), 1);
@@ -99,7 +100,7 @@ TEST(SynthesisTest, PrecursorMoleculesThrowsOnInvalidItemIndex) {
     Synthesis synthesis;
     synthesis.push(make_reactant_a());
     synthesis.push(make_reactant_b());
-    synthesis.push(make_test_reaction());
+    synthesis.push(make_test_reaction(), std::nullopt);
 
     const auto &top = synthesis.stack_top();
     ASSERT_EQ(top->size(), 1);

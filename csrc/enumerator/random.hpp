@@ -32,7 +32,7 @@ private:
 
 public:
     RandomEnumerator(std::shared_ptr<chemspace::ChemicalSpace> cs,
-                     const Config &config = default_config,
+                     const Config &config = kDefaultEnumeratorConfig,
                      std::optional<size_t> random_seed = std::nullopt);
 
     std::shared_ptr<chemspace::Synthesis> next();

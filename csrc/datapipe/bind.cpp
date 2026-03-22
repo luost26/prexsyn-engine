@@ -51,7 +51,7 @@ void def_module_datapipe(pybind11::module &m) {
                  const enumerator::EnumeratorConfig &>(),
              py::arg("chemical_space"), py::arg("molecule_descriptors"),
              py::arg("synthesis_descriptors"),
-             py::arg("enumerator_config") = enumerator::default_config)
+             py::arg("enumerator_config") = enumerator::kDefaultEnumeratorConfig)
         .def("start_workers", &DataPipeline::start_workers)
         .def("stop_workers", &DataPipeline::stop_workers)
         .def("get", &get_from_data_pipeline);

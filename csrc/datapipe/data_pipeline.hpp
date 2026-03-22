@@ -43,7 +43,7 @@ public:
     DataPipeline(const std::shared_ptr<ChemicalSpace> &,
                  const std::map<std::string, std::shared_ptr<MoleculeDescriptor>> &,
                  const std::map<std::string, std::shared_ptr<SynthesisDescriptor>> &,
-                 const enumerator::EnumeratorConfig & = enumerator::default_config);
+                 const enumerator::EnumeratorConfig & = enumerator::kDefaultEnumeratorConfig);
 
     const auto &buffer() const { return *buffer_; }
 

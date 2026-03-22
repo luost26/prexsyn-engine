@@ -32,7 +32,7 @@ void def_module_enumerator(pybind11::module &m) {
     py::class_<RandomEnumerator, py::smart_holder>(m, "RandomEnumerator")
         .def(py::init<std::shared_ptr<chemspace::ChemicalSpace>, const RandomEnumerator::Config &,
                       std::optional<size_t>>(),
-             py::arg("chemical_space"), py::arg("config") = default_config,
+             py::arg("chemical_space"), py::arg("config") = kDefaultEnumeratorConfig,
              py::arg("random_seed") = std::nullopt)
         .def("next", &RandomEnumerator::next)
         .def("next_with_product", &RandomEnumerator::next_with_product);

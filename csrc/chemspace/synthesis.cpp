@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <exception>
 #include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -69,10 +70,11 @@ Result ChemicalSpaceSynthesis::add_building_block(const std::string &index) noex
     }
 }
 
-Result ChemicalSpaceSynthesis::add_reaction(ReactionLibrary::Index index) noexcept {
+Result ChemicalSpaceSynthesis::add_reaction(ReactionLibrary::Index index,
+                                            std::optional<size_t> max_outcomes) noexcept {
     try {
         const auto &rxn_item = cs_.rxn_lib().get(index);
-        synthesis_->push(rxn_item.reaction);
+        synthesis_->push(rxn_item.reaction, max_outcomes);
         postfix_notation_.append(rxn_item.index, PostfixNotation::Token::Type::Reaction);
         return Result::ok();
     } catch (const std::exception &e) {
@@ -80,10 +82,11 @@ Result ChemicalSpaceSynthesis::add_reaction(ReactionLibrary::Index index) noexce
     }
 }
 
-Result ChemicalSpaceSynthesis::add_reaction(const std::string &index) noexcept {
+Result ChemicalSpaceSynthesis::add_reaction(const std::string &index,
+                                            std::optional<size_t> max_outcomes) noexcept {
     try {
         const auto &rxn_item = cs_.rxn_lib().get(index);
-        synthesis_->push(rxn_item.reaction);
+        synthesis_->push(rxn_item.reaction, max_outcomes);
         postfix_notation_.append(rxn_item.index, PostfixNotation::Token::Type::Reaction);
         return Result::ok();
     } catch (const std::exception &e) {
@@ -91,7 +94,8 @@ Result ChemicalSpaceSynthesis::add_reaction(const std::string &index) noexcept {
     }
 }
 
-Result ChemicalSpaceSynthesis::add_postfix_notation(const PostfixNotation &pfn) noexcept {
+Result ChemicalSpaceSynthesis::add_postfix_notation(const PostfixNotation &pfn,
+                                                    std::optional<size_t> max_outcomes) noexcept {
     size_t count_operations = 0;
     auto result = Result::ok();
     for (const auto &token : pfn.tokens()) {
@@ -103,7 +107,7 @@ Result ChemicalSpaceSynthesis::add_postfix_notation(const PostfixNotation &pfn) 
                 break;
             }
         } else if (token.type == PostfixNotation::Token::Type::Reaction) {
-            result = add_reaction(token.index);
+            result = add_reaction(token.index, max_outcomes);
             if (result) {
                 count_operations++;
             } else {
@@ -120,19 +124,21 @@ Result ChemicalSpaceSynthesis::add_postfix_notation(const PostfixNotation &pfn) 
     return result;
 };
 
-Result ChemicalSpaceSynthesis::add_intermediate(IntermediateLibrary::Index index) noexcept {
+Result ChemicalSpaceSynthesis::add_intermediate(IntermediateLibrary::Index index,
+                                                std::optional<size_t> max_outcomes) noexcept {
     try {
         const auto &int_item = cs_.int_lib().get(index);
-        return add_postfix_notation(int_item.postfix_notation);
+        return add_postfix_notation(int_item.postfix_notation, max_outcomes);
     } catch (const std::exception &e) {
         return Result::error(e.what());
     }
 }
 
-Result ChemicalSpaceSynthesis::add_intermediate(const std::string &identifier) noexcept {
+Result ChemicalSpaceSynthesis::add_intermediate(const std::string &identifier,
+                                                std::optional<size_t> max_outcomes) noexcept {
     try {
         const auto &int_item = cs_.int_lib().get(identifier);
-        return add_intermediate(int_item.index);
+        return add_intermediate(int_item.index, max_outcomes);
     } catch (const std::exception &e) {
         return Result::error(e.what());
     }

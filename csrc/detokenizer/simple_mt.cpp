@@ -28,7 +28,8 @@ MultiThreadedDetokenizer::operator()(size_t batch_size,
 
 #pragma omp parallel for
     for (size_t i = 0; i < batch_size; ++i) {
-        out[i] = detokenize(tokens.subspan(i * seqlen * 3, seqlen * 3), cs_, token_def_);
+        out[i] = detokenize(tokens.subspan(i * seqlen * 3, seqlen * 3), cs_, token_def_,
+                            max_outcomes_per_reaction_);
     }
 
     return out;

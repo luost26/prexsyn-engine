@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <memory>
+#include <optional>
 #include <span>
 #include <stdexcept>
 
@@ -14,7 +15,7 @@ namespace prexsyn::detokenizer {
 std::unique_ptr<chemspace::Synthesis>
 detokenize(const std::span<const std::int64_t> &tokens,
            const std::shared_ptr<chemspace::ChemicalSpace> &cs,
-           const descriptor::TokenDef &token_def) {
+           const descriptor::TokenDef &token_def, std::optional<size_t> max_outcomes_per_reaction) {
     auto length = tokens.size() / 3;
     if (tokens.size() != length * 3) {
         throw std::invalid_argument("Token size must be a multiple of 3");
@@ -28,7 +29,7 @@ detokenize(const std::span<const std::int64_t> &tokens,
         if (token_type == token_def.bb) {
             syn->add_building_block(bb_idx);
         } else if (token_type == token_def.rxn) {
-            syn->add_reaction(rxn_idx);
+            syn->add_reaction(rxn_idx, max_outcomes_per_reaction);
         } else if (token_type == token_def.end) {
             break;
         }
