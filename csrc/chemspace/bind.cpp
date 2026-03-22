@@ -23,18 +23,6 @@
 namespace py = pybind11;
 using namespace prexsyn::chemspace;
 
-template <typename T> static py::bytes serialize_to_bytes(const T &obj) {
-    std::stringstream ss;
-    obj.serialize(ss);
-    return {ss.str()};
-}
-
-template <typename T> static std::unique_ptr<T> deserialize_from_bytes(const py::bytes &data) {
-    std::string raw(data);
-    std::stringstream ss(raw);
-    return T::deserialize(ss);
-}
-
 template <typename T>
 static void serialize_to_file(const T &obj, const std::filesystem::path &path) {
     std::ofstream ofs(path, std::ios::binary);
@@ -98,8 +86,6 @@ static void def_bb_lib(py::module &m) {
         .def("get", py::overload_cast<const std::string &>(&BuildingBlockLibrary::get, py::const_),
              py::arg("identifier"), py::return_value_policy::reference_internal)
         .def("add", &BuildingBlockLibrary::add, py::arg("entry"))
-        .def("serialize", &serialize_to_bytes<BuildingBlockLibrary>)
-        .def_static("deserialize", &deserialize_from_bytes<BuildingBlockLibrary>)
         .def("serialize", &serialize_to_file<BuildingBlockLibrary>, py::arg("path"))
         .def_static("deserialize", &deserialize_from_file<BuildingBlockLibrary>, py::arg("path"))
         .def("__len__", &BuildingBlockLibrary::size)
@@ -156,8 +142,6 @@ static void def_rxn_lib(py::module &m) {
              py::arg("name"), py::return_value_policy::reference_internal)
         .def("add", &ReactionLibrary::add, py::arg("entry"))
         .def("match_reactants", &ReactionLibrary::match_reactants, py::arg("molecule"))
-        .def("serialize", &serialize_to_bytes<ReactionLibrary>)
-        .def_static("deserialize", &deserialize_from_bytes<ReactionLibrary>)
         .def("serialize", &serialize_to_file<ReactionLibrary>, py::arg("path"))
         .def_static("deserialize", &deserialize_from_file<ReactionLibrary>, py::arg("path"))
         .def("__len__", &ReactionLibrary::size)
@@ -190,8 +174,6 @@ static void def_int_lib(py::module &m) {
              py::arg("identifier"), py::return_value_policy::reference_internal)
         .def("add", &IntermediateLibrary::add, py::arg("entry"))
         .def("clear", &IntermediateLibrary::clear)
-        .def("serialize", &serialize_to_bytes<IntermediateLibrary>)
-        .def_static("deserialize", &deserialize_from_bytes<IntermediateLibrary>)
         .def("serialize", &serialize_to_file<IntermediateLibrary>, py::arg("path"))
         .def_static("deserialize", &deserialize_from_file<IntermediateLibrary>, py::arg("path"))
         .def("__len__", &IntermediateLibrary::size)
@@ -223,8 +205,6 @@ static void def_chemical_space(py::module &m) {
                       std::unique_ptr<IntermediateLibrary>, const ReactantMatchingConfig &>(),
              py::arg("bb_lib"), py::arg("rxn_lib"), py::arg("int_lib"),
              py::arg("matching_config") = ReactantMatchingConfig{})
-        .def("serialize", &serialize_to_bytes<ChemicalSpace>)
-        .def_static("deserialize", &deserialize_from_bytes<ChemicalSpace>)
         .def("serialize", &serialize_to_file<ChemicalSpace>, py::arg("path"))
         .def_static("deserialize", &deserialize_from_file<ChemicalSpace>, py::arg("path"))
         .def_static("peek",
