@@ -20,6 +20,8 @@ struct TokenDef {
     std::int64_t rxn = 4;
 };
 
+const constexpr TokenDef kDefaultTokenDef{};
+
 class SynthesisPostfixNotation : public SynthesisDescriptor {
 private:
     TokenDef token_def_;
@@ -39,7 +41,7 @@ public:
     }
 
     static std::unique_ptr<SynthesisPostfixNotation> create(size_t max_length = 16) {
-        return std::make_unique<SynthesisPostfixNotation>(TokenDef(), max_length);
+        return std::make_unique<SynthesisPostfixNotation>(kDefaultTokenDef, max_length);
     }
 
     std::vector<size_t> size() const override {

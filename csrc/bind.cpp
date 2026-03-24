@@ -4,6 +4,7 @@
 #include "chemspace/bind.hpp"
 #include "datapipe/bind.hpp"
 #include "descriptor/bind.hpp"
+#include "detokenizer/bind.hpp"
 #include "enumerator/bind.hpp"
 
 namespace py = pybind11;
@@ -25,4 +26,7 @@ PYBIND11_MODULE(prexsyn_engine, m) {
 
     auto m_datapipe = m.def_submodule("datapipe");
     def_module_datapipe(m_datapipe);
+
+    auto m_detokenizer = m.def_submodule("detokenizer");
+    def_module_detokenizer(m_detokenizer);
 }
