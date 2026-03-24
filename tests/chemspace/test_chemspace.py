@@ -1,3 +1,4 @@
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -57,8 +58,9 @@ def test_building_block_library_add_get_and_serde_roundtrip():
     assert bb_lib.get(0).identifier == "bb1"
     assert bb_lib.get("bb1").molecule.smiles() == "CCO"
 
-    payload = bb_lib.serialize()
-    cloned = chemspace.BuildingBlockLibrary.deserialize(payload)
+    with tempfile.NamedTemporaryFile() as tmp:
+        bb_lib.serialize(tmp.name)
+        cloned = chemspace.BuildingBlockLibrary.deserialize(tmp.name)
     assert cloned.size() == 1
     assert cloned.get(0).identifier == "bb1"
 
@@ -93,8 +95,9 @@ def test_reaction_library_match_and_serde_roundtrip():
     assert matches[0].reaction_name == "R1"
     assert matches[0].reactant_name == "amine"
 
-    payload = rxn_lib.serialize()
-    cloned = chemspace.ReactionLibrary.deserialize(payload)
+    with tempfile.NamedTemporaryFile() as tmp:
+        rxn_lib.serialize(tmp.name)
+        cloned = chemspace.ReactionLibrary.deserialize(tmp.name)
     assert cloned.size() == 1
     assert cloned.get(0).name == "R1"
 
@@ -126,16 +129,17 @@ def test_chemical_space_end_to_end_and_serde():
     rendered = cs.print_reactant_lists()
     assert "ReactionA" in rendered
 
-    payload = cs.serialize()
-    stats = chemspace.ChemicalSpace.peek(payload)
-    assert stats.num_building_blocks == cs.bb_lib().size()
-    assert stats.num_reactions == cs.rxn_lib().size()
-    assert stats.num_intermediates == cs.int_lib().size()
+    with tempfile.NamedTemporaryFile() as tmp:
+        cs.serialize(tmp.name)
+        stats = chemspace.ChemicalSpace.peek(tmp.name)
+        assert stats.num_building_blocks == cs.bb_lib().size()
+        assert stats.num_reactions == cs.rxn_lib().size()
+        assert stats.num_intermediates == cs.int_lib().size()
 
-    cloned = chemspace.ChemicalSpace.deserialize(payload)
-    assert cloned.bb_lib().size() == cs.bb_lib().size()
-    assert cloned.rxn_lib().size() == cs.rxn_lib().size()
-    assert cloned.int_lib().size() == cs.int_lib().size()
+        cloned = chemspace.ChemicalSpace.deserialize(tmp.name)
+        assert cloned.bb_lib().size() == cs.bb_lib().size()
+        assert cloned.rxn_lib().size() == cs.rxn_lib().size()
+        assert cloned.int_lib().size() == cs.int_lib().size()
 
 
 def test_chemspace_synthesis_add_and_undo():
@@ -148,7 +152,7 @@ def test_chemspace_synthesis_add_and_undo():
 
     r1 = syn.add_building_block("EN300-250786")
     r2 = syn.add_building_block("EN300-101318")
-    r3 = syn.add_reaction("ReactionA")
+    r3 = syn.add_reaction("ReactionA", None)
 
     assert bool(r1) and r1.is_ok
     assert bool(r2) and r2.is_ok

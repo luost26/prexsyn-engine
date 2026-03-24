@@ -40,7 +40,7 @@ def test_push_reaction_builds_expected_top_node_and_precursors():
 
     synthesis.push_molecule(reactant_a)
     synthesis.push_molecule(reactant_b)
-    synthesis.push_reaction(reaction)
+    synthesis.push_reaction(reaction, None)
 
     assert synthesis.stack_size() == 1
     top = synthesis.stack_top()
@@ -66,7 +66,7 @@ def test_push_reaction_raises_when_stack_has_too_few_reactants():
     synthesis.push_molecule(make_reactant_a())
 
     with pytest.raises(SynthesisError, match="Not enough reactants on the stack"):
-        synthesis.push_reaction(make_test_reaction())
+        synthesis.push_reaction(make_test_reaction(), None)
 
 
 def test_push_reaction_raises_when_no_products_are_produced():
@@ -75,7 +75,7 @@ def test_push_reaction_raises_when_no_products_are_produced():
     synthesis.push_molecule(make_non_matching_reactant())
 
     with pytest.raises(SynthesisError, match="did not produce any products"):
-        synthesis.push_reaction(make_test_reaction())
+        synthesis.push_reaction(make_test_reaction(), None)
 
 
 def test_undo_restores_precursor_nodes_in_original_stack_order():
@@ -85,7 +85,7 @@ def test_undo_restores_precursor_nodes_in_original_stack_order():
 
     synthesis.push_molecule(reactant_a)
     synthesis.push_molecule(reactant_b)
-    synthesis.push_reaction(make_test_reaction())
+    synthesis.push_reaction(make_test_reaction(), None)
 
     assert len(synthesis.nodes()) == 3
     assert synthesis.stack_size() == 1
@@ -102,7 +102,7 @@ def test_precursors_raises_on_invalid_item_index():
     synthesis = Synthesis()
     synthesis.push_molecule(make_reactant_a())
     synthesis.push_molecule(make_reactant_b())
-    synthesis.push_reaction(make_test_reaction())
+    synthesis.push_reaction(make_test_reaction(), None)
 
     top = synthesis.stack_top()
     assert top.size() == 1
