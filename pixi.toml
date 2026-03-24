@@ -9,6 +9,7 @@ version = "1.0.0.dev0"
 cmake = ">=4.2.3,<5"
 ninja = ">=1.13.2,<2"
 
+python = ">=3.10,<3.14"
 pip = "*"
 setuptools = "*"
 scikit-build-core = ">=0.11.6"
@@ -17,11 +18,13 @@ auditwheel = "*"
 patchelf = "*"
 pytest = "*"
 mypy = "*"
+pre-commit = ">=4.5.1,<5"
 
+[pypi-dependencies]
 numpy = ">=2.4.2,<3"
 click = "*"
 tqdm = "*"
-pre-commit = ">=4.5.1,<5"
+rdkit = ">=2025.9.6"
 
 [feature.dev-linux-64.dependencies]
 clangxx = "==21.1.0"
