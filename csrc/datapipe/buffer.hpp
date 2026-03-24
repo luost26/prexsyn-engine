@@ -98,6 +98,7 @@ public:
     void put(const WriteRow<capacity> &row);
     void get(const ReadBatch &batch);
     void get(const NamedReadBatch &batch);
+    void try_pop();
 };
 
 template <size_t capacity>

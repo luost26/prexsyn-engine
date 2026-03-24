@@ -114,6 +114,18 @@ void DataBuffer<capacity>::get(const NamedReadBatch &batch) {
     get(index_batch);
 }
 
+template <size_t capacity>
+    requires(capacity > 0)
+void DataBuffer<capacity>::try_pop() {
+    if (full_sem.try_acquire()) {
+        {
+            std::scoped_lock lock(mutex);
+            read_cursor = (read_cursor + 1) % capacity;
+        }
+        empty_sem.release();
+    }
+}
+
 template class DataBuffer<4>;
 template class DataBuffer<8192>;
 template class DataBuffer<65536>;

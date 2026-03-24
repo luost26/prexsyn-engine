@@ -68,6 +68,12 @@ void DataPipeline::stop_workers() {
     for (auto &worker : workers_) {
         worker->request_stop();
     }
+
+    // Discard data in buffer to unblock workers waiting on semaphore
+    for (size_t i = 0; i < workers_.size(); ++i) {
+        buffer_->try_pop();
+    }
+
     for (auto &worker : workers_) {
         worker->join();
     }
@@ -113,6 +119,7 @@ void Worker::run() {
         }
         owner_.buffer_->put(*data_row);
     }
+    owner_.logger_->info("Worker[seed={}] stopping", seed_);
 }
 
 void Worker::request_stop() { thread_.request_stop(); }
