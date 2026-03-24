@@ -36,7 +36,7 @@ std::unique_ptr<Molecule> Molecule::from_rdkit_pickle(const std::string &pickle)
     RDKit::ROMOL_SPTR rdkit_mol(new RDKit::ROMol());
     RDKit::MolPickler::MolPickler::molFromPickle(pickle, rdkit_mol.get(),
                                                  RDKit::PicklerOps::AllProps);
-    return std::make_unique<Molecule>(std::move(rdkit_mol));
+    return from_unsanitized_rdkit(rdkit_mol);
 }
 
 std::string Molecule::rdkit_pickle() const {

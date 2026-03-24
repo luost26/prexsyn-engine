@@ -23,7 +23,22 @@ using namespace prexsyn;
 static void def_molecule(py::module &m) {
     py::class_<Molecule, py::smart_holder>(m, "Molecule")
         .def_static("from_smiles", &Molecule::from_smiles)
+        .def_static("from_rdkit_mol",
+                    [](const py::object &rdk_mol) -> std::shared_ptr<Molecule> {
+                        py::tuple init_args = rdk_mol.attr("__getinitargs__")();
+                        py::bytes rdk_pickle = init_args[0];
+                        std::string pickle_str(rdk_pickle);
+                        return Molecule::from_rdkit_pickle(pickle_str);
+                    })
         .def("smiles", &Molecule::smiles, py::return_value_policy::copy)
+        .def("to_rdkit_mol",
+             [](const Molecule &mol) -> py::object {
+                 py::bytes rdk_pickle(mol.rdkit_pickle());
+                 py::module rdchem = py::module::import("rdkit.Chem.rdchem");
+                 py::object rdk_mol = rdchem.attr("Mol").attr("__new__")(rdchem.attr("Mol"));
+                 rdk_mol.attr("__init__")(rdk_pickle);
+                 return rdk_mol;
+             })
         .def("num_heavy_atoms", &Molecule::num_heavy_atoms)
         .def("largest_fragment", &Molecule::largest_fragment)
         .def(py::pickle([](const Molecule &mol) { return py::bytes(mol.serialize()); },
