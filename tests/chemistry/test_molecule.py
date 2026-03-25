@@ -4,6 +4,8 @@ import pytest
 import prexsyn_engine
 
 
+Chem = pytest.importorskip("rdkit.Chem", exc_type=ImportError)
+
 chemistry = prexsyn_engine.chemistry
 Molecule = chemistry.Molecule
 MoleculeError = chemistry.MoleculeError
@@ -45,3 +47,32 @@ def test_largest_fragment_returns_main_component():
 
     assert largest.smiles() == "CC"
     assert largest.num_heavy_atoms() == 2
+
+
+def test_from_rdkit_mol_creates_prexsyn_molecule():
+    rdk_mol = Chem.MolFromSmiles("CCO")
+
+    mol = Molecule.from_rdkit_mol(rdk_mol)
+
+    assert mol.smiles() == "CCO"
+    assert mol.num_heavy_atoms() == 3
+
+
+def test_to_rdkit_mol_returns_rdkit_molecule():
+    mol = Molecule.from_smiles("CCN")
+
+    rdk_mol = mol.to_rdkit_mol()
+
+    assert isinstance(rdk_mol, Chem.rdchem.Mol)
+    assert Chem.MolToSmiles(rdk_mol) == "CCN"
+
+
+def test_rdkit_conversion_roundtrip_preserves_canonical_smiles():
+    input_smiles = "OC1=CC=CC=C1"
+    canonical_input = Chem.MolToSmiles(Chem.MolFromSmiles(input_smiles))
+
+    mol = Molecule.from_rdkit_mol(Chem.MolFromSmiles(input_smiles))
+    rdk_mol = mol.to_rdkit_mol()
+    canonical_output = Chem.MolToSmiles(rdk_mol)
+
+    assert canonical_output == canonical_input
