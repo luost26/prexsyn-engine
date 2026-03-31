@@ -5,6 +5,8 @@ import typing
 class EnumeratorConfig:
     heavy_atom_limit: int
     max_building_blocks: int
+    max_outcomes_per_reaction: int
+    selectivity_cutoff: int
     def __init__(self) -> None: ...
 
 class RandomEnumerator:
