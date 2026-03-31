@@ -280,3 +280,149 @@ class TestSynthesisPostfixNotation:
 
         assert desc1.size()[0] == 16
         assert desc2.size()[0] == 32
+
+
+class TestBatchedMorganFingerprintCalls:
+    """Test cases for batched __call__ on MorganFingerprint descriptor."""
+
+    def test_batched_ecfp4_with_single_molecule_returns_2d_array(self):
+        """Test that calling ECFP4 with single molecule in list returns 2D array."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        mol = Molecule.from_smiles("CCC")
+
+        result = fp([mol])
+
+        assert isinstance(result, np.ndarray)
+        assert len(result.shape) == 2
+        assert result.shape[0] == 1
+
+    def test_batched_ecfp4_with_multiple_molecules_returns_correct_shape(self):
+        """Test that batched call returns shape (batch_size, *descriptor_size)."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        molecules = [
+            Molecule.from_smiles("CCC"),
+            Molecule.from_smiles("CCO"),
+            Molecule.from_smiles("CCCC"),
+        ]
+
+        result = fp(molecules)
+
+        expected_shape = (len(molecules),) + tuple(fp.size())
+        assert result.shape == expected_shape
+
+    def test_batched_ecfp4_dtype_matches_single_call(self):
+        """Test that batched call dtype matches single call."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        mol = Molecule.from_smiles("CCC")
+
+        single_result = fp(mol)
+        batched_result = fp([mol])
+
+        assert batched_result.dtype == single_result.dtype
+
+    def test_batched_ecfp4_individual_results_match_single_calls(self):
+        """Test that each batch result matches individual single calls."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        smiles_list = ["CCC", "CCO", "CCCC", "CC"]
+        molecules = [Molecule.from_smiles(s) for s in smiles_list]
+
+        # Get individual results
+        individual_results = [fp(mol) for mol in molecules]
+
+        # Get batched result
+        batched_result = fp(molecules)
+
+        # Each batch element should match the corresponding individual result
+        for i, individual in enumerate(individual_results):
+            assert np.array_equal(batched_result[i], individual), (
+                f"Batch result at index {i} does not match individual result"
+            )
+
+    def test_batched_fcfp4_individual_results_match_single_calls(self):
+        """Test batched FCFP4 results match individual calls."""
+        fp = descriptor.MorganFingerprint.fcfp4()
+        molecules = [
+            Molecule.from_smiles("CCC"),
+            Molecule.from_smiles("CCO"),
+            Molecule.from_smiles("CC"),
+        ]
+
+        individual_results = [fp(mol) for mol in molecules]
+        batched_result = fp(molecules)
+
+        for i, individual in enumerate(individual_results):
+            assert np.array_equal(batched_result[i], individual)
+
+    def test_batched_ecfp4_empty_list_returns_correct_shape(self):
+        """Test that empty molecule list returns (0, *fingerprint_size)."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+
+        result = fp([])
+
+        assert result.shape[0] == 0
+        assert len(result.shape) == len(fp.size()) + 1
+
+    def test_batched_ecfp4_large_batch_consistency(self):
+        """Test batched call consistency with larger batch."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        molecules = [Molecule.from_smiles("CCC") for _ in range(10)]
+
+        individual_results = [fp(mol) for mol in molecules]
+        batched_result = fp(molecules)
+
+        for i, individual in enumerate(individual_results):
+            assert np.array_equal(batched_result[i], individual)
+
+    def test_batched_call_all_molecules_produce_arrays(self):
+        """Test that all batch results are valid numpy arrays."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        molecules = [
+            Molecule.from_smiles("CCC"),
+            Molecule.from_smiles("c1ccccc1"),  # benzene
+            Molecule.from_smiles("CCN"),
+        ]
+
+        result = fp(molecules)
+
+        assert result.dtype == np.dtype("bool")
+        assert result.shape[0] == 3
+        # Each result should be a valid array without NaN or inf
+        assert np.all(np.isfinite(result.astype(int)))
+
+    def test_batched_ecfp4_vs_single_produces_same_values(self):
+        """Test that batched ECFP4 produces identical values vs calling individually."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        mol = Molecule.from_smiles("CCO")
+
+        # Call as batch of 1
+        batched_single = fp([mol])
+
+        # Call individually
+        individual = fp(mol)
+
+        # Reshape individual to match batch
+        individual_as_batch = individual[np.newaxis, :]
+
+        assert np.array_equal(batched_single, individual_as_batch)
+
+    def test_batched_different_molecules_produce_different_fingerprints(self):
+        """Test that different molecules in batch produce different fingerprints."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        mol1 = Molecule.from_smiles("CCO")
+        mol2 = Molecule.from_smiles("CC")
+
+        result = fp([mol1, mol2])
+
+        # Results should have different fingerprints
+        assert not np.array_equal(result[0], result[1])
+
+    def test_batched_identical_molecules_produce_identical_fingerprints(self):
+        """Test that identical molecules in batch produce identical fingerprints."""
+        fp = descriptor.MorganFingerprint.ecfp4()
+        mol = Molecule.from_smiles("CCCC")
+
+        result = fp([mol, mol, mol])
+
+        # All should be identical
+        assert np.array_equal(result[0], result[1])
+        assert np.array_equal(result[1], result[2])
