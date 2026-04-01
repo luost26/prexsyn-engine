@@ -7,13 +7,11 @@ import re
 from pathlib import Path
 
 VERSION_LINE_RE = re.compile(r'^(version\s*=\s*")([^"]+)("\s*)$', re.MULTILINE)
-POST_SUFFIX_RE = re.compile(r"\.post\d+$")
 
 
 def stamp_version(version: str, build_number: str) -> str:
     public = version.split("+", maxsplit=1)[0]
-    public = POST_SUFFIX_RE.sub("", public)
-    return f"{public}.post{build_number}"
+    return f"{public}+build.{build_number}"
 
 
 def update_pyproject(pyproject_path: Path, build_number: str) -> str:
@@ -47,7 +45,7 @@ def parse_args() -> argparse.Namespace:
         "--build-number",
         type=str,
         required=True,
-        help="Build number for the post-release suffix",
+        help="Build number for the +build.N local version suffix",
     )
     return parser.parse_args()
 
