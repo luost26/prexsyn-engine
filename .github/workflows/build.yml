@@ -82,7 +82,8 @@ jobs:
           pattern: cibw-wheels-*
           merge-multiple: true
       - name: Build simple index
-        run: python .github/generate_simple_index.py --wheels site/simple/prexsyn-engine --output site
+        run: >-
+          python .github/generate_simple_index.py --wheels site/simple/prexsyn-engine --output site --build-number "${{ github.run_number }}"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
