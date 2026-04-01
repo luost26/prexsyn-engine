@@ -82,6 +82,12 @@ void RandomEnumerator::grow_synthesis() {
         }
         const auto &rlist_bb = cs_->building_block_reactant_lists().get(match.reaction_index, i);
         const auto &rlist_int = cs_->intermediate_reactant_lists().get(match.reaction_index, i);
+        if (rlist_bb.empty() && rlist_int.empty()) {
+            // No possible reactants for this slot, so this reaction can't be applied
+            clear_synthesis();
+            return;
+        }
+
         const auto &[choice, index] = random_choice(rlist_bb, rlist_int, rng_);
         if (choice == which_vector::first) {
             result = synthesis_->add_building_block(index);
