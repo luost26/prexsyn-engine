@@ -125,6 +125,7 @@ static void def_synthesis(py::module &m) {
         .def_readonly("molecule", &SynthesisNode::PrecursorMolecule::molecule);
 
     py::class_<SynthesisNode, py::smart_holder>(m, "SynthesisNode")
+        .def("index", &SynthesisNode::index)
         .def("size", &SynthesisNode::size)
         .def("precursor_nodes", &SynthesisNode::precursor_nodes,
              py::return_value_policy::reference_internal)
