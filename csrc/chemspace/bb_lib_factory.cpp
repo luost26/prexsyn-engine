@@ -45,13 +45,13 @@ bb_lib_from_sdf(const std::filesystem::path &path, const BuildingBlockPreprocess
         try {
             RDKit::ROMOL_SPTR rdkit_mol{supplier.next()};
             auto mol = preprocessor(std::make_shared<Molecule>(rdkit_mol));
-            if (!rdkit_mol->hasProp("id")) {
-                logger()->warn("'id' property missing: {}", mol->smiles());
-                continue;
+            auto identifier = mol->smiles();
+            if (rdkit_mol->hasProp("id")) {
+                identifier = rdkit_mol->getProp<std::string>("id");
             }
             bb_lib->add({
                 .molecule = std::move(mol),
-                .identifier = deduplicator(rdkit_mol->getProp<std::string>("id")),
+                .identifier = deduplicator(identifier),
                 .labels = {},
             });
             count++;
