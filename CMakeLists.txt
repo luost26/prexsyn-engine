@@ -19,16 +19,22 @@ find_package(
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
-if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/boost")
-    execute_process(
-        COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost.sh" "${CMAKE_CURRENT_BINARY_DIR}/_third_party"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-        RESULT_VARIABLE BOOST_INSTALL_RESULT)
-    if(NOT BOOST_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Failed to install Boost: ${BOOST_INSTALL_RESULT}")
-    endif()
+if(USE_SYSTEM_BOOST)
+    find_package(Boost REQUIRED)
+    message(STATUS "Using system Boost: ${Boost_INCLUDE_DIRS}")
 else()
-    message(STATUS "Boost already installed. Skipping installation.")
+    if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/boost")
+        execute_process(
+            COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost.sh" "${CMAKE_CURRENT_BINARY_DIR}/_third_party"
+            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+            RESULT_VARIABLE BOOST_INSTALL_RESULT)
+        if(NOT BOOST_INSTALL_RESULT EQUAL 0)
+            message(FATAL_ERROR "Failed to install Boost: ${BOOST_INSTALL_RESULT}")
+        endif()
+    else()
+        message(STATUS "Boost already installed. Skipping installation.")
+    endif()
+    set(Boost_USE_STATIC_LIBS ON)
 endif()
 
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/rdkit")
@@ -42,8 +48,6 @@ if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/rdkit")
 else()
     message(STATUS "RDKit already installed. Skipping installation.")
 endif()
-
-set(Boost_USE_STATIC_LIBS ON)
 
 find_package(RDKit REQUIRED)
 message(STATUS "RDKit_INCLUDE_DIRS: ${RDKit_INCLUDE_DIRS}")
