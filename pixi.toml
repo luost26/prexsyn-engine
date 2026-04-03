@@ -66,6 +66,7 @@ LD_LIBRARY_PATH = "${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
 ASAN_SYMBOLIZER_PATH = "${CONDA_PREFIX}/bin/llvm-symbolizer"
 CXX = "${CONDA_PREFIX}/bin/clang++"
 CC = "${CONDA_PREFIX}/bin/clang"
+BOOST_TOOLSET = "clang"
 
 [environments]
 dev-linux-64 = { features = ["dev-linux-64"] }

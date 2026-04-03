@@ -24,8 +24,8 @@ for lib in "${LIBRARIES[@]}"; do
     python tools/boostdep/depinst/depinst.py -X test -g "--depth 1" $lib
 done
 
-if [[ -n "$CXX" ]]; then
-    ARGS="--with-toolset=$(basename $CXX)"
+if [[ -n "$BOOST_TOOLSET" ]]; then
+    ARGS="--with-toolset=$BOOST_TOOLSET"
 else
     ARGS=""
 fi
