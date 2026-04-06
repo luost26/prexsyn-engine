@@ -301,6 +301,8 @@ static void def_chemical_space_synthesis(py::module &m) {
                 return ChemicalSpaceSynthesis::deserialize(ss, chemspace, max_outcomes);
             },
             py::arg("data"), py::arg("chemspace"), py::arg("max_outcomes"))
+        .def("chemical_space", &ChemicalSpaceSynthesis::chemical_space,
+             py::return_value_policy::reference_internal)
         .def("postfix_notation", &ChemicalSpaceSynthesis::postfix_notation,
              py::return_value_policy::reference_internal)
         .def("synthesis", &ChemicalSpaceSynthesis::synthesis,

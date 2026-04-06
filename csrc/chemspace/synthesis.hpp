@@ -34,6 +34,7 @@ public:
     static std::unique_ptr<ChemicalSpaceSynthesis>
     deserialize(std::istream &, const ChemicalSpace &, std::optional<size_t> max_outcomes);
 
+    const ChemicalSpace &chemical_space() const { return cs_; }
     const PostfixNotation &postfix_notation() const { return postfix_notation_; }
     const Synthesis &synthesis() const { return *synthesis_; }
     std::shared_ptr<Synthesis> &get_synthesis() { return synthesis_; }
