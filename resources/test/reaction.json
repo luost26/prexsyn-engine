@@ -1,0 +1,25 @@
+[
+    {
+        "name": "Suzuki Coupling",
+        "reactants": {
+            "Halides": "[c,C!^3:1]-[Cl,Br,I]",
+            "Boronates": "[c,C!^3:2]-[B]"
+        },
+        "product": "[c,C!^3:1]-[c,C!^3:2]"
+    },
+    {
+        "name": "Amide Coupling",
+        "reactants": {
+            "Acids": "[C:1](=[O:2])[O;H1,-1]",
+            "Amines": "[N!H0:3]"
+        },
+        "product": "[C:1](=[O:2])[N:3]"
+    },
+    {
+        "name": "Alkynylation",
+        "reactants": {
+            "Halides": "[c,C!^3:1]-[Cl,Br,I]"
+        },
+        "product": "[c,C!^3:1]-[C]#[C]"
+    }
+]

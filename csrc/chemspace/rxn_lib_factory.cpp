@@ -10,6 +10,7 @@
 #include <vector>
 
 #include <csv.hpp>
+#include <nlohmann/json.hpp>
 
 #include "../chemistry/chemistry.hpp"
 #include "../utility/logging.hpp"
@@ -133,6 +134,92 @@ std::unique_ptr<ReactionLibrary> rxn_lib_from_csv(const std::filesystem::path &p
         }
     }
 
+    return rxn_lib;
+}
+
+std::unique_ptr<ReactionLibrary> rxn_lib_from_json(const std::filesystem::path &path,
+                                                   bool ignore_errors) {
+    auto rxn_lib = std::make_unique<ReactionLibrary>();
+
+    std::ifstream infile(path);
+    if (!infile) {
+        throw std::runtime_error("Failed to open reaction library file: " + path.string());
+    }
+
+    nlohmann::json data;
+    try {
+        infile >> data;
+    } catch (const nlohmann::json::exception &e) {
+        throw std::runtime_error("Failed to parse reaction JSON file: " + path.string() +
+                                 ", error: " + e.what());
+    }
+
+    if (!data.is_array()) {
+        throw std::runtime_error("Reaction JSON root must be an array: " + path.string());
+    }
+
+    logger()->info("Starting to load reactions from JSON: {}", path.string());
+
+    size_t entry_no = 0;
+    for (const auto &entry : data) {
+        entry_no++;
+
+        try {
+            if (!entry.is_object()) {
+                throw ReactionError("JSON entry must be an object");
+            }
+
+            std::string name = "RXN_" + std::to_string(entry_no);
+            if (entry.contains("name")) {
+                if (!entry.at("name").is_string()) {
+                    throw ReactionError("Field 'name' must be a string");
+                }
+                name = entry.at("name").get<std::string>();
+            }
+
+            if (!entry.contains("reactants") || !entry.at("reactants").is_object()) {
+                throw ReactionError("Field 'reactants' must be an object");
+            }
+            if (!entry.contains("product") || !entry.at("product").is_string()) {
+                throw ReactionError("Field 'product' must be a string");
+            }
+
+            const auto &reactants = entry.at("reactants");
+            if (reactants.empty()) {
+                throw ReactionError("Field 'reactants' must not be empty");
+            }
+
+            std::vector<std::string> reactant_names;
+            reactant_names.reserve(reactants.size());
+
+            std::string reaction_smarts;
+            bool first = true;
+            for (auto it = reactants.begin(); it != reactants.end(); ++it) {
+                if (!it.value().is_string()) {
+                    throw ReactionError("Reactant SMARTS for '" + it.key() + "' must be a string");
+                }
+                if (!first) {
+                    reaction_smarts += ".";
+                }
+                reaction_smarts += it.value().get<std::string>();
+                reactant_names.push_back(it.key());
+                first = false;
+            }
+
+            reaction_smarts += ">>";
+            reaction_smarts += entry.at("product").get<std::string>();
+
+            auto rxn = Reaction::from_smarts(reaction_smarts, reactant_names);
+            rxn_lib->add({.reaction = std::move(rxn), .name = std::move(name)});
+        } catch (const ReactionError &e) {
+            logger()->warn("Entry {}: {}", entry_no, e.what());
+            if (!ignore_errors) {
+                throw;
+            }
+        }
+    }
+
+    logger()->info("Done. Loaded: {}", rxn_lib->size());
     return rxn_lib;
 }
 

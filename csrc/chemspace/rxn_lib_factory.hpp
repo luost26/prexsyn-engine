@@ -22,4 +22,7 @@ std::unique_ptr<ReactionLibrary> rxn_lib_from_csv(const std::filesystem::path &,
                                                   const ReactionCSVConfig &config = {},
                                                   bool ignore_errors = false);
 
+std::unique_ptr<ReactionLibrary> rxn_lib_from_json(const std::filesystem::path &,
+                                                   bool ignore_errors = false);
+
 } // namespace prexsyn::chemspace

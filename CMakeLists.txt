@@ -69,6 +69,9 @@ FetchContent_Declare(
     GIT_TAG 2.5.1)
 FetchContent_MakeAvailable(csv)
 
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 FetchContent_Declare(
     pybind11
     GIT_REPOSITORY https://github.com/pybind/pybind11.git
@@ -89,7 +92,8 @@ list(FILTER SOURCES EXCLUDE REGEX "bind.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX "main.cpp$")
 add_library(prexsyn_obj OBJECT ${SOURCES})
 set_target_properties(prexsyn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX spdlog::spdlog)
+target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX spdlog::spdlog
+                                         nlohmann_json::nlohmann_json)
 target_include_directories(prexsyn_obj PUBLIC ${csv_SOURCE_DIR}/single_include ${spdlog_SOURCE_DIR}/include)
 add_executable(main csrc/main.cpp)
 target_link_libraries(main PRIVATE prexsyn_obj)
