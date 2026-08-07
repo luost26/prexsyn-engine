@@ -17,13 +17,13 @@ jobs:
           - os: ubuntu-latest
             platform: linux-x86_64
             archs: x86_64
-          - os: windows-latest
+          - os: windows-2022
             platform: windows-x86_64
             archs: AMD64
-          - os: macos-15-intel
-            platform: macos-x86_64
-            archs: x86_64
-            openmp-root: /usr/local/opt/libomp
+          # - os: macos-15-intel
+          #   platform: macos-x86_64
+          #   archs: x86_64
+          #   openmp-root: /usr/local/opt/libomp
           - os: macos-15
             platform: macos-arm64
             archs: arm64

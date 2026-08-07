@@ -1,5 +1,6 @@
 #pragma once
 
+#include <atomic>
 #include <cstddef>
 #include <map>
 #include <memory>
@@ -81,10 +82,15 @@ private:
     const DataPipeline &owner_;
     const size_t seed_;
     enumerator::RandomEnumerator enumerator_;
-    std::jthread thread_;
+    std::atomic<bool> stop_requested_{false};
+    std::thread thread_;
 
     Worker(const DataPipeline &owner, size_t seed);
 
+public:
+    ~Worker();
+
+private:
     void run();
     void request_stop();
     void join();

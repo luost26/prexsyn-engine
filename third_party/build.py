@@ -90,7 +90,9 @@ def build_boost(source_root: Path, prefix: Path) -> None:
 
     prefix_arg = f"--prefix={prefix}"
     if os.name == "nt":
-        run(["cmd.exe", "/d", "/c", "bootstrap.bat", prefix_arg], cwd=source)
+        # Boost 1.86 detects Visual Studio 18 as the unsupported "vcunk"
+        # toolset. CI uses Visual Studio 2022, so select its toolset explicitly.
+        run(["cmd.exe", "/d", "/c", "bootstrap.bat", "vc143"], cwd=source)
         b2 = source / "b2.exe"
     else:
         bootstrap = ["./bootstrap.sh", prefix_arg]

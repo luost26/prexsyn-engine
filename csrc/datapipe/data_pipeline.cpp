@@ -4,7 +4,6 @@
 #include <map>
 #include <memory>
 #include <span>
-#include <stop_token>
 #include <string>
 #include <utility>
 #include <vector>
@@ -106,13 +105,20 @@ DataPipeline::Batch DataPipeline::get(size_t batch_size) {
 
 Worker::Worker(const DataPipeline &owner, size_t seed)
     : owner_(owner), seed_(seed),
-      enumerator_(owner_.chemical_space_, owner_.enumerator_config_, seed),
-      thread_(&Worker::run, this) {
-    owner_.logger_->info("Worker[seed={}] started", seed);
+      enumerator_(owner_.chemical_space_, owner_.enumerator_config_, seed) {
+    owner_.logger_->info("Worker[seed={}] starting", seed);
+    thread_ = std::thread(&Worker::run, this);
+}
+
+Worker::~Worker() {
+    request_stop();
+    if (thread_.joinable()) {
+        thread_.join();
+    }
 }
 
 void Worker::run() {
-    while (!thread_.get_stop_token().stop_requested()) {
+    while (!stop_requested_.load()) {
         auto [synthesis, product] = enumerator_.next_with_product();
         auto data_row = owner_.buffer_->new_write_row();
         for (const auto &[name, fn] : owner_.synthesis_descriptors_) {
@@ -128,7 +134,7 @@ void Worker::run() {
     owner_.logger_->info("Worker[seed={}] stopping", seed_);
 }
 
-void Worker::request_stop() { thread_.request_stop(); }
+void Worker::request_stop() { stop_requested_.store(true); }
 
 void Worker::join() {
     if (thread_.joinable()) {
