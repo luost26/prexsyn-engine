@@ -125,6 +125,7 @@ def build_rdkit(
     platform: str | None,
     toolset: str | None,
     additional_prefixes: list[str],
+    static_boost: bool,
 ) -> None:
     marker = prefix / f".prexsyn-rdkit-{RDKIT_VERSION}"
     if marker.exists():
@@ -157,6 +158,8 @@ def build_rdkit(
         "-DRDK_INSTALL_COMIC_FONTS=OFF",
         "-DRDK_BUILD_DESCRIPTORS3D=OFF",
     ]
+    if static_boost:
+        configure.append("-DBoost_USE_STATIC_LIBS=ON")
     if platform:
         configure.extend(("-A", platform))
     if toolset:
@@ -201,6 +204,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--platform")
     parser.add_argument("--toolset")
     parser.add_argument("--cmake-prefix", action="append", default=[])
+    parser.add_argument(
+        "--rdkit-static-boost",
+        action="store_true",
+        help="Link RDKit against static Boost libraries",
+    )
     parser.add_argument("--skip-boost", action="store_true")
     parser.add_argument("--skip-rdkit", action="store_true")
     parser.add_argument("--clean", action="store_true")
@@ -231,6 +239,7 @@ def main() -> None:
             args.platform,
             args.toolset,
             args.cmake_prefix,
+            args.rdkit_static_boost,
         )
 
 
