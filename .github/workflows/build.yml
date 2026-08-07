@@ -11,8 +11,24 @@ jobs:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux-x86_64
+            archs: x86_64
+          - os: windows-2022
+            platform: windows-x86_64
+            archs: AMD64
+          # - os: macos-15-intel
+          #   platform: macos-x86_64
+          #   archs: x86_64
+          #   openmp-root: /usr/local/opt/libomp
+          - os: macos-15
+            platform: macos-arm64
+            archs: arm64
+            openmp-root: /opt/homebrew/opt/libomp
+            deployment_target: "15.0"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,15 +41,29 @@ jobs:
         uses: actions/cache@v5
         with:
           path: .cache/third_party
-          key: ${{ runner.os }}-third-party-${{ hashFiles('CMakeLists.txt', 'third_party/boost.sh', 'third_party/rdkit.sh') }}
+          key: ${{ runner.os }}-${{ runner.arch }}-third-party-${{ hashFiles('CMakeLists.txt', 'third_party/build.py') }}
+      - name: Enable long paths
+        if: runner.os == 'Windows'
+        run: git config --global core.longpaths true
+      - name: Install OpenMP runtime
+        if: runner.os == 'macOS'
+        run: brew install libomp
       - name: Build wheels
         uses: pypa/cibuildwheel@v3.4.0
         env:
+          CIBW_ARCHS: ${{ matrix.archs }}
           CIBW_BEFORE_ALL_LINUX: >-
-            mkdir -p /host${{ github.workspace }}/.cache/third_party && mkdir -p /project/build/scikit-build && rm -rf /project/build/scikit-build/_third_party && ln -s /host${{ github.workspace }}/.cache/third_party /project/build/scikit-build/_third_party
+            mkdir -p /host${{ github.workspace }}/.cache/third_party
+          CIBW_ENVIRONMENT_LINUX: >-
+            CMAKE_ARGS="-DPREXSYN_DEPS_DIR=/host${{ github.workspace }}/.cache/third_party"
+          CIBW_ENVIRONMENT_MACOS: >-
+            MACOSX_DEPLOYMENT_TARGET=${{ matrix.deployment_target }}
+            CMAKE_ARGS="-DPREXSYN_DEPS_DIR=.cache/third_party -DPREXSYN_OPENMP_ROOT=${{ matrix.openmp-root }}"
+          CIBW_ENVIRONMENT_WINDOWS: >-
+            CMAKE_ARGS="-DPREXSYN_DEPS_DIR=.cache/third_party"
       - uses: actions/upload-artifact@v4
         with:
-          name: cibw-wheels-${{ matrix.os }}-${{ strategy.job-index }}
+          name: cibw-wheels-${{ matrix.platform }}
           path: ./wheelhouse/*.whl
   make_sdist:
     name: Make SDist
@@ -68,7 +98,7 @@ jobs:
     name: Publish private PyPI index
     runs-on: ubuntu-latest
     needs: [build_wheels]
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

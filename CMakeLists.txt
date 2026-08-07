@@ -2,65 +2,82 @@ cmake_minimum_required(VERSION 3.28)
 include(FetchContent)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-file(MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/_third_party")
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_BINARY_DIR}/_third_party")
-# list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/third_party/pkgs")
-
 project(prexsyn_engine LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -Wall -Wextra -fsanitize=address")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -mavx2 -mfma -ffast-math")
+set(PREXSYN_DEPS_DIR "${CMAKE_CURRENT_BINARY_DIR}/_third_party" CACHE PATH
+    "Directory containing (or receiving) the prexsyn-engine C++ dependencies")
+if(NOT IS_ABSOLUTE "${PREXSYN_DEPS_DIR}")
+    cmake_path(ABSOLUTE_PATH PREXSYN_DEPS_DIR BASE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+               NORMALIZE)
+endif()
+option(USE_SYSTEM_BOOST "Use an existing Boost installation" OFF)
+option(USE_SYSTEM_RDKIT "Use an existing RDKit installation" OFF)
+set(PREXSYN_OPENMP_ROOT "" CACHE PATH "OpenMP runtime prefix (primarily for Apple Clang)")
 
-find_package(
-    OpenMP
-    COMPONENTS CXX
-    REQUIRED)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+find_package(Python REQUIRED COMPONENTS Interpreter Development.Module)
+file(MAKE_DIRECTORY "${PREXSYN_DEPS_DIR}")
 
-if(USE_SYSTEM_BOOST)
-    find_package(Boost REQUIRED)
-    message(STATUS "Using system Boost: ${Boost_INCLUDE_DIRS}")
-else()
-    if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/boost")
-        execute_process(
-            COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost.sh" "${CMAKE_CURRENT_BINARY_DIR}/_third_party"
-            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-            RESULT_VARIABLE BOOST_INSTALL_RESULT)
-        if(NOT BOOST_INSTALL_RESULT EQUAL 0)
-            message(FATAL_ERROR "Failed to install Boost: ${BOOST_INSTALL_RESULT}")
-        endif()
-    else()
-        message(STATUS "Boost already installed. Skipping installation.")
+if(APPLE AND PREXSYN_OPENMP_ROOT)
+    set(OpenMP_CXX_FLAGS "-Xpreprocessor -fopenmp" CACHE STRING "OpenMP compiler flags" FORCE)
+    set(OpenMP_CXX_LIB_NAMES "omp" CACHE STRING "OpenMP runtime library name" FORCE)
+    set(OpenMP_omp_LIBRARY "${PREXSYN_OPENMP_ROOT}/lib/libomp.dylib" CACHE FILEPATH
+        "OpenMP runtime library" FORCE)
+    set(OpenMP_CXX_INCLUDE_DIR "${PREXSYN_OPENMP_ROOT}/include" CACHE PATH
+        "OpenMP include directory" FORCE)
+endif()
+find_package(OpenMP REQUIRED COMPONENTS CXX)
+
+if(NOT (USE_SYSTEM_BOOST AND USE_SYSTEM_RDKIT))
+    set(PREXSYN_DEPS_COMMAND
+        "${Python_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/third_party/build.py"
+        "${PREXSYN_DEPS_DIR}" "--generator=${CMAKE_GENERATOR}")
+    if(CMAKE_GENERATOR_PLATFORM)
+        list(APPEND PREXSYN_DEPS_COMMAND "--platform=${CMAKE_GENERATOR_PLATFORM}")
     endif()
+    if(CMAKE_GENERATOR_TOOLSET)
+        list(APPEND PREXSYN_DEPS_COMMAND "--toolset=${CMAKE_GENERATOR_TOOLSET}")
+    endif()
+    foreach(PREXSYN_CMAKE_PREFIX IN LISTS CMAKE_PREFIX_PATH)
+        list(APPEND PREXSYN_DEPS_COMMAND "--cmake-prefix=${PREXSYN_CMAKE_PREFIX}")
+    endforeach()
+    if(USE_SYSTEM_BOOST)
+        list(APPEND PREXSYN_DEPS_COMMAND --skip-boost)
+    else()
+        list(APPEND PREXSYN_DEPS_COMMAND --rdkit-static-boost)
+    endif()
+    if(USE_SYSTEM_RDKIT)
+        list(APPEND PREXSYN_DEPS_COMMAND --skip-rdkit)
+    endif()
+    execute_process(
+        COMMAND ${PREXSYN_DEPS_COMMAND}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+        COMMAND_ECHO STDOUT
+        RESULT_VARIABLE PREXSYN_DEPS_RESULT)
+    if(NOT PREXSYN_DEPS_RESULT EQUAL 0)
+        message(FATAL_ERROR "Failed to install third-party dependencies: ${PREXSYN_DEPS_RESULT}")
+    endif()
+endif()
+
+list(PREPEND CMAKE_PREFIX_PATH "${PREXSYN_DEPS_DIR}")
+if(NOT USE_SYSTEM_BOOST)
     set(Boost_USE_STATIC_LIBS ON)
 endif()
-
-if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/rdkit")
-    execute_process(
-        COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/third_party/rdkit.sh" "${CMAKE_CURRENT_BINARY_DIR}/_third_party"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
-        RESULT_VARIABLE RDKIT_INSTALL_RESULT)
-    if(NOT RDKIT_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Failed to install RDKit: ${RDKIT_INSTALL_RESULT}")
-    endif()
-else()
-    message(STATUS "RDKit already installed. Skipping installation.")
-endif()
-
+find_package(Boost CONFIG REQUIRED)
+message(STATUS "Using Boost: ${Boost_INCLUDE_DIRS}")
 find_package(RDKit REQUIRED)
 message(STATUS "RDKit_INCLUDE_DIRS: ${RDKit_INCLUDE_DIRS}")
-set(RDKit_LIBRARIES
-    RDKit::RDGeneral_static
-    RDKit::GraphMol_static
-    RDKit::SmilesParse_static
-    RDKit::ChemReactions_static
-    RDKit::GeneralizedSubstruct_static
-    RDKit::DataStructs_static
-    RDKit::Fingerprints_static
-    RDKit::MolStandardize_static
-    RDKit::Descriptors_static)
+set(RDKit_LIBRARIES)
+foreach(RDKIT_COMPONENT RDGeneral GraphMol SmilesParse ChemReactions GeneralizedSubstruct DataStructs
+                        Fingerprints MolStandardize Descriptors)
+    if(TARGET RDKit::${RDKIT_COMPONENT}_static)
+        list(APPEND RDKit_LIBRARIES RDKit::${RDKIT_COMPONENT}_static)
+    elseif(TARGET RDKit::${RDKIT_COMPONENT})
+        list(APPEND RDKit_LIBRARIES RDKit::${RDKIT_COMPONENT})
+    else()
+        message(FATAL_ERROR "RDKit did not provide the ${RDKIT_COMPONENT} target")
+    endif()
+endforeach()
 
 FetchContent_Declare(
     csv
@@ -95,16 +112,31 @@ set_target_properties(prexsyn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX spdlog::spdlog
                                          nlohmann_json::nlohmann_json)
 target_include_directories(prexsyn_obj PUBLIC ${csv_SOURCE_DIR}/single_include ${spdlog_SOURCE_DIR}/include)
+if(WIN32)
+    # Prevent Windows headers from defining min/max macros that break std::min/std::max.
+    target_compile_definitions(prexsyn_obj PUBLIC NOMINMAX)
+endif()
+if(MSVC)
+    # Make __cplusplus reflect /std:c++20 so dependencies select their C++17+ APIs.
+    target_compile_options(prexsyn_obj PUBLIC /Zc:__cplusplus)
+    target_compile_options(prexsyn_obj PRIVATE /W4 $<$<CONFIG:Release>:/O2> $<$<CONFIG:Release>:/fp:fast>)
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(AMD64|x86_64)$")
+        target_compile_options(prexsyn_obj PRIVATE $<$<CONFIG:Release>:/arch:AVX2>)
+    endif()
+else()
+    target_compile_options(prexsyn_obj PRIVATE -Wall -Wextra $<$<CONFIG:Release>:-O3>
+                                                $<$<CONFIG:Release>:-ffast-math>)
+    if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(AMD64|amd64|x86_64)$")
+        target_compile_options(prexsyn_obj PRIVATE $<$<CONFIG:Release>:-mavx2>
+                                                    $<$<CONFIG:Release>:-mfma>)
+    endif()
+endif()
 add_executable(main csrc/main.cpp)
 target_link_libraries(main PRIVATE prexsyn_obj)
 
-find_package(Python COMPONENTS Interpreter Development)
 file(GLOB_RECURSE BIND_SOURCES CONFIGURE_DEPENDS csrc/*bind.cpp)
 pybind11_add_module(prexsyn_engine ${BIND_SOURCES})
 target_link_libraries(prexsyn_engine PRIVATE prexsyn_obj)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug" AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    target_compile_options(prexsyn_engine PRIVATE -shared-libasan)
-endif()
 install(TARGETS prexsyn_engine DESTINATION .)
 
 if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/prexsyn_engine-stubs")

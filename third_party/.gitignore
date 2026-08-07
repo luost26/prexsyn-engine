@@ -1,7 +1,5 @@
 *
 !.gitignore
-!clean.sh
-!boost.sh
-!rdkit.sh
 !pkgs/
 !pkgs/.gitkeep
+!build.py

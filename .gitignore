@@ -266,3 +266,4 @@ __marimo__/
 !.pixi/config.toml
 /typings
 /notebooks
+.DS_Store

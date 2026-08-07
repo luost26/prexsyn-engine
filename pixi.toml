@@ -41,12 +41,12 @@ libstdcxx-ng = ">=15.0.0"
 build-python = { cmd = "python -m build" }
 
 [feature.dev-linux-64.tasks]
-clean-third-party = { cmd = "./clean.sh", cwd = "third_party" }
-install-boost = { cmd = "./boost.sh $(pwd)/pkgs", cwd = "third_party" }
-install-rdkit = { cmd = "./rdkit.sh $(pwd)/pkgs", cwd = "third_party" }
+clean-third-party = { cmd = "python third_party/build.py third_party/pkgs --clean" }
+install-boost = { cmd = "python third_party/build.py third_party/pkgs --generator Ninja --skip-rdkit" }
+install-rdkit = { cmd = "python third_party/build.py third_party/pkgs --generator Ninja --skip-boost --cmake-prefix $CONDA_PREFIX", depends-on = ["install-boost"] }
 
-configure-debug = { cmd = "cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -G Ninja -S . -B build/debug && ln -sf ./debug/compile_commands.json build/compile_commands.json" }
-configure-release = { cmd = "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -G Ninja -S . -B build/release" }
+configure-debug = { cmd = "cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DPREXSYN_DEPS_DIR=third_party/pkgs -G Ninja -S . -B build/debug && ln -sf ./debug/compile_commands.json build/compile_commands.json" }
+configure-release = { cmd = "cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=$CONDA_PREFIX -DPREXSYN_DEPS_DIR=third_party/pkgs -G Ninja -S . -B build/release" }
 configure = [ { task = "configure-debug" }, { task = "configure-release" } ]
 build-debug = { cmd = "ninja -C build/debug/" }
 build-release = { cmd = "ninja -C build/release/" }
