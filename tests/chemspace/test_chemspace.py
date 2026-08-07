@@ -1,4 +1,3 @@
-import tempfile
 import pickle
 from pathlib import Path
 
@@ -60,7 +59,7 @@ def test_postfix_notation_pickle_roundtrip():
         assert cloned.type == original.type
 
 
-def test_building_block_library_add_get_and_serde_roundtrip():
+def test_building_block_library_add_get_and_serde_roundtrip(tmp_path: Path):
     bb_lib = chemspace.BuildingBlockLibrary()
 
     entry = chemspace.BuildingBlockEntry()
@@ -74,9 +73,9 @@ def test_building_block_library_add_get_and_serde_roundtrip():
     assert bb_lib.get(0).identifier == "bb1"
     assert bb_lib.get("bb1").molecule.smiles() == "CCO"
 
-    with tempfile.NamedTemporaryFile() as tmp:
-        bb_lib.serialize(tmp.name)
-        cloned = chemspace.BuildingBlockLibrary.deserialize(tmp.name)
+    serialized_path = tmp_path / "building_blocks.bin"
+    bb_lib.serialize(serialized_path)
+    cloned = chemspace.BuildingBlockLibrary.deserialize(serialized_path)
     assert cloned.size() == 1
     assert cloned.get(0).identifier == "bb1"
 
@@ -96,7 +95,7 @@ def test_building_block_library_duplicate_identifier_raises_specific_error():
         bb_lib.add(entry)
 
 
-def test_reaction_library_match_and_serde_roundtrip():
+def test_reaction_library_match_and_serde_roundtrip(tmp_path: Path):
     rxn_lib = chemspace.ReactionLibrary()
 
     rxn_entry = chemspace.ReactionEntry()
@@ -111,9 +110,9 @@ def test_reaction_library_match_and_serde_roundtrip():
     assert matches[0].reaction_name == "R1"
     assert matches[0].reactant_name == "amine"
 
-    with tempfile.NamedTemporaryFile() as tmp:
-        rxn_lib.serialize(tmp.name)
-        cloned = chemspace.ReactionLibrary.deserialize(tmp.name)
+    serialized_path = tmp_path / "reactions.bin"
+    rxn_lib.serialize(serialized_path)
+    cloned = chemspace.ReactionLibrary.deserialize(serialized_path)
     assert cloned.size() == 1
     assert cloned.get(0).name == "R1"
 
@@ -127,7 +126,7 @@ def test_factory_loaders_from_test_resources():
     assert rxn_lib.get("ReactionA").name == "ReactionA"
 
 
-def test_chemical_space_end_to_end_and_serde():
+def test_chemical_space_end_to_end_and_serde(tmp_path: Path):
     bb_lib = chemspace.bb_lib_from_sdf(resource_path("bb.sdf"))
     rxn_lib = chemspace.rxn_lib_from_plain_text(resource_path("rxn.txt"))
     int_lib = chemspace.IntermediateLibrary()
@@ -145,17 +144,17 @@ def test_chemical_space_end_to_end_and_serde():
     rendered = cs.print_reactant_lists()
     assert "ReactionA" in rendered
 
-    with tempfile.NamedTemporaryFile() as tmp:
-        cs.serialize(tmp.name)
-        stats = chemspace.ChemicalSpace.peek(tmp.name)
-        assert stats.num_building_blocks == cs.bb_lib().size()
-        assert stats.num_reactions == cs.rxn_lib().size()
-        assert stats.num_intermediates == cs.int_lib().size()
+    serialized_path = tmp_path / "chemical_space.bin"
+    cs.serialize(serialized_path)
+    stats = chemspace.ChemicalSpace.peek(serialized_path)
+    assert stats.num_building_blocks == cs.bb_lib().size()
+    assert stats.num_reactions == cs.rxn_lib().size()
+    assert stats.num_intermediates == cs.int_lib().size()
 
-        cloned = chemspace.ChemicalSpace.deserialize(tmp.name)
-        assert cloned.bb_lib().size() == cs.bb_lib().size()
-        assert cloned.rxn_lib().size() == cs.rxn_lib().size()
-        assert cloned.int_lib().size() == cs.int_lib().size()
+    cloned = chemspace.ChemicalSpace.deserialize(serialized_path)
+    assert cloned.bb_lib().size() == cs.bb_lib().size()
+    assert cloned.rxn_lib().size() == cs.rxn_lib().size()
+    assert cloned.int_lib().size() == cs.int_lib().size()
 
 
 def test_chemspace_synthesis_add_and_undo():
