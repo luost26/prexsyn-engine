@@ -158,8 +158,10 @@ void ChemicalSpace::generate_intermediates() {
         }
     }
 
+    const auto num_pairs = static_cast<std::ptrdiff_t>(bb_rxn_pairs.size());
 #pragma omp parallel for schedule(dynamic)
-    for (const auto &[bb_idx, rxn_idx] : bb_rxn_pairs) {
+    for (std::ptrdiff_t pair_idx = 0; pair_idx < num_pairs; ++pair_idx) {
+        const auto &[bb_idx, rxn_idx] = bb_rxn_pairs[static_cast<size_t>(pair_idx)];
         const auto &bb_item = bb_lib_->get(bb_idx);
         const auto &rxn_item = rxn_lib_->get(rxn_idx);
         PostfixNotation pfn{};
@@ -199,8 +201,10 @@ void ChemicalSpace::build_reactant_lists_for_building_blocks() {
     rnt_bb_mapping_.init(*rxn_lib_);
 
     size_t count_processed = 0;
+    const auto num_building_blocks = static_cast<std::ptrdiff_t>(bb_lib_->size());
 #pragma omp parallel for schedule(dynamic)
-    for (size_t i = 0; i < bb_lib_->size(); ++i) {
+    for (std::ptrdiff_t work_idx = 0; work_idx < num_building_blocks; ++work_idx) {
+        const auto i = static_cast<size_t>(work_idx);
         const auto &bb = bb_lib_->get(i);
         auto matches = rxn_lib_->match_reactants(*bb.molecule);
 #pragma omp critical
@@ -227,8 +231,10 @@ void ChemicalSpace::build_reactant_lists_for_intermediates() {
     rnt_int_mapping_.init(*rxn_lib_);
 
     size_t count_processed = 0;
+    const auto num_intermediates = static_cast<std::ptrdiff_t>(int_lib_->size());
 #pragma omp parallel for schedule(dynamic)
-    for (size_t i = 0; i < int_lib_->size(); ++i) {
+    for (std::ptrdiff_t work_idx = 0; work_idx < num_intermediates; ++work_idx) {
+        const auto i = static_cast<size_t>(work_idx);
         const auto &intm = int_lib_->get(i);
         auto matches = rxn_lib_->match_reactants(*intm.molecule);
 #pragma omp critical

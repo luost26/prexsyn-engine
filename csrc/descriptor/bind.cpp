@@ -47,8 +47,10 @@ static auto get_batched_numpy_array(const DescriptorType &desc,
 
     auto *base_ptr = reinterpret_cast<std::byte *>(arr.mutable_data());
 
+    const auto num_inputs = static_cast<std::ptrdiff_t>(inputs.size());
 #pragma omp parallel for
-    for (size_t i = 0; i < inputs.size(); ++i) {
+    for (std::ptrdiff_t work_idx = 0; work_idx < num_inputs; ++work_idx) {
+        const auto i = static_cast<size_t>(work_idx);
         auto offset = i * desc.size_in_bytes();
         auto span_i = std::span<std::byte>(base_ptr + offset, desc.size_in_bytes());
         desc(inputs[i], span_i);

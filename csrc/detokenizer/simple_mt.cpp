@@ -26,8 +26,10 @@ MultiThreadedDetokenizer::operator()(size_t batch_size,
     std::vector<std::unique_ptr<chemspace::Synthesis>> out;
     out.resize(batch_size);
 
+    const auto parallel_batch_size = static_cast<std::ptrdiff_t>(batch_size);
 #pragma omp parallel for schedule(dynamic)
-    for (size_t i = 0; i < batch_size; ++i) {
+    for (std::ptrdiff_t work_idx = 0; work_idx < parallel_batch_size; ++work_idx) {
+        const auto i = static_cast<size_t>(work_idx);
         out[i] = detokenize(tokens.subspan(i * seqlen * 3, seqlen * 3), cs_, token_def_,
                             max_outcomes_per_reaction_);
     }
