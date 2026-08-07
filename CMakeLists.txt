@@ -19,9 +19,7 @@ find_package(
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
-if(USE_SYSTEM_BOOST)
-    message(STATUS "Using system Boost")
-else()
+if(NOT USE_SYSTEM_BOOST)
     if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/boost")
         execute_process(
             COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/third_party/boost.sh" "${CMAKE_CURRENT_BINARY_DIR}/_third_party"
@@ -36,7 +34,11 @@ else()
     set(Boost_USE_STATIC_LIBS ON)
 endif()
 find_package(Boost REQUIRED COMPONENTS serialization)
-message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
+if(USE_SYSTEM_BOOST)
+    message(STATUS "Using system Boost: ${Boost_INCLUDE_DIRS}")
+else()
+    message(STATUS "Using bundled Boost: ${Boost_INCLUDE_DIRS}")
+endif()
 
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/rdkit")
     execute_process(
