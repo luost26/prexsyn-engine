@@ -20,8 +20,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 
 if(USE_SYSTEM_BOOST)
-    find_package(Boost REQUIRED)
-    message(STATUS "Using system Boost: ${Boost_INCLUDE_DIRS}")
+    message(STATUS "Using system Boost")
 else()
     if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/boost")
         execute_process(
@@ -36,6 +35,8 @@ else()
     endif()
     set(Boost_USE_STATIC_LIBS ON)
 endif()
+find_package(Boost REQUIRED COMPONENTS serialization)
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 
 if(NOT EXISTS "${CMAKE_CURRENT_BINARY_DIR}/_third_party/include/rdkit")
     execute_process(
@@ -92,8 +93,8 @@ list(FILTER SOURCES EXCLUDE REGEX "bind.cpp$")
 list(FILTER SOURCES EXCLUDE REGEX "main.cpp$")
 add_library(prexsyn_obj OBJECT ${SOURCES})
 set_target_properties(prexsyn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
-target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX spdlog::spdlog
-                                         nlohmann_json::nlohmann_json)
+target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} Boost::serialization OpenMP::OpenMP_CXX
+                                         spdlog::spdlog nlohmann_json::nlohmann_json)
 target_include_directories(prexsyn_obj PUBLIC ${csv_SOURCE_DIR}/single_include ${spdlog_SOURCE_DIR}/include)
 add_executable(main csrc/main.cpp)
 target_link_libraries(main PRIVATE prexsyn_obj)
