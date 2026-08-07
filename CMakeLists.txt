@@ -110,7 +110,13 @@ set_target_properties(prexsyn_obj PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_link_libraries(prexsyn_obj PUBLIC ${RDKit_LIBRARIES} OpenMP::OpenMP_CXX spdlog::spdlog
                                          nlohmann_json::nlohmann_json)
 target_include_directories(prexsyn_obj PUBLIC ${csv_SOURCE_DIR}/single_include ${spdlog_SOURCE_DIR}/include)
+if(WIN32)
+    # Prevent Windows headers from defining min/max macros that break std::min/std::max.
+    target_compile_definitions(prexsyn_obj PUBLIC NOMINMAX)
+endif()
 if(MSVC)
+    # Make __cplusplus reflect /std:c++20 so dependencies select their C++17+ APIs.
+    target_compile_options(prexsyn_obj PUBLIC /Zc:__cplusplus)
     target_compile_options(prexsyn_obj PRIVATE /W4 $<$<CONFIG:Release>:/O2> $<$<CONFIG:Release>:/fp:fast>)
     if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(AMD64|x86_64)$")
         target_compile_options(prexsyn_obj PRIVATE $<$<CONFIG:Release>:/arch:AVX2>)

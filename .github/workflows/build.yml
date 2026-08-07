@@ -28,6 +28,7 @@ jobs:
             platform: macos-arm64
             archs: arm64
             openmp-root: /opt/homebrew/opt/libomp
+            deployment_target: "15.0"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -56,6 +57,7 @@ jobs:
           CIBW_ENVIRONMENT_LINUX: >-
             CMAKE_ARGS="-DPREXSYN_DEPS_DIR=/host${{ github.workspace }}/.cache/third_party"
           CIBW_ENVIRONMENT_MACOS: >-
+            MACOSX_DEPLOYMENT_TARGET=${{ matrix.deployment_target }}
             CMAKE_ARGS="-DPREXSYN_DEPS_DIR=.cache/third_party -DPREXSYN_OPENMP_ROOT=${{ matrix.openmp-root }}"
           CIBW_ENVIRONMENT_WINDOWS: >-
             CMAKE_ARGS="-DPREXSYN_DEPS_DIR=.cache/third_party"
