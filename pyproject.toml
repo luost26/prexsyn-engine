@@ -1,6 +1,6 @@
 [project]
 name = "prexsyn-engine"
-version = "1.1.0"
+version = "1.1.1"
 requires-python = ">=3.10"
 authors = [{ name = "Shitong Luo", email = "luost26@gmail.com" }]
 readme = "README.md"
